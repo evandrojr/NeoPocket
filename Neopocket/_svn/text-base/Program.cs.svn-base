@@ -1,0 +1,40 @@
+using System;
+using System.Windows.Forms;
+using Neopocket.Forms;
+using Neopocket.Utils;
+using Neopocket.Core;
+using System.IO;
+//using System.Threading;
+//using System.Globalization;
+
+namespace Neopocket
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [MTAThread]
+        static void Main()
+        {
+            //Define que devem ser usados os formatos Brasileiros
+            //System.Globalization.CultureInfo cultureInfo = new System.Globalization.CultureInfo("pt-BR");
+            //System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+
+            try
+            {
+                Directory.CreateDirectory(Globals.APP_LOGDIRECTORY);
+            }
+            catch { }
+
+            Globals.Bd = new Bd();
+            Globals.Bd.ConStr = Globals.APP_DBCONN;
+            Globals.Bd.Connect();
+
+            Parametro.Carregar();
+            
+            Application.Run(new FrmLogin());
+        }
+    }
+}

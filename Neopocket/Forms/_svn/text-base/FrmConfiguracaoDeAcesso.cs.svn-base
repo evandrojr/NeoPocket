@@ -1,0 +1,183 @@
+﻿using System;
+using System.Windows.Forms;
+using System.IO;
+using Neopocket.Utils;
+
+namespace Neopocket.Forms
+{
+    /// <summary>
+    /// Formulário de configuração de acesso ao NeoPocket.
+    /// </summary>
+    public partial class FrmConfiguracaoDeAcesso : FormBase
+    {
+        #region [ Construtor ]
+
+        public FrmConfiguracaoDeAcesso()
+        {
+            InitializeComponent();
+        }
+
+        #endregion
+
+        #region [ Load ]
+
+        private void FrmConfiguracaoDeAcesso_Load(object sender, EventArgs e)
+        {
+            this.CarregaCampos();
+        }
+
+        #endregion
+
+        #region [ Verificação do código único de acesso ]
+
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            if (txtCodigoAcesso.Text != "veb")
+            {
+                MessageBox.Show("Senha incorreta!");
+                return;
+            }
+
+            pnlAcesso.Visible = false;
+            pnlConfiguracao.Visible = true;
+        }
+
+        #endregion
+
+        #region [ Carrega os campos de configuração ]
+
+        /// <summary>
+        /// Método responsável por carregar as informações de configuração do NeoPocket para edição.
+        /// </summary>
+        private void CarregaCampos()
+        {
+            txtNome.Text = Globals.APP_USER_NAME;
+            txtSenha.Text = Globals.APP_USER_PASS;
+            txtCodigoVendedor.Text = Globals.Funcionario.Id.ToString();
+            txtEnderecoFTP.Text = String.Empty;
+            txtUsuarioFTP.Text = Globals.APP_FTP_USER;
+            txtSenhaFTP.Text = Globals.APP_FTP_PASS;
+
+            if ((!String.IsNullOrEmpty(Globals.APP_FTP_SERVER)) && (Globals.APP_FTP_SERVER.Length >= 6))
+                txtEnderecoFTP.Text = Globals.APP_FTP_SERVER.Substring(6) + "/" + Globals.APP_FTP_PATH;
+
+            try
+            {
+                if (
+                        (String.IsNullOrEmpty(Globals.APP_FTP_SERVER)) ||
+                        (Globals.APP_FTP_SERVER.Length <= 6) ||
+                        (String.IsNullOrEmpty(Globals.APP_FTP_USER)) ||
+                        (String.IsNullOrEmpty(Globals.APP_FTP_PASS)) ||
+                        (String.IsNullOrEmpty(Globals.Funcionario.Nome)) ||
+                        (String.IsNullOrEmpty(Globals.Funcionario.Id.ToString()))
+                    )
+                {
+                    CriarConfig();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                MessageBox.Show("O dispositivo ainda não foi configurado!", "Alerta");
+            }
+        }
+
+        #endregion
+
+        #region [ Fechamento das configurações ]
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnVoltar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Salvar as configurações ]
+
+        private void btnSalvar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Globals.APP_USER_NAME = txtNome.Text;
+                Globals.APP_USER_PASS = txtSenha.Text;
+                Globals.Funcionario.Id = Convert.ToInt32(txtCodigoVendedor.Text);
+                if (txtEnderecoFTP.Text[txtEnderecoFTP.Text.Length - 1] != '/')
+                    txtEnderecoFTP.Text += "/";
+                Fcn.DeEnderecoParaVariaveisFTP("ftp://" + txtEnderecoFTP.Text.Trim());
+                Globals.APP_FTP_PASS = txtSenhaFTP.Text;
+                Globals.APP_FTP_USER = txtUsuarioFTP.Text;
+
+                TextWriter tw;
+                tw = new StreamWriter(Globals.APP_PATH + "usuario.dat", true);
+                tw.WriteLine(Globals.APP_USER_NAME);
+                tw.Close();
+                tw = new StreamWriter(Globals.APP_PATH + "senha.seg", true);
+                tw.WriteLine(Crypt.Transform(Globals.APP_USER_PASS));
+                tw.Close();
+                tw = new StreamWriter(Globals.APP_PATH + "ftpusuario.dat", true);
+                tw.WriteLine(Globals.APP_FTP_USER);
+                tw.Close();
+                tw = new StreamWriter(Globals.APP_PATH + "ftpcaminho.dat", true);
+                tw.WriteLine(Globals.APP_FTP_SERVER + "/" + Globals.APP_FTP_PATH);
+                tw.Close();
+                tw = new StreamWriter(Globals.APP_PATH + "ftpsenha.seg", true);
+                tw.WriteLine(Crypt.Transform(Globals.APP_FTP_PASS));
+                tw.Close();
+                tw = new StreamWriter(Globals.APP_PATH + "vendedornome.dat", true);
+                tw.WriteLine(Globals.Funcionario.Nome);
+                tw.Close();
+                tw = new StreamWriter(Globals.APP_PATH + "vendedorcodigo.seg", true);
+                tw.WriteLine(Crypt.Transform(Globals.Funcionario.Id.ToString()));
+                tw.Close();
+                this.DialogResult = DialogResult.OK;
+                MessageBox.Show("Configurações armazenadas!", "Neo");
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        private static void CriarConfig()
+        {
+            FileStream fs;
+
+            fs = File.Create(Globals.APP_PATH + "usuario.dat");
+            fs.Close();
+            fs = File.Create(Globals.APP_PATH + "senha.seg");
+            fs.Close();
+            fs = File.Create(Globals.APP_PATH + "ftpusuario.dat");
+            fs.Close();
+            fs = File.Create(Globals.APP_PATH + "ftpcaminho.dat");
+            fs.Close();
+            fs = File.Create(Globals.APP_PATH + "ftpsenha.seg");
+            fs.Close();
+            fs = File.Create(Globals.APP_PATH + "vendedornome.dat");
+            fs.Close();
+            fs = File.Create(Globals.APP_PATH + "vendedorcodigo.seg");
+            fs.Close();
+        }
+
+        #endregion
+
+        #region [ Limpar dados do NeoPocket ]
+
+        private void btnLimpar_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Tem certeza? Isso irá apagar todos os dados da base de dados utilizada pelo Neo Pocket", "Alerta!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.No)
+                return;
+            Globals.Bd.DadosApagarCompletamente();
+        }
+
+        #endregion
+    }
+}

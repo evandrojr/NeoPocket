@@ -1,0 +1,175 @@
+﻿namespace Neopocket.Forms
+{
+    partial class FrmLogin
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.MainMenu mainMenu;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLogin));
+            this.mainMenu = new System.Windows.Forms.MainMenu();
+            this.mniSair = new System.Windows.Forms.MenuItem();
+            this.dataTable1 = new System.Data.DataTable();
+            this.inputPanel = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
+            this.txtNome = new System.Windows.Forms.TextBox();
+            this.txtSenha = new System.Windows.Forms.TextBox();
+            this.btnEntrar = new System.Windows.Forms.Button();
+            this.picConfiguracoesDeAcesso = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbEntrar = new System.Windows.Forms.Button();
+            this.batteryLife = new OpenNETCF.Windows.Forms.BatteryLife();
+            this.lblBateria = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // mainMenu
+            // 
+            this.mainMenu.MenuItems.Add(this.mniSair);
+            // 
+            // mniSair
+            // 
+            this.mniSair.Text = "Sair";
+            this.mniSair.Click += new System.EventHandler(this.mniSair_Click);
+            // 
+            // dataTable1
+            // 
+            this.dataTable1.DisplayExpression = "";
+            this.dataTable1.Prefix = "";
+            this.dataTable1.TableName = "Table1";
+            // 
+            // inputPanel
+            // 
+            this.inputPanel.Enabled = true;
+            // 
+            // txtNome
+            // 
+            this.txtNome.Location = new System.Drawing.Point(100, 135);
+            this.txtNome.Name = "txtNome";
+            this.txtNome.Size = new System.Drawing.Size(100, 21);
+            this.txtNome.TabIndex = 2;
+            this.txtNome.GotFocus += new System.EventHandler(this.txtNome_GotFocus);
+            // 
+            // txtSenha
+            // 
+            this.txtSenha.Location = new System.Drawing.Point(100, 162);
+            this.txtSenha.Name = "txtSenha";
+            this.txtSenha.PasswordChar = '*';
+            this.txtSenha.Size = new System.Drawing.Size(100, 21);
+            this.txtSenha.TabIndex = 3;
+            this.txtSenha.GotFocus += new System.EventHandler(this.txtSenha_GotFocus);
+            // 
+            // btnEntrar
+            // 
+            this.btnEntrar.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.btnEntrar.Location = new System.Drawing.Point(132, 189);
+            this.btnEntrar.Name = "btnEntrar";
+            this.btnEntrar.Size = new System.Drawing.Size(68, 20);
+            this.btnEntrar.TabIndex = 1;
+            this.btnEntrar.Text = "Entrar";
+            this.btnEntrar.Click += new System.EventHandler(this.btnEntrar_Click);
+            // 
+            // picConfiguracoesDeAcesso
+            // 
+            this.picConfiguracoesDeAcesso.BackColor = System.Drawing.Color.SkyBlue;
+            this.picConfiguracoesDeAcesso.Image = ((System.Drawing.Image)(resources.GetObject("picConfiguracoesDeAcesso.Image")));
+            this.picConfiguracoesDeAcesso.Location = new System.Drawing.Point(206, 236);
+            this.picConfiguracoesDeAcesso.Name = "picConfiguracoesDeAcesso";
+            this.picConfiguracoesDeAcesso.Size = new System.Drawing.Size(34, 32);
+            this.picConfiguracoesDeAcesso.Click += new System.EventHandler(this.picConfiguracoesDeAcesso_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(240, 268);
+            // 
+            // pbEntrar
+            // 
+            this.pbEntrar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.pbEntrar.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.pbEntrar.Location = new System.Drawing.Point(112, 55);
+            this.pbEntrar.Name = "pbEntrar";
+            this.pbEntrar.Size = new System.Drawing.Size(23, 25);
+            this.pbEntrar.TabIndex = 5;
+            this.pbEntrar.Click += new System.EventHandler(this.pbEntrar_Click);
+            // 
+            // batteryLife
+            // 
+            this.batteryLife.Location = new System.Drawing.Point(3, 245);
+            this.batteryLife.Name = "batteryLife";
+            this.batteryLife.Size = new System.Drawing.Size(108, 20);
+            this.batteryLife.TabIndex = 8;
+            // 
+            // lblBateria
+            // 
+            this.lblBateria.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(160)))), ((int)(((byte)(219)))));
+            this.lblBateria.Location = new System.Drawing.Point(4, 225);
+            this.lblBateria.Name = "lblBateria";
+            this.lblBateria.Size = new System.Drawing.Size(43, 20);
+            this.lblBateria.Text = "Bateria";
+            // 
+            // FrmLogin
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(240, 268);
+            this.Controls.Add(this.lblBateria);
+            this.Controls.Add(this.batteryLife);
+            this.Controls.Add(this.pbEntrar);
+            this.Controls.Add(this.picConfiguracoesDeAcesso);
+            this.Controls.Add(this.btnEntrar);
+            this.Controls.Add(this.txtSenha);
+            this.Controls.Add(this.txtNome);
+            this.Controls.Add(this.pictureBox1);
+            this.Menu = this.mainMenu;
+            this.Name = "FrmLogin";
+            this.Text = "Neo Pocket";
+            this.Load += new System.EventHandler(this.FrmLogin_Load);
+            this.GotFocus += new System.EventHandler(this.FrmLogin_GotFocus);
+            ((System.ComponentModel.ISupportInitialize)(this.dataTable1)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Data.DataTable dataTable1;
+        private Microsoft.WindowsCE.Forms.InputPanel inputPanel;
+        private System.Windows.Forms.MenuItem mniSair;
+        private System.Windows.Forms.TextBox txtNome;
+        private System.Windows.Forms.TextBox txtSenha;
+        private System.Windows.Forms.Button btnEntrar;
+        private System.Windows.Forms.PictureBox picConfiguracoesDeAcesso;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button pbEntrar;
+        private OpenNETCF.Windows.Forms.BatteryLife batteryLife;
+        private System.Windows.Forms.Label lblBateria;
+    }
+}
+

@@ -1,0 +1,244 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlServerCe;
+using Neopocket.Core;
+using Neopocket.Utils;
+
+namespace Neopocket
+{
+    public class Grade
+    {
+
+        public Produto Produto;
+        public List<GradeItem> LstGradeItem = new List<GradeItem>();
+
+
+        public Grade(Produto produto)
+        {
+            Produto = produto;
+        }
+
+        public void GuardaLista(int idItemAtributo, int idItemGrade, int idAtributo, int idGrade, int quantidade)
+        {
+            GradeItem gi = new GradeItem(this);
+            gi.IdItemAtributo = idItemAtributo;
+            gi.IdItemGrade = idItemGrade;
+            gi.IdAtributo = idAtributo;
+            gi.IdGrade = idGrade;
+            gi.Quantidade = quantidade;
+            LstGradeItem.Add(gi);
+        }
+
+        public void Carregar()
+        {
+            // A consulta abaixo retorna a grade de todos os itens do pedido informado
+            // Parece que o resto do sistema se comporta como se fosse a grade apenas do item ou produto.
+            string sqlPedidoGrade = @"
+                select 
+                        * 
+                from 
+                        item_pedido_grade
+                where
+                        id_pedido ='" + Produto.Pedido.Id + "'" +
+               @" and id_produto=" + Produto.Id;
+            DataTable dtPedidoGrade = D.Bd.DataTablePreenche(sqlPedidoGrade);
+            for (int y = 0; y < dtPedidoGrade.Rows.Count; ++y)
+            {
+                GradeItem gi = new GradeItem(this);
+                gi.Id = Convert.ToInt32(dtPedidoGrade.Rows[y]["id_item_pedido_grade"]);
+                GuardaLista(Convert.ToInt32(dtPedidoGrade.Rows[y]["id_item_atributo"]),
+                    Convert.ToInt32(dtPedidoGrade.Rows[y]["id_item_grade"]),
+                    Convert.ToInt32(dtPedidoGrade.Rows[y]["id_atributo"]),
+                    Convert.ToInt32(dtPedidoGrade.Rows[y]["id_grade"]),
+                    Convert.ToInt32(dtPedidoGrade.Rows[y]["quantidade"]));
+            }
+        }
+
+        public int Inserir(SqlCeTransaction bdTrans)
+        {
+            int rf = 0;
+            foreach (GradeItem gi in LstGradeItem)
+            {
+                if (gi.Inserir(bdTrans) == 1)
+                {
+                    ++rf;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            return rf;
+        }
+
+        public int Atualizar(SqlCeTransaction bdTrans)
+        {
+            Excluir(bdTrans);
+            return Inserir(bdTrans);
+        }
+
+
+        public int Excluir(SqlCeTransaction bdTrans)
+        {
+            //string sqlUpdateEstoque = "";
+            //Código temporariamente comentado por estar com erro 19/03/2009
+            
+//            foreach (GradeItem gi in LstGradeItem)
+//            {
+//                //Recupera a quantidade do estoque
+//                string sqlPedidoOriginalQuantidade = @"
+//                select
+//                     quantidade
+//                from
+//                     item_pedido_grade
+//                where 
+//                     id_pedido=" + Globals.Pedido.Id + " and id_produto=" + Produto.Id +
+//                         @" and id_grade = " + Produto.IdGrade.V +
+//                         @" and id_item_grade = " + gi.IdItemGrade +
+//                         @" and id_atributo = " + gi.IdAtributo +
+//                         @" and id_item_atributo = " + gi.IdItemAtributo;
+
+//                IntN quantidadeOriginal = Globals.Bd.IntN(sqlPedidoOriginalQuantidade, bdTrans);
+//                if (quantidadeOriginal.Iniciada)
+//                {
+//                    sqlUpdateEstoque = @"
+//                    update
+//                        saldo_grade
+//                    set
+//                        estoque=estoque + " + quantidadeOriginal.V + @" 
+//                    where 
+//                        id_produto=" + Produto.Id +
+//                                @" and id_grade = " + Produto.IdGrade.V +
+//                                @" and id_item_grade = " + gi.IdItemGrade +
+//                                @" and id_atributo = " + gi.IdAtributo +
+//                                @" and id_item_atributo = " + gi.IdItemAtributo;
+//                    Globals.Bd.ExecuteNonQuery(sqlUpdateEstoque, bdTrans);
+//                }
+//            }
+             
+            int rf;
+            string sqlDeleteItemGrade = @"
+            delete from 
+                item_pedido_grade
+            where id_produto=" + Produto.Id + " and id_pedido='" + Produto.Pedido.Id + "'";
+            rf = D.Bd.ExecuteNonQuery(sqlDeleteItemGrade, bdTrans);
+            return rf;
+        }
+
+
+        public class GradeItem
+        {
+            public int Id, IdItemAtributo, IdAtributo, IdGrade;
+            public int IdItemGrade, Quantidade;
+            public Grade Grade;
+
+
+            public GradeItem(Grade grade)
+            {
+                Grade = grade;
+            }
+            public int IdProduto
+            {
+                get { return Grade.Produto.Id; }
+            }
+
+            public Guid IdPedido
+            {
+                get { return Grade.Produto.Pedido.Id; }
+            }
+
+            public void Carregar()
+            {
+
+            }
+
+            public int Inserir(SqlCeTransaction dbTrans)
+            {
+                int rf;
+
+                //Código comentado por estar afetando a performance
+                
+
+                //verifica se existe na tabela saldo estoque
+                string sqlExisteSaldoEstoque = @" select count(*) "+
+                    @"from saldo_grade" +
+                    @" where  
+                        id_produto =  " + Grade.Produto.Id +
+                    @" and id_grade = " + Grade.Produto.IdGrade.V +
+                    @" and id_item_grade = " + IdItemGrade +
+                    @" and id_atributo = " + IdAtributo +
+                    @" and id_item_atributo = " + IdItemAtributo;
+                if (D.Bd.I(sqlExisteSaldoEstoque) > 0)
+                {
+                    //Dá baixa no estoque:
+                    string sqlUpdateEstoque = @"
+                    update 
+                        saldo_grade
+                    set
+                        estoque = estoque - " + Quantidade +
+                    @" where  
+                        id_produto =  " + Grade.Produto.Id +
+                    @" and id_grade = " + Grade.Produto.IdGrade.V +
+                    @" and id_item_grade = " + IdItemGrade +
+                    @" and id_atributo = " + IdAtributo +
+                    @" and id_item_atributo = " + IdItemAtributo;
+
+                    rf = D.Bd.ExecuteNonQuery(sqlUpdateEstoque, dbTrans);
+                    if (rf < 1)
+                    {
+                        dbTrans.Rollback();
+                        return -1;
+                    }
+                }
+                 
+                 
+                string sqlInsertItemGrade = @"
+                insert into
+                    item_pedido_grade
+                (id_produto,
+                 id_funcionario,
+                 id_atributo,   
+                 id_item_atributo,
+                 id_item_grade,
+                 id_pedido,
+                 id_grade,
+                 quantidade)
+                        values (" +
+                    Grade.Produto.Id + "," +
+                    D.Funcionario.Id + "," +
+                    IdAtributo + "," +
+                    IdItemAtributo + "," +
+                    IdItemGrade + ",'" +
+                    Grade.Produto.Pedido.Id + "'," +
+                    Grade.Produto.IdGrade.V + "," +
+                    Quantidade + ")";
+
+                rf = D.Bd.ExecuteNonQuery(sqlInsertItemGrade, dbTrans);
+                return rf;
+            }
+
+            //Não é usada o item é removido e recolocado em caso de edição
+
+            //            public int Atualizar(SqlCeTransaction dbTrans)
+            //            {
+            //                int rf;
+            //                string sqlUpdadeItemGrade = @"
+            //                update 
+            //                    item_pedido_grade
+            //                set
+            //                id_produto=" + Grade.Produto.Id + "," +
+            //                "id_item_atributo=" + IdItemAtributo + "," +
+            //                "id_item_grade=" + IdItemGrade + "," +
+            //                "id_pedido=" + Grade.Produto.Pedido.Id + "," +
+            //                "quantidade=" + Quantidade +
+            //                " where id_item_produto_grade=" + Id;
+            //                rf = Globals.Bd.ExecuteNonQuery(sqlUpdadeItemGrade, dbTrans);
+            //                return rf;
+            //            }
+
+
+
+        }
+    }
+}

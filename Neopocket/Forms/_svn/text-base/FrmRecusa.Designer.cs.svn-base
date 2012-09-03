@@ -1,0 +1,121 @@
+﻿namespace Neopocket.Forms
+{
+    partial class FrmRecusa
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.MainMenu mainMenu;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmRecusa));
+            this.mainMenu = new System.Windows.Forms.MainMenu();
+            this.mnuCancelar = new System.Windows.Forms.MenuItem();
+            this.mnuSalvar = new System.Windows.Forms.MenuItem();
+            this.inputPanel = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
+            this.picTelaRecusa = new System.Windows.Forms.PictureBox();
+            this.lblRecusa = new System.Windows.Forms.Label();
+            this.cboMotivo = new System.Windows.Forms.ComboBox();
+            this.txtObservação = new System.Windows.Forms.TextBox();
+            this.SuspendLayout();
+            // 
+            // mainMenu
+            // 
+            this.mainMenu.MenuItems.Add(this.mnuCancelar);
+            this.mainMenu.MenuItems.Add(this.mnuSalvar);
+            // 
+            // mnuCancelar
+            // 
+            this.mnuCancelar.Text = "Cancelar";
+            this.mnuCancelar.Click += new System.EventHandler(this.mnuCancelar_Click);
+            // 
+            // mnuSalvar
+            // 
+            this.mnuSalvar.Text = "Salvar";
+            this.mnuSalvar.Click += new System.EventHandler(this.mnuSalvar_Click);
+            // 
+            // picTelaRecusa
+            // 
+            this.picTelaRecusa.Image = ((System.Drawing.Image)(resources.GetObject("picTelaRecusa.Image")));
+            this.picTelaRecusa.Location = new System.Drawing.Point(0, 0);
+            this.picTelaRecusa.Name = "picTelaRecusa";
+            this.picTelaRecusa.Size = new System.Drawing.Size(240, 268);
+            // 
+            // lblRecusa
+            // 
+            this.lblRecusa.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lblRecusa.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
+            this.lblRecusa.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lblRecusa.Location = new System.Drawing.Point(3, 1);
+            this.lblRecusa.Name = "lblRecusa";
+            this.lblRecusa.Size = new System.Drawing.Size(234, 32);
+            this.lblRecusa.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // cboMotivo
+            // 
+            this.cboMotivo.Location = new System.Drawing.Point(3, 35);
+            this.cboMotivo.Name = "cboMotivo";
+            this.cboMotivo.Size = new System.Drawing.Size(234, 22);
+            this.cboMotivo.TabIndex = 2;
+            // 
+            // txtObservação
+            // 
+            this.txtObservação.Location = new System.Drawing.Point(3, 63);
+            this.txtObservação.Multiline = true;
+            this.txtObservação.Name = "txtObservação";
+            this.txtObservação.Size = new System.Drawing.Size(234, 205);
+            this.txtObservação.TabIndex = 3;
+            this.txtObservação.GotFocus += new System.EventHandler(this.txtObservação_GotFocus);
+            this.txtObservação.LostFocus += new System.EventHandler(this.txtObservação_LostFocus);
+            // 
+            // FrmRecusa
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(240, 268);
+            this.Controls.Add(this.txtObservação);
+            this.Controls.Add(this.cboMotivo);
+            this.Controls.Add(this.lblRecusa);
+            this.Controls.Add(this.picTelaRecusa);
+            this.Menu = this.mainMenu;
+            this.Name = "FrmRecusa";
+            this.Text = "  Recusa";
+            this.Load += new System.EventHandler(this.FrmRecusa_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.MenuItem mnuCancelar;
+        private Microsoft.WindowsCE.Forms.InputPanel inputPanel;
+        private System.Windows.Forms.MenuItem mnuSalvar;
+        private System.Windows.Forms.PictureBox picTelaRecusa;
+        private System.Windows.Forms.Label lblRecusa;
+        private System.Windows.Forms.ComboBox cboMotivo;
+        private System.Windows.Forms.TextBox txtObservação;
+    }
+}

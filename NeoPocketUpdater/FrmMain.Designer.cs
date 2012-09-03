@@ -1,0 +1,79 @@
+﻿namespace NeoPocketUpdater
+{
+    partial class FrmMain
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.MainMenu mainMenu;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.mainMenu = new System.Windows.Forms.MainMenu();
+            this.menuItemSair = new System.Windows.Forms.MenuItem();
+            this.TxtMsg = new System.Windows.Forms.TextBox();
+            this.SuspendLayout();
+            // 
+            // mainMenu
+            // 
+            this.mainMenu.MenuItems.Add(this.menuItemSair);
+            // 
+            // menuItemSair
+            // 
+            this.menuItemSair.Enabled = false;
+            this.menuItemSair.Text = "Sair";
+            // 
+            // TxtMsg
+            // 
+            this.TxtMsg.Location = new System.Drawing.Point(0, 3);
+            this.TxtMsg.Multiline = true;
+            this.TxtMsg.Name = "TxtMsg";
+            this.TxtMsg.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TxtMsg.Size = new System.Drawing.Size(240, 262);
+            this.TxtMsg.TabIndex = 0;
+            // 
+            // FrmMain
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(240, 268);
+            this.ControlBox = false;
+            this.Controls.Add(this.TxtMsg);
+            this.Menu = this.mainMenu;
+            this.MinimizeBox = false;
+            this.Name = "FrmMain";
+            this.Text = "Neo Pocket Updater";
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        public System.Windows.Forms.TextBox TxtMsg;
+        private System.Windows.Forms.MenuItem menuItemSair;
+
+
+    }
+}
+

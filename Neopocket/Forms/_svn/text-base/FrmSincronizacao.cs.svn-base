@@ -1,0 +1,424 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using System.IO;
+using Neopocket.Utils;
+using Neopocket.Core;
+
+namespace Neopocket.Forms
+{
+    /// <summary>
+    /// Formulário de sincronização de dados entre o NeoPocket e o NeoSync
+    /// </summary>
+    public partial class FrmSincronizacao : FormBase
+    {
+        #region [ Atributos ]
+
+        private Boolean primeiraVezQueOFormularioEhCarregado = true;
+        private long processoInicioTick;
+
+        #endregion
+
+        #region [ Construtor ]
+
+        public FrmSincronizacao()
+        {
+            InitializeComponent();
+        }
+
+        #endregion
+
+        #region [ Sincronização ]
+
+        /// <summary>
+        /// Criar diretorio
+        /// Selecionar clientes para envio
+        /// Selecionar pedidos para envio
+        /// Compactar arquivos
+        /// Procurar a pasta mais recente
+        /// Enviar arquivos
+        /// Marcar pedidos como enviados
+        /// Fechar conexões
+        /// Receber arquivos clientes
+        /// Fechar conexões
+        /// Receber arquivos gerais
+        /// Fechar conexões
+        /// Descompactar arquivo de clientes
+        /// Descompactar arquivos gerais
+        /// Remover clientes antigos
+        /// Marcar clientes e pedidos como sincronizados
+        /// Carregar dados
+        /// Deletar arquivos
+        /// 
+        /// </summary>
+        private void Sincronizar()
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                String msgSucesso = String.Empty;
+                processoInicioTick = DateTime.Now.Ticks;
+
+                #region [ Cria o diretório de Sincronização ]
+
+                try
+                {
+                    Directory.CreateDirectory(Globals.APP_PATH + Globals.APP_SYNC_PATH);
+                }
+                catch
+                {
+                }
+
+                #endregion
+
+                #region [ Procura o servidor FTP ]
+
+                NeoFileSystemService.ValidationSoapHeader header = new NeoFileSystemService.ValidationSoapHeader();
+                header.Directory = Globals.APP_FTP_USER;
+                header.Password = Globals.APP_FTP_PASS;
+                NeoFileSystemService.NeoFileSystemService fileSystemService = new NeoFileSystemService.NeoFileSystemService();
+                fileSystemService.ValidationSoapHeaderValue = header;
+
+                try
+                {
+                    foreach (String d in fileSystemService.DirList(Globals.APP_FTP_USER + @"\"))
+                    {
+                        String strDiretorioNome = d;
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    FE.Show("Não foi possível encontrar o servidor, tente novamente", "Aviso", e.Message);
+                    Cursor.Current = Cursors.Default;
+                    mnuVoltar.Enabled = true;
+                    return;
+                }
+
+                #endregion
+
+                #region [ Apagar todos os arquivos no diretório de sincronização ]
+
+                DirectoryInfo di = new DirectoryInfo(Globals.APP_PATH + Globals.APP_SYNC_PATH);
+                FileInfo[] rgFiles = di.GetFiles();
+                foreach (FileInfo fi in rgFiles)
+                {
+                    try
+                    {
+                        fi.Delete();
+                    }
+                    catch { }
+                }
+
+                #endregion
+
+                #region [ 1° Parte de Sincronização ]
+
+                txtStatus.Text = "Selecionando novos clientes e pedidos ";
+                Sincronizacao.Iniciar();
+                Sincronizacao.ClientesSelecionarParaEnvioCSV();
+                Sincronizacao.RecusaSelecionarParaEnvioCSV();
+                Sincronizacao.PedidosSelecionarParaEnvioCSV();
+                Boolean haviamArquivosParaEnviar = Sincronizacao.ArquivosCompactar();
+                if (haviamArquivosParaEnviar)
+                {
+                    TempoMedir(true);
+                    txtStatus.Text += "Enviando novos clientes e pedidos ";
+                    Sincronizacao.Upload(Globals.APP_PATH + Globals.APP_SYNC_PATH + Sincronizacao.ArquivoEnviarNome, Globals.APP_FTP_USER + @"\" + Sincronizacao.ArquivoEnviarNome, fileSystemService);
+                    TempoMedir(msgSucesso == "");
+                    if (msgSucesso != "")
+                    {
+                        MessageBox.Show("Não foi possível enviar arquivo com clientes e pedidos para servidor FTP", "Neo");
+                        mnuVoltar.Enabled = true;
+                        Cursor.Current = Cursors.Default;
+                        return;
+                    }
+                    else
+                    {
+                        Sincronizacao.LstClienteNovoId = Globals.Bd.ListGuid(@"
+                    select
+                            id_cliente_pocket
+                    from 
+                            cliente
+                    where
+                            status='N'");
+                        Sincronizacao.LstPedidoNovoId = Globals.Bd.ListGuid(@"
+                    select
+                            id_pedido
+                    from 
+                            pedido
+                    where
+                            status='N'");
+
+                        //............Recusa....................................
+
+                        Sincronizacao.LstRecusaNovoId = Globals.Bd.ListInt(@"
+                    select
+                            id_recusa
+                    from 
+                            recusa
+                    where
+                            status='N'");
+                        Globals.Bd.ExecuteNonQuery("Update recusa set status = 'S'");
+                        Globals.Bd.ExecuteNonQuery("Update pedido set status = 'S'");
+                        Globals.Bd.ExecuteNonQuery("Update cliente set status = 'S'");
+                    }
+                }
+                else
+                {
+                    TempoMedir(true);
+                    txtStatus.Text += "Não existem clientes ou pedidos novos ";
+                    TempoMedir(true);
+                }
+
+                #endregion
+
+                #region [ 2° Parte da Sincronização - Importação dos arquivos da loja ]
+
+                List<String> lstPastas = new List<String>();
+                foreach (String d in fileSystemService.DirList(Globals.APP_FTP_USER + @"\"))
+                {
+                    String strDiretorioNome = d.Substring(d.LastIndexOf(@"\", d.Length - 2) + 1,
+                                                                                   d.Length -
+                                                                                   d.LastIndexOf(@"\", d.Length - 2) - 1);
+                    if (strDiretorioNome.ToUpper().Substring(0, Math.Min(3, strDiretorioNome.Length)) == "ANO")
+                    {
+                        lstPastas.Add(strDiretorioNome);
+                    }
+                }
+                if (lstPastas.Count == 0)
+                {
+                    FE.Show("Não foi encontrada a pasta contendo dados a receber", "Neo", msgSucesso);
+                    Cursor.Current = Cursors.Default;
+                    mnuVoltar.Enabled = true;
+                    return;
+                }
+
+                txtStatus.Text += "Recebendo arquivo de clientes ";
+                lstPastas.Sort();
+                String strSubpasta = lstPastas[lstPastas.Count - 1];
+                Sincronizacao.ArquivoClientesReceberNomeBase = "CLR" + Globals.Funcionario.Id.ToString().PadLeft(6, '0');
+                Sincronizacao.Download(Globals.APP_FTP_USER + @"\" + strSubpasta + @"\" + Sincronizacao.ArquivoClientesReceberNomeBase + ".zip", Globals.APP_PATH + Globals.APP_SYNC_PATH + Sincronizacao.ArquivoClientesReceberNomeBase + ".zip", fileSystemService);
+                Globals.Bd.ExecuteNonQuery("Update cliente set status ='S' where status is null");
+                TempoMedir(msgSucesso == "");
+
+                if (msgSucesso != "")
+                {
+                    FE.Show("Não foi encontrado arquivo com clientes ou não foi possível conectar com a Internet", "Neo", msgSucesso);
+                    mnuVoltar.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                    return;
+                }
+
+                txtStatus.Text += "Recebendo dados gerais de atualização ";
+                Sincronizacao.Download(Globals.APP_FTP_USER + @"\" + strSubpasta + @"\" + Sincronizacao.ArquivoComumReceberNome, Globals.APP_PATH + Globals.APP_SYNC_PATH + Sincronizacao.ArquivoComumReceberNome, fileSystemService);
+
+                TempoMedir(msgSucesso == "");
+                if (msgSucesso != "")
+                {
+                    FE.Show("Não foi encontrado arquivo com atualizações ou não foi possivel conectar com a Internet", "Neo", msgSucesso);
+                    mnuVoltar.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                    return;
+                }
+
+                txtStatus.Text += "Agora você já pode desconectar da Internet " + Environment.NewLine;
+                txtStatus.Text += "Descompactando arquivos ";
+                msgSucesso = Sincronizacao.ArquivosDescompactar();
+                if (msgSucesso != "")
+                {
+                    FE.Show("Não foi possível descompactar o arquivo com atualizações. O Neo Pocket conseguiu enviar mas os dados locais não foram atualizados", "Neo", msgSucesso);
+                    mnuVoltar.Enabled = true;
+                    return;
+                }
+                TempoMedir(msgSucesso == "");
+
+                txtStatus.Text += "Unindo clientes antigos com os novos";
+                Sincronizacao.RemoveClientesAntigos();
+                Sincronizacao.CarregaClienteCsv();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando rotas para as cidades";
+                Sincronizacao.RotaCidadeCarregar();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando registro de todos os clientes";
+                Sincronizacao.ClientesCastradosCarregar();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando produtos ";
+                Sincronizacao.CarregaProdutoCsv();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando vendedores ";
+                Sincronizacao.CarregaVendedorCsv();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando cidades ";
+                Sincronizacao.CarregaCidadeCsv();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando espécies financeira ";
+                Sincronizacao.CarregaEspecieFinanceiraCsv();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando os ítens da tabela de preço ";
+                Sincronizacao.CarregaItemTabelaPrecoCsv();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando formas de pagamento ";
+                Sincronizacao.CarregaFormaPagamentoCsv();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando os ítems das formas de pagamento ";
+                Sincronizacao.CarregaItemFormaPagamentoCsv();
+                TempoMedir(true);
+
+                txtStatus.Text += "Carregando as formas de pagamento das tabelas de preço";
+                Sincronizacao.CarregaFormaPagamentoTabelaPrecoCsv();
+                TempoMedir(true);
+
+                if (File.Exists(Globals.APP_PATH + Globals.APP_SYNC_PATH + "ATRIBUTO.csv"))
+                {
+                    txtStatus.Text += "Carregando atributos ";
+                    Sincronizacao.CarregaAtributoCsv();
+                    TempoMedir(true);
+                }
+
+                if (File.Exists(Globals.APP_PATH + Globals.APP_SYNC_PATH + "GRADE.csv"))
+                {
+                    txtStatus.Text += "Carregando grades ";
+                    Sincronizacao.CarregaGradeCsv();
+                    TempoMedir(true);
+                }
+
+                if (File.Exists(Globals.APP_PATH + Globals.APP_SYNC_PATH + "ITEMATRIBUTO.csv"))
+                {
+                    txtStatus.Text += "Carregando tabela ítem atributo ";
+                    Sincronizacao.CarregaItemAtributoCsv();
+                    TempoMedir(true);
+                }
+
+                if (File.Exists(Globals.APP_PATH + Globals.APP_SYNC_PATH + "ITEMGRADE.csv"))
+                {
+                    txtStatus.Text += "Carregando tabela ítem grade ";
+                    Sincronizacao.CarregaItemGradeCsv();
+                    TempoMedir(true);
+                }
+
+                txtStatus.Text += "Carregando parâmetros ";
+                Sincronizacao.CarregaParametroCsv();
+                TempoMedir(true);
+
+                if (File.Exists(Globals.APP_PATH + Globals.APP_SYNC_PATH + "SALDOGRADE.csv"))
+                {
+                    txtStatus.Text += "Carregando saldo grade ";
+                    Sincronizacao.CarregaSaldoGradeCsv();
+                    TempoMedir(true);
+                }
+
+                txtStatus.Text += "Carregando tabelas de preço ";
+                Sincronizacao.CarregaTabelaPrecoCsv();
+                TempoMedir(true);
+
+                if (File.Exists(Globals.APP_PATH + Globals.APP_SYNC_PATH + "MOTIVO.csv"))
+                {
+                    txtStatus.Text += "Carregando motivo ";
+                    Sincronizacao.CarregaTabelaMotivoCsv();
+                    TempoMedir(true);
+                }
+
+                #region [ Limpa arquivos temporários ]
+
+                txtStatus.Text += "Removendo arquivos temporários ";
+                di = new DirectoryInfo(Globals.APP_PATH + Globals.APP_SYNC_PATH);
+                rgFiles = di.GetFiles();
+                foreach (FileInfo fi in rgFiles)
+                {
+                    try
+                    {
+                        fi.Delete();
+                    }
+                    catch { }
+                }
+
+                #endregion
+
+                TempoMedir(msgSucesso == "");
+
+                txtStatus.Text += "Reindexando produtos para habilitar paginação ";
+                Sincronizacao.ProdutosReindexar();
+                TempoMedir(true);
+
+                //Carregar os dados do funcionário
+                try
+                {
+                    Globals.Funcionario.Carregar();
+                }
+                catch (Exception ex)
+                {
+                    FE.Show(ex);
+                    Application.Exit();
+                }
+
+                if (Parametro.Carregar())
+                {
+                    Cursor.Current = Cursors.Default;
+                    mnuVoltar.Enabled = true;
+                    MessageBox.Show("Atualização ocorrida com sucesso pressione 'ok' e 'voltar' para sair.", "Neo");
+                }
+                else
+                {
+                    Cursor.Current = Cursors.Default;
+                    mnuVoltar.Enabled = true;
+                    MessageBox.Show("Atualização finalizada pressione 'ok' e 'voltar' para sair.", "Neo");
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                mnuVoltar.Enabled = true;
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Ativação do form ]
+
+        private void FrmSincronizacao_Activated(object sender, EventArgs e)
+        {
+            if (!primeiraVezQueOFormularioEhCarregado)
+                return;
+            primeiraVezQueOFormularioEhCarregado = false;
+            Sincronizar();
+        }
+
+        #endregion
+
+        #region [ Voltar ]
+
+        private void mnuVoltar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Medi o tempo gasto para execução de uma operação ]
+
+        private void TempoMedir(Boolean sucesso)
+        {
+            long duracao = (long)Math.Round((DateTime.Now.Ticks - processoInicioTick) / 10000000.0);
+            processoInicioTick = DateTime.Now.Ticks;
+            if (sucesso)
+                txtStatus.Text += "(ok " + duracao + "s)" + Environment.NewLine;
+            else
+                txtStatus.Text += "(erro na execução!)" + Environment.NewLine;
+            Application.DoEvents();
+        }
+
+        #endregion
+    }
+}

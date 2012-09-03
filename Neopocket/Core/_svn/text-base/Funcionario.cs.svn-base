@@ -1,0 +1,49 @@
+﻿using System;
+using System.Data.SqlServerCe;
+using Neopocket.Utils;
+
+namespace Neopocket.Core
+{
+    /// <summary>
+    /// Classe pode ser melhorada
+    /// </summary>
+    public class Funcionario
+    {
+        public int Id; //Carregado pelo aquivo criptografado
+        public double DescontoMaximo;
+        public double AcrescimoMaximo;
+        public string Nome;
+
+        public bool Valida(string nome, string senha)
+        {
+            return true;
+        }
+
+        //Chamar sempre apos carregar os parametros
+        public void Carregar()
+        {
+            SqlCeDataReader reader = null;
+
+            try
+            {
+                string sql = "SELECT * FROM funcionario WHERE id=" + Id;
+                SqlCeCommand cmd = new SqlCeCommand(sql, Globals.Bd.Con);
+                reader = cmd.ExecuteReader();
+                reader.Read();
+
+                Nome = Convert.ToString(reader["nome"]);
+                DescontoMaximo = Convert.ToDouble(reader["desconto_maximo"]);
+                AcrescimoMaximo = Convert.ToDouble(reader["acrescimo_maximo"]);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Verifique se o código do funcionário '" + Id + "'está correto. ", ex);
+            }
+            finally
+            {
+                reader.Close();
+            }
+        }
+
+    }
+}

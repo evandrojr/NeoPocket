@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoSync", "NeoSync.csproj", "{2F7C7147-27C5-4F44-819D-670FF8A5F852}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NeoSync_Instalador", "NeoSync_Instalador\NeoSync_Instalador.vdproj", "{8FE791BF-0A90-4EBD-B959-0CF0829A7679}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2F7C7147-27C5-4F44-819D-670FF8A5F852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7C7147-27C5-4F44-819D-670FF8A5F852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7C7147-27C5-4F44-819D-670FF8A5F852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7C7147-27C5-4F44-819D-670FF8A5F852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FE791BF-0A90-4EBD-B959-0CF0829A7679}.Debug|Any CPU.ActiveCfg = Debug
+		{8FE791BF-0A90-4EBD-B959-0CF0829A7679}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,108 @@
+﻿using System;
+using Neopocket.Utils;
+
+namespace Neopocket
+{
+    class Fcn
+    {
+        /// <summary>
+        /// Informa se o objeto passado foi setadado com algum valor excluindo null 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static bool EhNulo(object o)
+        {
+            try
+            {
+                if (o == null)
+                    return true;
+            }
+            catch
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static string DinheiroFormata(double valor)
+        {
+            if (valor >= 0)
+                return valor.ToString("C", Globals.CultureInfoBRA);
+            else
+                return valor.ToString("C", Globals.CultureInfoBRA).Replace("(", "").Replace(")", "").Insert(2, "-");
+        }
+
+        public static string DinheiroFormataSemCifrao(double valor)
+        {
+            //return String.Format("0.#0", valor);
+            return valor.ToString("0.#0", Globals.CultureInfoBRA);
+        }
+
+        public static void DeEnderecoParaVariaveisFTP(String endereco)
+        {
+            if (!String.IsNullOrEmpty(endereco))
+            {
+                Globals.APP_FTP_PATH = endereco;
+                if (Globals.APP_FTP_PATH.IndexOf("/", Globals.APP_FTP_PATH.IndexOf("//") + 2) >= 0)
+                {
+                    Globals.APP_FTP_SERVER = Globals.APP_FTP_PATH.Substring(0, Globals.APP_FTP_PATH.IndexOf("/", Globals.APP_FTP_PATH.IndexOf("//") + 2));
+                    if ((Globals.APP_FTP_PATH.Length - Globals.APP_FTP_SERVER.Length) == 1)
+                        Globals.APP_FTP_PATH = String.Empty;
+                    else
+                        Globals.APP_FTP_PATH = Globals.APP_FTP_PATH.Substring(Globals.APP_FTP_SERVER.Length + 1, Globals.APP_FTP_PATH.Length - Globals.APP_FTP_SERVER.Length - 1);
+                }
+                else
+                {
+                    Globals.APP_FTP_SERVER = Globals.APP_FTP_PATH;
+                    Globals.APP_FTP_PATH = String.Empty;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Truncate a value keeping a number of decimal places
+        /// </summary>
+        /// <param name="value">Value to be truncated</param>
+        /// <param name="decimals">Number of decimal places</param>
+        /// <returns></returns>
+        public static double TruncateWithDecimals(double value, int decimals)
+        {
+            double decimalsHolder = Math.Pow(10, decimals);
+
+            value = Math.Floor(value * decimalsHolder);
+            return value /= decimalsHolder;
+        }
+
+        public static DateTime DomingoPassadoData()
+        {
+            DateTime hoje = DateTime.Today;
+            DateTime domingoPassado = new DateTime();
+            TimeSpan diasPassados;
+            int diasPassadosI = 0;
+
+            if (hoje.DayOfWeek == DayOfWeek.Monday)
+                diasPassadosI = 1;
+            else
+                if (hoje.DayOfWeek == DayOfWeek.Tuesday)
+                    diasPassadosI = 2;
+                else
+                    if (hoje.DayOfWeek == DayOfWeek.Wednesday)
+                        diasPassadosI = 3;
+                    else
+                        if (hoje.DayOfWeek == DayOfWeek.Thursday)
+                            diasPassadosI = 4;
+                        else
+                            if (hoje.DayOfWeek == DayOfWeek.Friday)
+                                diasPassadosI = 5;
+                            else
+                                if (hoje.DayOfWeek == DayOfWeek.Saturday)
+                                    diasPassadosI = 6;
+            diasPassados = new TimeSpan(diasPassadosI, 0, 0, 0);
+            domingoPassado = hoje - diasPassados;
+            return domingoPassado.Date;
+        }
+
+
+    }
+
+}

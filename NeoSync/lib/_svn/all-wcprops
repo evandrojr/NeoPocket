@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 27
+/svn/neosync/!svn/ver/3/lib
+END
+NeoException.resx
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/neosync/!svn/ver/1/lib/NeoException.resx
+END
+NeoCsv.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/neosync/!svn/ver/3/lib/NeoCsv.cs
+END
+NeoException.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/neosync/!svn/ver/1/lib/NeoException.Designer.cs
+END
+FtpLib.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/neosync/!svn/ver/1/lib/FtpLib.cs
+END
+ICSharpCode.SharpZipLib.dll
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/neosync/!svn/ver/1/lib/ICSharpCode.SharpZipLib.dll
+END
+NeoException.cs
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/neosync/!svn/ver/1/lib/NeoException.cs
+END
+NeoMail.cs
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/neosync/!svn/ver/1/lib/NeoMail.cs
+END
+NeoZip.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/neosync/!svn/ver/1/lib/NeoZip.cs
+END
+NeoDebug.cs
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/neosync/!svn/ver/1/lib/NeoDebug.cs
+END
+NeoFcn.cs
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/neosync/!svn/ver/1/lib/NeoFcn.cs
+END

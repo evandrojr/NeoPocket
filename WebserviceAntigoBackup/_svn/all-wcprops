@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/neopocket/!svn/ver/1/WebserviceAntigoBackup
+END
+Web.config
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/neopocket/!svn/ver/1/WebserviceAntigoBackup/Web.config
+END
+NeoFtp.asmx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/neopocket/!svn/ver/1/WebserviceAntigoBackup/NeoFtp.asmx
+END
+Service.asmx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/neopocket/!svn/ver/1/WebserviceAntigoBackup/Service.asmx
+END
+PrecompiledApp.config
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/neopocket/!svn/ver/1/WebserviceAntigoBackup/PrecompiledApp.config
+END

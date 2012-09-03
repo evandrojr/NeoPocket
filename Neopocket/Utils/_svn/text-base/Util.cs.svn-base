@@ -1,0 +1,80 @@
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Forms;
+using Microsoft.WindowsCE.Forms;
+using System.Drawing;
+
+namespace Neopocket.Utils
+{
+    public class Util
+    {
+        /// <summary>
+        /// Exibe um formulário trocando o estado do cursor do mouse.
+        /// </summary>
+        /// <param name="form">Form</param>
+        public static void FormExibir(Form form)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            form.Activate();
+            form.Show();
+            Cursor.Current = Cursors.Default;
+        }
+
+        /// <summary>
+        /// Exibe um formulário trocando o estado do cursor do mouse.
+        /// </summary>
+        /// <param name="form">Form</param>
+        /// <returns>DialogResult</returns>
+        public static DialogResult FormDialogExibir(Form form)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            DialogResult result = form.ShowDialog();
+            Cursor.Current = Cursors.Default;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Checha a orientação da tela para ajustar a depender do dispositivo.
+        /// </summary>
+        public static void ScreenOrientationChecar()
+        {
+            if (SystemSettings.ScreenOrientation != ScreenOrientation.Angle0)
+                SystemSettings.ScreenOrientation = ScreenOrientation.Angle0;
+        }
+
+        /// <summary>
+        /// Válida os componentes dentro de um panel.
+        /// </summary>
+        /// <param name="panel">Panel a ser validado</param>
+        /// <param name="notification">Controle de notificação</param>
+        /// <returns>Boolean</returns>
+        public static Boolean ValidarPanel(System.Windows.Forms.Panel panel, Microsoft.WindowsCE.Forms.Notification notification)
+        {
+            bool result = true;
+
+            for (int j = 0; j < panel.Controls.Count; j++)
+                if (panel.Controls[j] is TextBox)
+                {
+                    if (String.IsNullOrEmpty(panel.Controls[j].Text))
+                    {
+                        result = false;
+                        ((TextBox)panel.Controls[j]).BackColor = Color.Red;
+                    }
+                    else
+                        ((TextBox)panel.Controls[j]).BackColor = Color.White;
+                }
+
+            if (!result)
+            {
+                notification.Text = "Campos obrigatórios não preechidos estão em vermelho.";
+                notification.Visible = true;
+                return false;
+            }
+            
+            return result;
+        }
+    }
+}

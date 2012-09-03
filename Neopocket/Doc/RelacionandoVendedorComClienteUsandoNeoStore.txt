@@ -1,0 +1,7 @@
+﻿No neostore:
+
+Administração -> Logistica de Entrega -> Rota
+Clicar na engrenagem no canto direito
+
+digitar C para cidade
+N para nao trocar os dados dos vendedores

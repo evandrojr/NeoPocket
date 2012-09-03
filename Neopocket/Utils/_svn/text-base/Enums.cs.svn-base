@@ -1,0 +1,23 @@
+﻿
+namespace Neopocket.Utils
+{
+    public class Enums
+    {
+        public enum Acao : byte
+        {
+            ClienteADefinir, // Quando se entra no formulario de clientes vindo do formulario principal
+            ClienteCadastro,
+            ClienteEdicao,
+            PedidoADefinir, // Quando se entra no formulario de pedido vindo do formulario principal
+            PedidoCadastro,
+            PedidoEdicao,
+            ProdutoListar,
+            RecusaADefinir, // Quando se estra no formulario de recusa vindo do formulario do cliente
+            RecusaCadastro,
+            RecusaEdicao,
+            PedidoExclusao,
+            RelatorioVer,
+            RotaSeguir,
+        }
+    }
+}

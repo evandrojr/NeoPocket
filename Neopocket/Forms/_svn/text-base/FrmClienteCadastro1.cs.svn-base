@@ -1,0 +1,196 @@
+﻿using System;
+using System.Windows.Forms;
+using Neopocket.Utils;
+
+namespace Neopocket.Forms
+{
+    /// <summary>
+    /// Primeira tela de cadastro do cliente
+    /// </summary>
+    public partial class FrmClienteCadastro1 : FormBase
+    {
+        #region [ Construtor ]
+
+        public FrmClienteCadastro1()
+        {
+            InitializeComponent();
+            notification.Caption = "Neo";
+            this.Carregar();
+        }
+
+        #endregion
+
+        #region [ Carrega as informações do cliente ]
+
+        public void Carregar()
+        {
+            txtCodigo.Text = Globals.Cliente.Id.ToString();
+
+            if (!String.IsNullOrEmpty(Globals.Cliente.NomeFantasia))
+            {
+                txtNomeFantasia.Text = Globals.Cliente.NomeFantasia;
+            }
+            if (!String.IsNullOrEmpty(Globals.Cliente.RazaoSocial))
+            {
+                txtRazaoSocial.Text = Globals.Cliente.RazaoSocial;
+            }
+            if (!String.IsNullOrEmpty(Globals.Cliente.CnpjCpf))
+            {
+                txtCNPJCPF.Text = Globals.Cliente.CnpjCpf;
+            }
+            if (!String.IsNullOrEmpty(Globals.Cliente.RgIncricao))
+            {
+                txtRG.Text = Globals.Cliente.RgIncricao;
+            }
+            if (!String.IsNullOrEmpty(Globals.Cliente.TipoPessoa))
+            {
+                cboTipoPessoa.SelectedIndex = 1;
+            }
+            else
+            {
+                if (Globals.Cliente.TipoPessoa == "F")
+                    cboTipoPessoa.SelectedIndex = 0;
+                else
+                    cboTipoPessoa.SelectedIndex = 1;
+            }
+        }
+
+        #endregion
+
+        #region [ Validação ]
+
+        /// <summary>
+        /// Validação dos campos do formulário
+        /// </summary>
+        /// <returns>Boolean</returns>
+        private Boolean ValidaCampos()
+        {
+            try
+            {
+                Boolean validacaoPanel = Util.ValidarPanel(this.pnlValidacao, this.notification);
+
+                if (!Globals.APP_TESTEMODE)
+                {
+                    if (cboTipoPessoa.SelectedIndex == 1)
+                    {
+                        if (!Validator.IsCnpj(txtCNPJCPF.Text))
+                        {
+                            notification.Text = "CNPJ inválido";
+                            notification.Visible = true;
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!Validator.IsCpf(txtCNPJCPF.Text))
+                        {
+                            notification.Text = "CPF inválido";
+                            notification.Visible = true;
+                            return false;
+                        }
+                    }
+                }
+
+                if (0 < Globals.Bd.I(@"
+                SELECT count(cnpj_cpf)
+                FROM 
+                               cliente_cadastrado
+                WHERE
+                               cnpj_cpf = '" + txtCNPJCPF.Text + "'"))
+                {
+                    notification.Text = "Cliente já cadastrado ou alteração de CNPJ/CPF não são permitidas pelo pocket";
+                    notification.Visible = true;
+                    return false;
+                }
+
+                return validacaoPanel;
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region [ Conclusão da fase ]
+
+        private void Concluir()
+        {
+            Globals.Cliente.NomeFantasia = txtNomeFantasia.Text;
+            Globals.Cliente.RazaoSocial = txtRazaoSocial.Text;
+            Globals.Cliente.CnpjCpf = txtCNPJCPF.Text;
+            Globals.Cliente.RgIncricao = txtRG.Text;
+
+            if (cboTipoPessoa.SelectedIndex == 0)
+            {
+                Globals.Cliente.TipoPessoa = "F";
+            }
+            else
+            {
+                Globals.Cliente.TipoPessoa = "J";
+            }
+
+            Util.FormExibir(new FrmClienteCadastro2());
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Cancelamento ]
+
+        private void mnuCancelar_Click(object sender, EventArgs e)
+        {
+            inputPanel.Enabled = false;
+            DialogResult result = MessageBox.Show("Deseja realmente cancelar o cadastro?", "Neo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.Yes)
+                this.Close();
+        }
+
+        #endregion
+
+        #region [ Trata o scroll ]
+
+        private void inputPanel_EnabledChanged(object sender, EventArgs e)
+        {
+            pnlValidacao.AutoScroll = true;
+        }
+
+        #endregion
+
+        #region [ Próxima fase ]
+
+        private void btnProximo_Click_1(object sender, EventArgs e)
+        {
+            if (ValidaCampos())
+            {
+                Concluir();
+            }
+        }
+
+        #endregion
+
+        #region [ Mudança do tipo de pessoa ]
+
+        private void cboTipoPessoa_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cboTipoPessoa.SelectedIndex != 0)
+            {
+                lblRazaoSocial.Text = "Razão Social:";
+                lblNomeFantasia.Text = "Nome Fantasia:";
+                lblCNPJCPF.Text = "CNPJ:";
+                lblRG.Text = "Insc. Est:";
+            }
+            else
+            {
+                lblRazaoSocial.Text = "Nome Completo:";
+                lblNomeFantasia.Text = "Apelido:";
+                lblCNPJCPF.Text = "CPF:";
+                lblRG.Text = "RG:";
+            }
+        }
+
+        #endregion
+    }
+}

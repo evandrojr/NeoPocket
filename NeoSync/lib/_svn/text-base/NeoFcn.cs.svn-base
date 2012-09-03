@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace NeoFcn
+{
+    public class Fcn
+    {
+        ////unir
+        //public static StringBuilder u(string s1, string s2){
+        //    StringBuilder s = new StringBuilder(s1);
+        //    return s.Append(s2);
+        //}
+
+        //public static StringBuilder u(string s1, string s2, string s3)
+        //{
+        //    StringBuilder s = new StringBuilder(s1);
+        //    return s.Append(s2).Append(s3);
+        //}
+
+        //public static StringBuilder u(string s1, string s2, string s3, string s4)
+        //{
+        //    StringBuilder s = new StringBuilder(s1);
+        //    return s.Append(s2).Append(s3).Append(s4);
+        //}
+
+        //public static StringBuilder u(string s1, string s2, string s3, string s4)
+        //{
+        //    StringBuilder s = new StringBuilder(s1);
+        //    return s.Append(s2).Append(s3).Append(s4);
+        //}
+
+
+    }
+}

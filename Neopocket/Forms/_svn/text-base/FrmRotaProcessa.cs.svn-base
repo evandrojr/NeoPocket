@@ -1,0 +1,425 @@
+﻿#region Using
+
+using System;
+using System.Text;
+using System.Data;
+using Neopocket.Utils;
+using Microsoft.WindowsCE.Forms;
+using System.Drawing;
+using System.Collections;
+using Neo.Pocket.Controls;
+using Neopocket.Core;
+using System.Windows.Forms;
+using System.Data.SqlServerCe;
+
+#endregion
+
+namespace Neopocket.Forms
+{
+    public partial class FrmRotaProcessa : FormBase
+    {
+        #region [ Construtor ]
+
+        private Rota rota = null;
+
+        public FrmRotaProcessa()
+            : base(false)
+        {
+            InitializeComponent();
+            RowBackColorMap = new Hashtable();
+            RowForeColorMap = new Hashtable();
+            rota = new Rota();
+        }
+
+        #endregion
+
+        #region [ Load ]
+
+        private void Frm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                #region Cria as colunas da NeoGrid
+
+                #region id_rota
+
+                Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colIdRota = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+                colIdRota.HeaderText = "Rota";
+                colIdRota.ReadOnly = true;
+                colIdRota.Owner = grdRota;
+                colIdRota.MappingName = "id_rota";
+                colIdRota.AlternatingColor = null;
+                //colIdRota.OnDrawColumnCell += new Neo.Pocket.Controls.NeoDataGridCustomColumnBase.NeoDataGridTextBoxColumnEventHandler(OnDrawColumnCell);
+                NeoTableStyle.GridColumnStyles.Add(colIdRota);
+
+                #endregion
+
+                #region cliente_nome
+
+                Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colClienteNome = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+                colClienteNome.HeaderText = "Cliente";
+                colClienteNome.Owner = grdRota;
+                colClienteNome.MappingName = "cliente_nome";
+                //colClienteNome.OnDrawColumnCell += new Neo.Pocket.Controls.NeoDataGridCustomColumnBase.NeoDataGridTextBoxColumnEventHandler(OnDrawColumnCell);
+                colClienteNome.ReadOnly = true;
+                colClienteNome.Width = 80;
+                colClienteNome.AlternatingColor = null;
+                NeoTableStyle.GridColumnStyles.Add(colClienteNome);
+
+                #endregion
+
+                #region cidade
+
+                Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colCidade = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+                colCidade.HeaderText = "Cidade";
+                colCidade.Owner = grdRota;
+                colCidade.MappingName = "cidade";
+                //colCidade.OnDrawColumnCell += new Neo.Pocket.Controls.NeoDataGridCustomColumnBase.NeoDataGridTextBoxColumnEventHandler(OnDrawColumnCell);
+                colCidade.ReadOnly = true;
+                colCidade.Width = 80;
+                colCidade.AlternatingColor = null;
+                NeoTableStyle.GridColumnStyles.Add(colCidade);
+
+                #endregion
+
+                #region id_uf
+
+                Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colIdUF = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+                colIdUF.HeaderText = "UF";
+                colIdUF.Owner = grdRota;
+                colIdUF.MappingName = "id_uf";
+                colIdUF.ReadOnly = true;
+                colIdUF.Width = 40;
+                colIdUF.AlternatingColor = null;
+                //colIdUF.OnDrawColumnCell += new Neo.Pocket.Controls.NeoDataGridCustomColumnBase.NeoDataGridTextBoxColumnEventHandler(OnDrawColumnCell);
+                NeoTableStyle.GridColumnStyles.Add(colIdUF);
+
+                #endregion
+
+                #region visitacao_ordem
+
+                Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colVisitacaoOrdemCliente = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+                colVisitacaoOrdemCliente.HeaderText = "Ordem";
+                colVisitacaoOrdemCliente.Owner = grdRota;
+                colVisitacaoOrdemCliente.MappingName = "visitacao_ordem";
+                colVisitacaoOrdemCliente.ReadOnly = true;
+                colVisitacaoOrdemCliente.AlternatingColor = null;
+                //colVisitacaoOrdemCliente.OnDrawColumnCell += new Neo.Pocket.Controls.NeoDataGridCustomColumnBase.NeoDataGridTextBoxColumnEventHandler(OnDrawColumnCell);
+                NeoTableStyle.GridColumnStyles.Add(colVisitacaoOrdemCliente);
+
+                #endregion
+
+                #region status
+
+                Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colStatus = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+                colStatus.HeaderText = "Status";
+                colStatus.Owner = grdRota;
+                colStatus.MappingName = "statusLabel";
+                colStatus.ReadOnly = true;
+                colStatus.Width = 80;
+                colStatus.AlternatingColor = null;
+                //colVisitacaoOrdemCliente.OnDrawColumnCell += new Neo.Pocket.Controls.NeoDataGridCustomColumnBase.NeoDataGridTextBoxColumnEventHandler(OnDrawColumnCell);
+                NeoTableStyle.GridColumnStyles.Add(colStatus);
+
+                #endregion
+
+                #endregion
+
+                UpdateView();
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Cores da grid ]
+
+        private Hashtable RowBackColorMap;
+        private Hashtable RowForeColorMap;
+
+        private void CheckRowColor(NeoDataGridCustomColumnBase Column)
+        {
+            if (grdRota.DataSource != null)
+            {
+                int rowNumber = 0;
+
+                if (Column.RowNumber == 0)
+                    rowNumber = 0;
+                else if (Column.RowNumber > 0)
+                    rowNumber = Column.RowNumber + 1;
+                else
+                    rowNumber = Column.RowNumber;
+
+                DataTable source = grdRota.DataSource as DataTable;
+                DataRow currentRow = source.Rows[rowNumber];
+
+                Int32 idRota = Int32.Parse(currentRow["id_rota"].ToString());
+                object idCliente = currentRow["id_cliente"];
+                object idClientePocket = currentRow["id_cliente_pocket"];
+                String tokenKey = idRota.ToString() + "#" + (rowNumber).ToString();
+                Int32 status = Int32.Parse(currentRow["status"].ToString());
+
+                Color rowBackColor = Color.Yellow;
+                Color rowForeColor = Color.Blue;
+
+                if (RowBackColorMap.ContainsKey(tokenKey))
+                {
+                    rowBackColor = (Color)RowBackColorMap[tokenKey];
+                    rowForeColor = (Color)RowForeColorMap[tokenKey];
+                }
+                else
+                {
+                    switch (status)
+                    {
+                        case 0: // Á visitar
+                            rowBackColor = Color.Red;
+                            rowForeColor = Color.White;
+                            break;
+
+                        case 1: // Visitado
+                            rowBackColor = Color.Green;
+                            rowForeColor = Color.White;
+                            break;
+
+                        case 2: // Pendente
+                            rowBackColor = Color.Black;
+                            rowForeColor = Color.White;
+                            break;
+                        case 3: // Desabilitado
+                            rowBackColor = Color.Gray;
+                            rowForeColor = Color.Black;
+                            break;
+                    }
+
+                    RowBackColorMap.Add(tokenKey, rowBackColor);
+                    RowForeColorMap.Add(tokenKey, rowForeColor);
+
+                }
+
+                Column.BackColor = rowBackColor;
+                Column.ForeColor = rowForeColor;
+            }
+        }
+
+        private DataTable FormatDatasourceStatus(DataTable source)
+        {
+            if (source != null)
+            {
+                Boolean liberarProximaCidade = true;
+                int totalCidadesPendentes = 0;
+                int totalCidadesVisitadas = 0;
+                int totalCidadesAvisitar = 0;
+
+                String ultimaCidade = String.Empty;
+
+                for (int i = 0; i < source.Rows.Count; i++)
+                {
+                    String currentCidade = source.Rows[i]["cidade"].ToString();
+
+                    if (liberarProximaCidade)
+                    {
+                        liberarProximaCidade = false;
+                        ultimaCidade = currentCidade;
+                    }
+
+                    // Compara se existem rotas pendentes dentro da mesma cidade
+                    for (int x = 0; x < source.Rows.Count; x++)
+                    {
+                        if (i != x)
+                        {
+                            String comparerCidade = source.Rows[x]["cidade"].ToString();
+                            if (currentCidade.Equals(comparerCidade))
+                            {
+                                Int32 status = Int32.Parse(source.Rows[x]["status"].ToString());
+                                if (status == 2)
+                                    totalCidadesPendentes++;
+                                else if (status == 0)
+                                    totalCidadesAvisitar++;
+                                else if (status == 1)
+                                    totalCidadesVisitadas++;
+                            }
+                        }
+                    }
+
+                    int totalRotasCidade = totalCidadesPendentes + totalCidadesAvisitar + totalCidadesVisitadas;
+
+                    if (totalCidadesAvisitar == 0)
+                    {
+                        liberarProximaCidade = true;
+                    }
+
+                    if (!ultimaCidade.Equals(currentCidade))
+                        source.Rows[i]["status"] = 3;
+                }
+
+                return source;
+            }
+
+            return null;
+        }
+
+        protected void OnDrawColumnCell(object sender, Neo.Pocket.Controls.NeoDataGridCustomColumnEventArgs e)
+        {
+            CheckRowColor(e.Column);
+        }
+
+        #endregion
+
+        #region [ Atualiza a listagem ]
+
+        public void UpdateView()
+        {
+            RowBackColorMap = new Hashtable();
+            RowForeColorMap = new Hashtable();
+
+            #region Orientação da tela
+
+            if (SystemSettings.ScreenOrientation != ScreenOrientation.Angle90)
+                SystemSettings.ScreenOrientation = ScreenOrientation.Angle90;
+
+            #endregion
+
+            try
+            {
+                StringBuilder QueryBuilder = new StringBuilder();
+                DataTable QueryResult;
+
+                QueryBuilder.AppendLine("SELECT top(30) rota_cidade.id_rota, cliente.id_cliente, cliente.id_cliente_pocket, cliente.cliente_nome, rota_cidade.id_cidade, rota_cidade.cidade, rota_cidade.id_uf, COALESCE(visita.status, 0) AS status, '' as statusLabel");
+                QueryBuilder.AppendLine("FROM rota_cidade");
+                QueryBuilder.AppendLine("INNER JOIN cliente ON rota_cidade.id_funcionario = cliente.id_funcionario");
+                QueryBuilder.AppendLine("LEFT OUTER JOIN visita ON cliente.id_cliente = visita.id_cliente AND cliente.id_funcionario = visita.id_funcionario");
+                QueryBuilder.AppendLine("WHERE (cliente.id_funcionario = " + Globals.Funcionario.Id + ") AND");
+                QueryBuilder.AppendLine("((visita.data_visita >= @ValidadeInicio) and (visita.data_visita <= @ValidadeFim) or (visita.data_visita is null))");
+                QueryBuilder.AppendLine("ORDER BY rota_cidade.visitacao_ordem, cliente.visitacao_ordem");
+
+                using (SqlCeCommand cmd = new SqlCeCommand(String.Empty, Globals.Bd.Con))
+                {
+                    cmd.CommandText = QueryBuilder.ToString();
+                    cmd.Parameters.Add("@ValidadeInicio", SqlDbType.DateTime).Value = rota.ValidadeInicio;
+                    cmd.Parameters.Add("@ValidadeFim", SqlDbType.DateTime).Value = rota.ValidadeFim;
+
+                    SqlCeDataReader reader = null;
+                    reader = cmd.ExecuteReader();
+                    DataSet ds = Bd.ConvertDataReaderToDataSet(reader, "rota");
+                    QueryResult = ds.Tables[0];
+                }
+
+                for (int i = 0; i < QueryResult.Rows.Count; i++)
+                {
+                    if (QueryResult.Rows[i]["status"].ToString() == "0")
+                    {
+                        QueryResult.Rows[i]["statusLabel"] = "Não visitado";
+                    }
+                    else if (QueryResult.Rows[i]["status"].ToString() == "1")
+                    {
+                        QueryResult.Rows[i]["statusLabel"] = "Visitado";
+                    }
+                    else if (QueryResult.Rows[i]["status"].ToString() == "2")
+                    {
+                        QueryResult.Rows[i]["statusLabel"] = "Pendente";
+                    }
+                    else
+                        QueryResult.Rows[i]["statusLabel"] = "Bloqueado";
+                }
+
+                NeoTableStyle.MappingName = "rota";
+                grdRota.SetBackupDataSource(QueryResult);
+                //grdRota.DataSource = FormatDatasourceStatus(QueryResult);
+                grdRota.DataSource = QueryResult;
+                grdRota.Pager = NeoPager;
+
+                try
+                {
+                    // Caso nao exista nenhuma linha não da erro
+                    grdRota.Select(0);
+                }
+                catch { }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Menu ]
+
+        private void mnuVoltar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Seleção do cliente ]
+
+        private void grdRota_DoubleClick(object sender, EventArgs e)
+        {
+            Int32 i = grdRota.CurrentRowIndex;
+            if (i == -1)
+                return;
+
+            try
+            {
+                this.GetSelectedCliente();
+
+                if (Globals.Cliente != null)
+                {
+                    Globals.Pedido = new Pedido();
+                    Pedido.IdClientePocket = Globals.Cliente.Id;
+
+                    try
+                    {
+                        Pedido.IdClienteStore = Globals.Cliente.IdStore;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Observação, este é um cliente que não foi cadastrado ainda no NeoStore.", "Observação");
+                    }
+
+                    Util.FormExibir(new FrmPedidoLista(this));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        private Boolean GetSelectedCliente()
+        {
+            Int32 i = grdRota.CurrentRowIndex;
+            if (i == -1)
+                return false;
+
+            Globals.Cliente = new Cliente();
+
+            if (grdRota.DataSource != null)
+            {
+                DataTable source = grdRota.DataSource as DataTable;
+                Int32 status = Int32.Parse(source.Rows[i]["status"].ToString());
+
+                if (status != 3) // Se o status da rota não for desabilitada
+                {
+                    if (!(source.Rows[i]["id_cliente_pocket"] is DBNull))
+                        Globals.Cliente.Carregar((Guid)(source.Rows[i]["id_cliente_pocket"]), 0, Cliente.IdTipoEnum.IdPocket);
+                    else
+                        Globals.Cliente.Carregar(new Guid(), (Int32)(source.Rows[i]["id_cliente"]), Cliente.IdTipoEnum.IdStore);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+    }
+}

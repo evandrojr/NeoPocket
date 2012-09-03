@@ -1,0 +1,349 @@
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Configuration;
+using System.Data;
+using System.IO;
+using System.Data.Common;
+using FirebirdSql.Data.FirebirdClient;//provider do SGBD FireBird
+using System.Text.RegularExpressions;
+using System.Xml;
+using Config;
+using NeoDebug;
+
+namespace NeoSync
+{
+   
+    public class MapeamentoBdCsv
+    {
+        Dictionary<string, string> c; //par [Campo, valor] do arquivo CSV
+        Dictionary<string, string> p; //par [Campo, valor] do banco de dados
+
+        public string TabelaBdNome, CaminhoCsv, ArquivoCsvNome;
+        public static string caminhoCsv;
+        public NeoCsv.Csv csvArquivo;
+        public List<string> LstCamposData = new List<string>();
+        public List<string> LstCamposBit = new List<string>();
+        public List<string> LstCamposReal = new List<string>();
+        public static string CampoBusca = null;
+        public string TabelaCsvNomeExato;
+        public static int InsercaoQtd=0, ErrosQtd=0;
+        private Bd bd; // O banco de dados usado para a carga de dados
+
+        public MapeamentoBdCsv(string tabela, string arquivoCsv, Bd banco)
+        {
+            bd = banco;
+            TabelaBdNome = tabela;
+            csvArquivo = new NeoCsv.Csv(arquivoCsv);
+            csvArquivo.ColumnsRead();
+        }
+
+        private static bool igual(String a)
+        {
+            if (a == CampoBusca)
+                return true;
+            else
+                return false;
+        }
+
+        //public static string DataPtParaBd(string data)
+        //{
+        //    return data.Substring(6, 4) + "-" + data.Substring(3, 2) + "-" + data.Substring(0, 2);
+        //}
+
+        public bool ClienteCarregar()
+        {
+            Debug.LogWrite("===== Lendo " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+
+
+            while(csvArquivo.LerLinha())
+            {
+                c = new Dictionary<string, string>();
+                for (int i = 0; i < csvArquivo.Linha.LstCsvColuna.Count; ++i)
+                {
+                    c.Add(csvArquivo.Linha.LstCsvColuna[i].Nome, csvArquivo.Linha.LstCsvColuna[i].Valor.Trim());
+                }
+                p = new Dictionary<string, string>();
+
+                if(c["id_cliente"]=="0" || c["id_cliente"]=="")
+                     p.Add("@ICODIGO" , "");
+                else
+                     p.Add("@ICODIGO" , c["id_cliente"].PadLeft(6,'0'));
+                p.Add("@ICOD_CLIENTE_POCKET" , c["id_cliente_pocket"].Replace("-",""));
+                p.Add("@INOME", c["cliente_nome"]);
+                if(c["cliente_nome_reduzido"] == "")
+                    p.Add("@INOMEREDUZIDO" , c["cliente_nome"].Substring(1,30));
+                else
+                    p.Add("@INOMEREDUZIDO" , c["cliente_nome_reduzido"]);
+                p.Add("@ITIPOPESSOA" , c["tipo_pessoa"]);
+                if(c["cgc_cpf"]==""){
+                    if(c["tipo_pessoa"]=="F")
+                        p.Add("@ICGC_CPF", "99999999999");
+                    else
+                        p.Add("@ICGC_CPF", "'");
+                }else{
+                    p.Add("@ICGC_CPF", c["cgc_cpf"]);
+                }
+                p.Add("@ITELEFONE" , c["telefone"]);
+                p.Add("@IRG_INSCRICAO" , c["rg_inscricao"]);
+                p.Add("@INASCIMENTO" , c["nascimento"]);
+                p.Add("@ICASAMENTO", "null");
+                if(c["tipo_pessoa"]=="F")
+                    p.Add("@ITIPO_INSCRICAO" , "RG");
+                else
+                    p.Add("@ITIPO_INSCRICAO" , "NO");
+                if(c["endereco"]=="")
+                    p.Add("@IENDERECO" , "<Indefinido>");
+                else
+                    p.Add("@IENDERECO" , c["endereco"]);
+                if (c["bairro"] == "")
+                    p.Add("@IBAIRRO", "<Indefinido>");
+                else
+                    p.Add("@IBAIRRO", c["bairro"]);
+                p.Add("@ICOD_CIDADE", c["cidade"]);
+                p.Add("@ICEP", c["cep"]);
+                if (c["uf_cod"] == "") // Corrigir isso para que possa ser usado em outros estados
+                    c["uf_cod"] = "BA";    
+                p.Add("@ICOD_UF", c["uf_cod"]);
+                p.Add("@IENDERECO_COBRANCA", p["@IENDERECO"]);
+                p.Add("@IBAIRRO_COBRANCA", p["@IBAIRRO"]);
+                p.Add("@ICOD_CIDADE_COBRANCA" , p["@ICOD_CIDADE"]);
+                p.Add("@ICEP_COBRANCA" , p["@ICEP"]);
+                p.Add("@ICOD_UF_COBRANCA" , p["@ICOD_UF"]);
+                p.Add("@ISEXO" , "I");
+                p.Add("@INOME_COMPRADOR" , c["comprador_nome"]);
+                p.Add("@ICOD_FUNCIONARIO" , c["id_funcionario"].PadLeft(6,'0'));
+                p.Add("@ITELEFONE_REFERENCIA2" , c["referencia_comercial2_telefone"]);
+                p.Add("@IREFERENCIA_COMERCIAL1" , c["referencia_comercial1"]);
+                p.Add("@IREFERENCIA_COMERCIAL2" , c["referencia_comercial2"]);
+                p.Add("@ITELEFONE_REFERENCIA1" , c["referencia_comercial1_telefone"]);
+                p.Add("@ITELEFONE_AGENCIA" , c["agencia_telefone"]);
+                p.Add("@ICOD_AGENCIA_REF" , c["agencia_codigo"]);
+                p.Add("@ICOD_BANCO_REF" , c["banco_codigo"].PadLeft(3,'0'));
+                if(c["intervalo"].Length > 0)
+                    p.Add("@IINTERVALO" , c["intervalo"].Substring(0,1));
+                if(c["limite_credito"]=="")
+                    p.Add("@ILIMITE_CREDITO" , "0");
+                else
+                    p.Add("@ILIMITE_CREDITO" , c["limite_credito"]);
+                p.Add("@ICOD_FORMAPAGAMENTO" , c["id_forma_pagamento"]);
+                p.Add("@IDIA_VISITA" , c["dia_visita"]);
+                                
+                D.Bd.StoredProcedureExecute("SP_PKT_GRAVA_CLIENTE", p, D.Roteiro.Transacao);
+            }
+            csvArquivo.Fechar();
+            Debug.LogWrite("###### FIM importando " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            return true;
+        }
+
+        public bool PedidoCarregar()
+        {
+            Debug.LogWrite("===== Lendo " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            Dictionary<string, string> dicRet;
+                        
+            while (csvArquivo.LerLinha())
+            {
+                c = new Dictionary<string, string>();
+                for (int i = 0; i < csvArquivo.Linha.LstCsvColuna.Count; ++i)
+                {
+                    c.Add(csvArquivo.Linha.LstCsvColuna[i].Nome, csvArquivo.Linha.LstCsvColuna[i].Valor.Trim());
+                }
+                p = new Dictionary<string, string>();
+
+//Nao existe esse campo                  p.Add("@ITIPOTABELA", "P");
+//Nao existe esse campo                  p.Add("@IACAO", "I");
+                p.Add("@IOPERACAO", "I");
+                p.Add("@ITIPOREGISTRO", "S");
+                p.Add("@ISTATUS", "A");
+                if (c["id_cliente_store"] == "0" || c["id_cliente_store"] == "" || c["id_cliente_store"].ToUpper() == "NULL")
+                    p.Add("@ICOD_REQUISITANTE", "");
+                else
+                    p.Add("@ICOD_REQUISITANTE", "C" + c["id_cliente_store"].PadLeft(6, '0'));
+                c["id_cliente_pocket"]=c["id_cliente_pocket"].Replace("-", "");
+                if(c["id_cliente_pocket"]=="00000000000000000000000000000000")
+                    p.Add("@ICOD_CLIENTE_POCKET", "NULL");
+                else
+                    p.Add("@ICOD_CLIENTE_POCKET", c["id_cliente_pocket"]);
+                p.Add("@ICOD_CEDENTE", "L" + D.Loja);
+                p.Add("@ITIPOACRESCIMO", "N");
+                p.Add("@IVALORACRESCIMO", "0");
+                p.Add("@IPRAZOVALIDADE", "0");
+                p.Add("@ICOD_FUNCIONARIO", c["id_funcionario"].PadLeft(6, '0'));
+                p.Add("@IDATA", c["data"]);
+                if (c["id_tabela_preco"] == "0")
+                    c["id_tabela_preco"] = "NULL";
+                p.Add("@ICOD_TABELAPRECO", c["id_tabela_preco"].PadLeft(2, '0'));
+                p.Add("@ICOD_PEDIDO_POCKET", c["id_pedido"].Replace("-", ""));
+                p.Add("@ITIPODESCONTO", "$");
+                if (c["desconto"] != "")
+                {
+                    if(Convert.ToDouble(c["desconto"], D.CultureInfoBRA) >=0 )
+                        p.Add("@IVALORDESCONTO", c["desconto"].Replace(',', '.'));
+                    else
+                        p.Add("@IVALORDESCONTO", "0");
+                }
+                else
+                    p.Add("@IVALORDESCONTO", "0");
+                p.Add("@IOBSERVACAO", c["observacao"]);
+                p.Add("@IBDI", c["bdi"]);
+
+                dicRet = D.Bd.StoredProcedureExecute("SP_PKT_IMPORTA_PEDIDO", p, D.Roteiro.Transacao);
+                Roteiro.lstPedidoCodigo.Add(dicRet["@SCODIGO"]);
+                //Remover no futuro breve após atualizar os pockets da Sanog
+                if (c["id_forma_pagamento"] == "0")
+                    Roteiro.lstPedidoFormaPagamento.Add("72");
+                else
+                Roteiro.lstPedidoFormaPagamento.Add(c["id_forma_pagamento"]);                
+            }
+            csvArquivo.Fechar();
+            Debug.LogWrite("###### FIM importando " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            return true;
+        }
+
+        public bool ItemPedidoCarregar(){
+
+            string valorUnitario;
+            string itensPedidoDesconto;
+
+            Debug.LogWrite("===== Lendo " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            Dictionary<string, string> dicRet;
+            string[] arPedido = null;
+            FbCommand cmd=null;
+            FbDataReader reader = null;
+            string ALIQUOTAIPISAIDA, BASEICMSSUBSTITUIDO;
+//            string id_pedido_store;
+
+            while (csvArquivo.LerLinha())
+            {
+                c = new Dictionary<string, string>();
+                for (int i = 0; i < csvArquivo.Linha.LstCsvColuna.Count; ++i)
+                {
+                    c.Add(csvArquivo.Linha.LstCsvColuna[i].Nome, csvArquivo.Linha.LstCsvColuna[i].Valor.Trim());
+                }
+                p = new Dictionary<string, string>();
+
+                valorUnitario = c["valor_unitario"];
+                itensPedidoDesconto = c["desconto"];
+
+//                A SP já pega automaticamente o código do pedido
+//  
+//                id_pedido_store = D.Bd.T(@"
+//                Select 
+//                        CODIGO
+//                from
+//                        PEDIDO
+//                where
+//                        COD_FUNCIONARIO='" + c["id_funcionario"].PadLeft(6,'0') + "' and COD_PEDIDO_POCKET =" + c["id_pedido"],D.Roteiro.Transacao);
+//                p.Add("@ICODIGO", id_pedido_store);
+
+
+//Nao existe esse campo                  p.Add("@ITIPOTABELA", "P");
+                p.Add("@IOPERACAO", "I");
+                p.Add("@IACAO", "I");
+                p.Add("@IPRAZOENTREGA", "0");
+                p.Add("@IVALORACRESCIMO", "0");
+                c["id_pedido"] = c["id_pedido"].Replace("-", "");
+                if (c["id_pedido"] == "00000000000000000000000000000000" || c["id_pedido"] =="")
+                {
+                    throw new Exception("Pedido veio sem código");
+                }
+                else
+                    p.Add("@ICOD_PEDIDO_POCKET", c["id_pedido"]);
+                p.Add("@ICOD_PRODUTO", c["id_produto"].PadLeft(8,'0'));
+                cmd = new FbCommand("Select ALIQUOTAIPISAIDA, BASEICMSSUBSTITUIDO from Produto where Codigo='" + c["id_produto"].PadLeft(8,'0') + "'", D.Bd.Con, D.Roteiro.Transacao);
+                reader=cmd.ExecuteReader();
+                if(reader.Read()){
+                    ALIQUOTAIPISAIDA = Convert.ToString(reader[0]);
+                    BASEICMSSUBSTITUIDO = Convert.ToString(reader[1]);
+                }else{
+                    ALIQUOTAIPISAIDA = "0.00";
+                    BASEICMSSUBSTITUIDO = "0.00";
+                }
+               p.Add("@IALIQUOTAIPI", ALIQUOTAIPISAIDA);
+               p.Add("@IICMSSUBSTITUIDO", BASEICMSSUBSTITUIDO);
+
+               p.Add("@IQUANTIDADE", c["quantidade"]);
+               p.Add("@IVALORUNITARIO", c["valor_unitario"].Replace(',','.'));
+               p.Add("@IVALORDESCONTO", c["desconto"]);
+
+               //Não é mais necessário o COD_FUNCIONARIO_PEDIDO pois o GUID já identifica o pedido unicamente
+                //p.Add("@ICOD_FUNCIONARIO_PEDIDO", c["id_funcionario"].PadLeft(6,'0'));
+
+                dicRet = D.Bd.StoredProcedureExecute("SP_PKT_IMPORTA_ITEMPEDIDO", p, D.Roteiro.Transacao);
+                
+            }
+            csvArquivo.Fechar();
+            Debug.LogWrite("###### FIM importando " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            return true;
+        }
+
+        public bool ItemPedidoGradeCarregar()
+        {
+
+            Debug.LogWrite("===== Lendo " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            Dictionary<string, string> dicRet;
+            
+            while (csvArquivo.LerLinha())
+            {
+                c = new Dictionary<string, string>();
+                for (int i = 0; i < csvArquivo.Linha.LstCsvColuna.Count; ++i)
+                {
+                    c.Add(csvArquivo.Linha.LstCsvColuna[i].Nome, csvArquivo.Linha.LstCsvColuna[i].Valor.Trim());
+                }
+                p = new Dictionary<string, string>();
+
+//Nao existe esse campo                  p.Add("@ITIPOTABELA", "P");
+                p.Add("@IACAO", "I");
+//                p.Add("@ICODIGO", "NULL"); // Para que seja inserção ao inves de update
+                p.Add("@IOPERACAO", "I");
+                p.Add("@ITIPOMOVIMENTACAO", "S");
+                p.Add("@ICOD_ITEMATRIBUTO", c["id_item_atributo"].PadLeft(3,'0'));
+                p.Add("@ICOD_ITEMGRADE", c["id_item_grade"].PadLeft(3, '0'));
+                p.Add("@ICOD_PRODUTO", c["id_produto"].PadLeft(8,'0'));
+                p.Add("@IQUANTIDADE", c["quantidade"]);
+                p.Add("@ICOD_ATRIBUTO", c["id_atributo"].PadLeft(2,'0'));
+                p.Add("@ICOD_GRADE", c["id_grade"].PadLeft(2, '0'));
+                p.Add("@ICOD_PEDIDO_POCKET", c["id_pedido"].Replace("-", ""));
+                p.Add("@ICOD_FUNCIONARIO_PEDIDO", c["id_funcionario"].PadLeft(6,'0'));
+
+
+                dicRet = D.Bd.StoredProcedureExecute("SP_PKT_IMPORTA_ITEMPEDIDOGRADE", p, D.Roteiro.Transacao);
+            }
+            csvArquivo.Fechar();
+            Debug.LogWrite("###### FIM importando " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            return true;
+        }
+
+        public bool RecusaCarregar()
+        {
+            Debug.LogWrite("===== Lendo " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            Dictionary<string, string> dicRet;
+
+            while (csvArquivo.LerLinha())
+            {
+                c = new Dictionary<string, string>();
+                for (int i = 0; i < csvArquivo.Linha.LstCsvColuna.Count; ++i)
+                {
+                    c.Add(csvArquivo.Linha.LstCsvColuna[i].Nome, csvArquivo.Linha.LstCsvColuna[i].Valor.Trim());
+                }
+                p = new Dictionary<string, string>();
+
+                p.Add("@CCOD_CLIENTE", c["id_cliente"].PadLeft(6, '0'));
+                p.Add("@CCOD_FUNCIONARIO", c["id_funcionario"].PadLeft(6, '0'));
+                p.Add("@ICOD_MOTIVO", c["id_motivo"].PadLeft(6, '0'));
+                p.Add("@DDATA_VISITA", c["data_visita"].PadLeft(6, '0'));
+                p.Add("@COBSERVACAO", c["observacao"]);
+
+                dicRet = D.Bd.StoredProcedureExecute("SP_PKT_GRAVA_RECUSA", p, D.Roteiro.Transacao);
+            }
+            csvArquivo.Fechar();
+            Debug.LogWrite("###### FIM importando " + csvArquivo.ArquivoNome + " tabela " + TabelaBdNome + " ======");
+            return true;
+        }     
+
+    }
+
+}
+
+

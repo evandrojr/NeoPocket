@@ -1,0 +1,24 @@
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using Config;
+
+namespace NeoPocketUpdater
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [MTAThread]
+        static void Main()
+        {
+            D.Bd = new Bd();
+            D.Bd.ConStr = D.ConexaoParamentros;
+            D.Bd.Connect();
+            D.FrmMainRef = new FrmMain();
+            Application.Run(D.FrmMainRef);
+        }
+    }
+}

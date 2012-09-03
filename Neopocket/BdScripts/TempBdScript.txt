@@ -1,0 +1,233 @@
+﻿create table [produto](
+
+	[id_produto] [int] primary key not null ,
+	[nome] [nchar](80) null,
+	[referencia] [nchar](40) null,
+	[id_unidade_venda] [nchar](4) null,
+	[id_grade] [int] null,
+	[preco_venda] [money] null,
+	[preco_promocao] [money] null,
+	[estoque] [numeric] null,
+	[venda_fracionada] [bit] null,
+	[promocao_data_inicio] [datetime] null,
+	[ptomocao_data_final] [datetime] null
+)
+
+create table [atributo](
+
+	[id_atributo] [int] primary key not null,
+	[descricao] [nvarchar](15) null
+	
+)
+
+create table [cidade](
+
+	[id_cidade] [int] primary key not null,
+	[descricao] [nvarchar](60) null,
+	[uf_cod] [nchar](2) null
+
+)
+
+create table [cliente](
+
+	[id_cliente] [int]null,
+	[id_cliente_pocket] [int]null,
+	[cliente_nome] [nchar](60)null,
+	[cliente_nome_reduzido] [nchar](30)null,
+	[tipo_pessoa] [nchar](1)null,
+	[telefone] [nchar](11)null,
+	[cgc_cpf] [nchar](14)null,
+	[rg_incricao] [nchar](15)null,
+	[endereco] [nvarchar](50)null,
+	[endereco_numero] [nchar](10)null,
+	[bairro] [nvarchar](30)null,
+	[cidade] [int]null,
+	[uf_cod] [nchar](2)null,
+	[cep] [nchar](8)null,
+	[comprador_nome] [nchar](60)null,
+	[limite_credido] [money]null,
+	[nascimento] [datetime]null,
+	[id_forma_pagamento] [int]null,
+	[dia_visita] [smallint]null,
+	[id_funcionario] [int]null,
+	[intervalo] [nchar]null,
+	[banco_codigo] [smallint]null,
+	[agencia_codigo] [nchar](10)null,
+	[agencia_telefone] [nvarchar](11)null,
+	[referencia_comercial1] [nvarchar](60)null,
+	[referencia_comercial1_telefone] [nvarchar](11)null,
+ 	[referencia_comercial2] [nvarchar](60)null,
+	[referencia_comercial2_telefone] [nvarchar](11)null
+	
+
+)
+create table [especie_financeira](
+
+	[id_especie_financeira] [int]primary key not null,
+	[descricao] [nvarchar](40)null,
+	[verifica_credido] [bit]null
+
+)
+create table [forma_pagamento](
+
+    [id_forma_pagamento] [int]primary key not null,
+    [descricao] [nvarchar](40)null,
+    [no_parcelas] [tinyint]null
+
+
+)
+create table [funcionario](
+
+	[id_funcionario] [int]primary key not null,
+	[funcionario_nome] [nvarchar](30)null,
+	[funcionario_senha] [nvarchar](10)null,
+	[desconto_maximo] [real]null
+
+)
+create table [grade](
+
+	[id_grade] [int] primary key not null,
+	[descricao] [nvarchar](40)null
+
+)
+create table [item_atributo](
+
+	[id_item_atributo] [int] null,
+	[id_atributo] [int]null,
+	[descricao] [nvarchar](15)null
+	
+)
+create table [item_grade](
+
+	[id_item_grade] [int] null,
+	[id_grade] [int]null,
+	[descricao] [nvarchar](15)null
+
+)
+create table [item_pedido](
+
+	[id_item_pedido] [int] primary key identity(1,1) not null,
+	[id_pedido] [int] not null,
+	[id_produto] [int]not null,
+	[quantidade] [int]not null,
+	[valor_unitario] [money]not null,
+	[desconto] [real]not null,
+	constraint idx_item_pedido_id_pedido_id_produto unique(id_pedido,id_produto)   
+	
+)
+create table [item_pedido_grade](
+
+   [id_item_pedido_grade] [int] primary key identity(1,1) not null,
+   [id_produto] [int] not null,
+   [id_item_atributo] [int]not null,
+   [id_item_grade] [int]not null,
+   [id_pedido] [int]not null,
+   [quantidade] [int]not null
+   constraint idx_item_pedido_grade_id_pedido_id_produto unique(id_pedido,id_produto)   
+
+
+)
+create table [item_tabela_preco](
+
+   [id_tabela_preco] [int] null,
+   [id_produto] [int] null,
+   [tipo_valor] [nchar] null,
+   [valor1] [money]null,
+   [qtd_minima1] [int]null,
+   [valor2] [money]null,
+   [qtd_minima2] [int]null,
+   [valor3] [money]null,
+   [qtd_minima3] [int]null,
+   [valor4] [money]null,
+   [qtd_minima4] [int]null,
+   [desconto_maximo] [real]null,
+   [acrescimo_maximo] [real]null
+
+)
+create table [parametro](
+
+	[nome] [nvarchar](120) primary key not null,
+	[tipo] [nchar](1)null,
+	[valor] [nvarchar](254)null
+
+)
+create table [pedido](
+
+	[id_pedido] [int] primary key identity(1,1) not null,
+	[id_cliente_pocket] [int]not null,
+	[id_cliente_store] [int] null,
+	[data] [datetime]not null,
+	[id_funcionario] [int]not null,
+	[id_tabela_preco] [int]not null,
+	[id_forma_pagamento] [int]not null,
+	[status] [nchar](1)not null,
+	[valor] [money] null,
+	[observacao][nvarchar](4000) null,
+	[desconto] [money] null,
+	constraint idx_pedido_id_pedido_id_cliente_pocket unique(id_pedido,id_cliente_pocket),   
+	constraint idx_pedido_id_pedido_id_cliente_store unique(id_pedido,id_cliente_store)   
+
+	
+
+)
+create table [produto_grade](
+
+	[id_produto] [int]null,
+	[id_grade] [int]null,
+	[id_item_grade] [int]null,
+	[id_atributo] [int]null,
+	[id_item_atributo] [int]null
+
+)
+create table [saldo_grade](
+
+	[id_produto] [int]null,
+	[id_grade] [int]null,
+	[id_item_grade] [int]null,
+	[id_atributo] [int]null,
+	[id_item_atributo] [int]null,
+    [estoque] [int]null 
+
+)
+create table [tabela_preco](
+
+	[id_tabela_preco] [int]primary key not null,
+	[descricao] [nvarchar](40)null,
+	[ajuste_percentual] [real]null,
+	[tipo] [nchar](1)null 
+
+)
+
+creat table [motivo](
+   
+   [id_motivo] [int] primary key not null,
+   [descricao] [nvarchar](60)null
+)
+
+creat table [recusa](
+   
+   [id_recusa] [int] primary key identity(1,1) not null,
+   [id_cliente] [int]null,
+   [id_funcionario] [int] null,
+   [data_visita] [datetime] null,
+   [id_motivo] [int] null,
+   [observacao] [nvarchar](4000)null,
+   [status] [nchar] not null  
+   
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

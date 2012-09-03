@@ -1,0 +1,207 @@
+﻿namespace Neo.Pocket.Controls
+{
+    #region Using
+
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Windows.Forms;
+    using System.ComponentModel;
+    using System.Data;
+
+    #endregion
+
+    [Serializable()]
+    public class NeoDataGrid : DataGrid, ISupportInitialize
+    {
+        #region Fields
+
+        private NeoDataGridPager pager;
+        private object backupDataSource;
+
+        #endregion
+
+        #region Public Properties
+
+        public NeoDataGridPager Pager
+        {
+            get
+            {
+                return pager;
+            }
+            set
+            {
+                pager = value;
+
+                if (pager != null)
+                {
+                    pager.Owner = this;
+                }
+            }
+        }
+
+        public void SetBackupDataSource(object backupDataSource)
+        { BackupDataSource = backupDataSource; }
+
+        internal object BackupDataSource
+        {
+            get { return backupDataSource; }
+            set { backupDataSource = value; }
+        }
+
+        #endregion
+
+        #region Ctor
+
+        public NeoDataGrid()
+        {
+            InitializeComponent();
+        }
+
+        #endregion
+
+        #region InitializeComponent
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // NeoDataGrid
+            // 
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NeoDataGrid_MouseDown);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public void Sort(int colIndex)
+        {
+            if (this.DataSource is DataTable)
+            {
+                DataView vw = (this.DataSource as DataTable).DefaultView;
+
+                string sort = vw.Table.Columns[colIndex].ColumnName;
+
+                if (vw.Sort.StartsWith(sort))
+                {
+                    if (vw.Sort.EndsWith("ASC"))
+                        vw.Sort = sort + " DESC";
+                    else
+                        vw.Sort = sort + " ASC";
+                }
+                else
+                {
+                    vw.Sort = sort + " ASC";
+                }
+            }
+        }
+
+        public void Search(int colIndex, string pesquisa, NeoDataGridSearchMode mode)
+        {
+            Boolean hasPesquisa = false;
+            if (!string.IsNullOrEmpty(pesquisa))
+                hasPesquisa = true;
+            else
+            {
+                hasPesquisa = false;
+            }
+
+            if (hasPesquisa)
+            {
+                DataTable dtSource = (DataTable)this.BackupDataSource;
+                DataTable dtResult = dtSource.Clone();
+
+                dtResult.Rows.Clear();
+                foreach (DataRow row in dtSource.Rows)
+                {
+                    string value = row[colIndex].ToString();
+
+                    if (!String.IsNullOrEmpty(value))
+                    {
+                        if (mode == NeoDataGridSearchMode.StartWith)
+                        {
+                            if (value.StartsWith(pesquisa, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                dtResult.ImportRow(row);
+                            }
+                        }
+                        else if (mode == NeoDataGridSearchMode.StartEnd)
+                        {
+                            if (value.EndsWith(pesquisa, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                dtResult.ImportRow(row);
+                            }
+                        }
+                        else
+                        {
+                            if (value.IndexOf(pesquisa, StringComparison.CurrentCultureIgnoreCase) != -1)
+                            {
+                                dtResult.ImportRow(row);
+                            }
+                        }
+                    }
+                }
+                this.DataSource = dtResult;
+                if (this.Pager != null)
+                {
+                    this.Pager.OriginalDataSource = this.DataSource;
+                    this.Pager.FirstPage();
+                }
+            }
+            else
+            {
+                this.DataSource = this.BackupDataSource;
+                if (this.Pager != null)
+                {
+                    this.Pager.OriginalDataSource = this.DataSource;
+                    this.Pager.FirstPage();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Ordenation Events
+
+        private void NeoDataGrid_MouseDown(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                DataGrid.HitTestInfo hitTest;
+
+                if (e.Button == MouseButtons.Left)
+                {
+                    hitTest = this.HitTest(e.X, e.Y);
+
+                    if (hitTest.Type == DataGrid.HitTestType.ColumnHeader)
+                    {
+                        Sort(hitTest.Column);
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        #endregion
+
+        #region ISupportInitialize Members
+
+        public void BeginInit()
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void EndInit()
+        {
+            //throw new NotImplementedException();
+        }
+
+        #endregion
+    }
+}

@@ -1,0 +1,147 @@
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Configuration;
+using System.Data;
+using System.IO;
+using System.Data.Common;
+using System.Text.RegularExpressions;
+using System.Xml;
+using Config;
+using System.Net.Mail;
+using System.Net;
+
+
+namespace NeoDebug
+{
+    /// <summary>
+    /// In case of error it saves in the disk and/or emails the error report
+    /// </summary>
+    public static class Debug
+    {
+        static StreamWriter log;
+        public static bool ReportSend = D.NeoDebug_ReportSend; //Sends by email
+        public static bool ReportSave = D.NeoDebug_ReportSave; //Writes in the HD
+
+        public static string LogFile = D.NeoDebug_LogFile;
+        public static string From = D.NeoDebug_From;
+        public static string To = D.NeoDebug_To;
+        public static string Subject = D.NeoDebug_Subject;
+        public static string Body = D.NeoDebug_Body;
+        public static string Host = D.NeoDebug_Host;
+        public static string Port = D.NeoDebug_Port;
+        public static string User = D.NeoDebug_User;
+        public static string Password = D.NeoDebug_Password;
+
+        private static void LogCreate()
+        {
+            try
+            {
+                File.Delete(D.AplicacaoDiretorio + LogFile);
+            }
+            catch { }
+            log = new StreamWriter(D.AplicacaoDiretorio + LogFile);
+            log.Close();
+        }
+
+        public static void ErrorRecord(string messageError)
+        {
+            string report;
+            log = new StreamWriter(D.AplicacaoDiretorio + LogFile, true);
+            report = DateTime.Now + " " + messageError;
+            if(ReportSave)
+                try
+                {
+                    LogWrite(report);
+                }
+                catch { }
+
+            if (ReportSend)
+            {
+                try
+                {
+                    ReportEmailSend(report);
+                }
+                catch { }
+            }
+        }
+
+        public static void ErrorRecord(Exception ex)
+        {
+            string report;
+            report = ex.Source + " " + ex.Message + ex.StackTrace;
+            if (ReportSave)
+                try
+                {
+                    LogWrite(report);
+                }
+                catch { }
+
+            if (ReportSend)
+            {
+                try
+                {
+                    ReportEmailSend(DateTime.Now + " " + report);
+                }
+                catch { }
+            }
+        }
+
+        public static void LogWrite(string report)
+        {
+            try
+            {
+                log = new StreamWriter(D.AplicacaoDiretorio + LogFile, true);
+                log.WriteLine(DateTime.Now + " " + report);
+            }
+            catch(Exception ex)
+            {
+                log = new StreamWriter(D.AplicacaoDiretorio + "Log_thread_Roteiro.txt", true);
+                log.WriteLine(DateTime.Now + " " + report);
+            }finally{
+                try{
+                    log.Close();
+                }catch{}
+            }
+        }
+
+
+        private static bool ReportEmailSend(string report)
+        {
+            try
+            {
+                // TODO: Add error handling for invalid arguments
+
+                // To
+                MailMessage mailMsg = new MailMessage();
+                mailMsg.To.Add(To);
+
+                // From
+                MailAddress mailAddress = new MailAddress(From);
+                mailMsg.From = mailAddress;
+
+                // Subject and Body
+                mailMsg.Subject = D.ApplicationName + " Máquina " + Dns.GetHostName();
+
+                mailMsg.Body = report;
+
+                // Init SmtpClient and send
+                SmtpClient smtpClient = new SmtpClient(Host, Convert.ToInt32(Port));
+                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(User, Password);
+                smtpClient.Credentials = credentials;
+
+                smtpClient.Send(mailMsg);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                report = DateTime.Now + " " + ex.Message;
+                LogWrite(report);
+                return false;
+            }
+        }
+
+
+    }
+}

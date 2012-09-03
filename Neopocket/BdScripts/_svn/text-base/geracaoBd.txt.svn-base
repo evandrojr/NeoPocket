@@ -1,0 +1,36 @@
+﻿Criar chaves primárias e validacoes no final
+
+CREATE TABLE item_pedido_grade(
+	[id_item_pedido_grade] [int] NOT NULL,
+	[id_produto] [int] NOT NULL,
+	[id_item_atributo] [int] NOT NULL,
+	[id_item_grade] [int] NOT NULL,
+	[id_pedido] [int] NOT NULL,
+	[quantidade] [int] NOT NULL
+); 
+
+
+CREATE TABLE item_pedido(
+	[id_item_pedido] [int] NOT NULL,
+	[id_pedido] [int] NOT NULL,
+	[id_produto] [int] NOT NULL,
+	[quantidade] [int] NOT NULL,
+	[valor_unitario] [money] NOT NULL,
+	[desconto] [real] NOT NULL,
+); 
+
+
+
+
+CREATE TABLE pedido(
+	[id_pedido] [int] NOT NULL,
+	[id_cliente] [int] NOT NULL,
+	[data] [datetime] NOT NULL,
+	[id_funcionario] [int] NOT NULL,
+	[id_tabela_preco] [int] NOT NULL,
+	[id_forma_pagamento] [int] NOT NULL,
+	[id_especie_financeira] [int] NOT NULL,
+	[status] [int] NOT NULL,
+	[id_pedido_store] [int] NOT NULL,
+	[valor] [money] NOT NULL
+);

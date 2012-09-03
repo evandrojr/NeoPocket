@@ -1,0 +1,420 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Threading;
+using NeoDebug;
+using ShowLib;
+using Core;
+using System.IO;
+using System.Net;
+
+using NeoZip;
+
+using System.Data.Common;
+using FirebirdSql.Data.FirebirdClient;//provider do SGBD FireBird
+
+namespace NeoSync
+{
+    public partial class FrmRelPedido : Form
+    {
+        string codVendedor, codLoja;
+        Bd bd;
+        bool pedidoComEstoqueOK = true;
+        string problema="";
+        
+        public FrmRelPedido()
+        {
+            InitializeComponent();
+        }
+
+        private void FrmRelPedido_Load(object sender, EventArgs e)
+        {
+
+            bd = new Bd();
+
+            bd.ConStr = D.ConexaoParamentros();
+
+            try
+            {
+                bd.Connect();
+            }
+            catch (Exception ex)
+            {
+                FE.Show(ex);
+            }
+            
+            
+            DataTable dtVendedores;
+//            dtVendedores = bd.DataTablePreenche(@"
+//                    
+//                    select '-1' as codigo, 'Todos' as nome from funcionario
+//                        UNION
+//                    Select
+//                            codigo, nome
+//                    from
+//                            funcionario
+//                    where
+//                            participa_forca_venda='1' and ativo ='1'", "funcionario");
+
+            dtVendedores = bd.DataTablePreenche(@"
+                                Select 
+                                        -1 as codigo, 'Todos' as nome                               
+                                from
+                                        funcionario
+                                UNION
+                                Select
+                                        codigo, nome
+                                from
+                                        funcionario", "funcionario");
+
+            cbxVendedor.DataSource = dtVendedores;
+            cbxVendedor.DisplayMember = "nome";
+            cbxVendedor.ValueMember = "codigo";
+
+            DataTable dtLoja = bd.DataTablePreenche(@"
+                
+                SELECT
+                        codigo, nome_fantasia
+                FROM    
+                        loja", "loja");
+
+            cbxLoja.DataSource = dtLoja;
+            cbxLoja.DisplayMember = "nome_fantasia";
+            cbxLoja.ValueMember = "codigo";
+        }
+
+
+        bool pedidoComGradeProblemaDescrever(DataTable dtPedido, int iDtPedido, DataTable dtItem, int iDtItem)
+        {
+            double estoqueRestante;
+            string problemaGrade = "", qEstoqueUpdate = "", referencia = "", qEstoque = "";
+
+            string qGradeEstoqueRestante = @"
+                            SELECT
+                              PRODUTO.REFERENCIA, PRODUTO.DESCRICAO, PRODUTO.CODIGO, TMP_SALDOGRADE_NEOSYNC.QUANTIDADEESTOQUE, 
+                              TMP_SALDOGRADE_NEOSYNC.QUANTIDADEESTOQUE - ITEMPEDIDOPRODUTOGRADE.QUANTIDADE AS SALDO_POS_PEDIDO, 
+                              ITEMPEDIDOPRODUTOGRADE.QUANTIDADE, ITEMPEDIDOPRODUTOGRADE.COD_PEDIDO, ITEMGRADE.DESCRICAO AS ITEMGRADE, 
+                              ITEMATRIBUTO.DESCRICAO AS ITEMATRIBUTO, GRADE.DESCRICAO AS GRADE, ATRIBUTO.DESCRICAO AS ATRIBUTO, TMP_SALDOGRADE_NEOSYNC.COD_GRADE, 
+                              TMP_SALDOGRADE_NEOSYNC.COD_ITEMGRADE, TMP_SALDOGRADE_NEOSYNC.COD_ATRIBUTO, TMP_SALDOGRADE_NEOSYNC.COD_ITEMATRIBUTO
+                            FROM
+                              TMP_SALDOGRADE_NEOSYNC INNER JOIN
+                              PRODUTO ON TMP_SALDOGRADE_NEOSYNC.COD_PRODUTO = PRODUTO.CODIGO INNER JOIN
+                              ITEMPEDIDOPRODUTOGRADE ON TMP_SALDOGRADE_NEOSYNC.COD_PRODUTO = ITEMPEDIDOPRODUTOGRADE.COD_PRODUTO AND 
+                              TMP_SALDOGRADE_NEOSYNC.COD_GRADE = ITEMPEDIDOPRODUTOGRADE.COD_GRADE AND 
+                              TMP_SALDOGRADE_NEOSYNC.COD_ITEMGRADE = ITEMPEDIDOPRODUTOGRADE.COD_ITEMGRADE AND 
+                              TMP_SALDOGRADE_NEOSYNC.COD_ATRIBUTO = ITEMPEDIDOPRODUTOGRADE.COD_ATRIBUTO AND 
+                              TMP_SALDOGRADE_NEOSYNC.COD_ITEMATRIBUTO = ITEMPEDIDOPRODUTOGRADE.COD_ITEMATRIBUTO INNER JOIN
+                              ITEMGRADE ON TMP_SALDOGRADE_NEOSYNC.COD_ITEMGRADE = ITEMGRADE.CODIGO AND TMP_SALDOGRADE_NEOSYNC.COD_GRADE = ITEMGRADE.COD_GRADE INNER JOIN
+                              GRADE ON TMP_SALDOGRADE_NEOSYNC.COD_GRADE = GRADE.CODIGO INNER JOIN
+                              ITEMATRIBUTO ON TMP_SALDOGRADE_NEOSYNC.COD_ITEMATRIBUTO = ITEMATRIBUTO.CODIGO INNER JOIN
+                              ATRIBUTO ON TMP_SALDOGRADE_NEOSYNC.COD_ATRIBUTO = ATRIBUTO.CODIGO
+                            WHERE
+                                (ITEMPEDIDOPRODUTOGRADE.COD_PEDIDO = " + dtPedido.Rows[iDtPedido]["CODIGO"] + ") " +
+                @" AND (ITEMPEDIDOPRODUTOGRADE.COD_PRODUTO = '" + dtItem.Rows[iDtItem]["COD_PRODUTO"] + @"')
+                                    and TMP_SALDOGRADE_NEOSYNC.COD_LOJA='" + codLoja + "'";
+
+            DataTable dtEstoqueGradeRestante = bd.DataTablePreenche(qGradeEstoqueRestante);
+
+            for (int iDtEstoqueGradeRestante = 0; iDtEstoqueGradeRestante < dtEstoqueGradeRestante.Rows.Count; ++iDtEstoqueGradeRestante)
+            {
+                estoqueRestante = Convert.ToDouble(dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["SALDO_POS_PEDIDO"]);
+                if (estoqueRestante < 0)
+                {
+                    pedidoComEstoqueOK = false;
+                    problemaGrade = dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["atributo"] + " = " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["itematributo"] + " e " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["grade"] + " = " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["itemgrade"];
+                    if (!Parametro.UsarReferenciaProduto)
+                        problema += "->Item cod " + dtItem.Rows[iDtItem]["COD_PRODUTO"] + " " + problemaGrade + " requeridos " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["QUANTIDADE"] + " disponível " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["QUANTIDADEESTOQUE"] + "    ";
+                    else
+                    {
+                        referencia = D.Bd.T("Select COALESCE(referencia,'') from produto where CODIGO = " + dtItem.Rows[iDtItem]["COD_PRODUTO"]);
+                        problema += "->Item ref " + referencia + " " + problemaGrade + " requeridos " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["QUANTIDADE"] + " disponível " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["QUANTIDADEESTOQUE"] + "    ";
+                    }
+                    problema += problemaGrade;
+                }
+                qEstoqueUpdate = @"
+                        update 
+                                TMP_SALDOGRADE_NEOSYNC set 
+                        QUANTIDADEESTOQUE = QUANTIDADEESTOQUE - " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["QUANTIDADE"] + " " +
+                        " where COD_LOJA = " + codLoja + " and COD_PRODUTO = '" + dtItem.Rows[iDtItem]["COD_PRODUTO"] + @"' 
+                          and COD_GRADE='" + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["COD_GRADE"] + @"'
+                          and COD_ITEMGRADE='" + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["COD_ITEMGRADE"] + @"'
+                          and COD_ATRIBUTO='" + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["COD_ATRIBUTO"] + @"'
+                          and COD_ITEMATRIBUTO='" + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["COD_ITEMATRIBUTO"] + "'";
+                bd.ExecuteNonQuery(qEstoqueUpdate);
+                qEstoqueUpdate = @"
+                        update 
+                                TMP_SALDO_NEOSYNC
+                        set 
+                                QUANTIDADEESTOQUE = QUANTIDADEESTOQUE - " + dtEstoqueGradeRestante.Rows[iDtEstoqueGradeRestante]["QUANTIDADE"] + " " +
+                " where COD_LOJA = " + codLoja + " and COD_PRODUTO = '" + dtItem.Rows[iDtItem]["COD_PRODUTO"] + "'";
+                bd.ExecuteNonQuery(qEstoque);
+            }            
+            return true;
+        }
+
+        bool pedidoSemGradeProblemaDescrever(DataTable dtPedido, int iDtPedido, DataTable dtItem, int iDtItem){
+
+            double qtdPedida=0, estoque;
+            string qEstoqueUpdate = "", referencia = "", qEstoque = "";
+            qEstoque = @"
+            SELECT 
+                P.CODIGO,
+                P.REFERENCIA,
+                P.DESCRICAO,
+                P.COD_UNIDADE_VENDA,
+                S.QUANTIDADEESTOQUE
+             FROM
+                PRODUTO P JOIN TMP_SALDO_NEOSYNC S ON S.COD_PRODUTO = P.CODIGO
+            WHERE 
+                P.APLICACAO IN ('A','V','B')and P.ATIVO ='1' and 
+                p.CODIGO = '" + dtItem.Rows[iDtItem]["COD_PRODUTO"] +
+                    "' and S.COD_LOJA='" + codLoja + "'";
+            DataTable dtEstoque = bd.DataTablePreenche(qEstoque);
+            if (dtEstoque.Rows.Count > 1)
+            {
+                throw new Exception("Encontrado o mesmo produto mais de uma vez na tabela de saldo");
+            }
+            for (int iDtEstoque = 0; iDtEstoque < dtEstoque.Rows.Count; ++iDtEstoque)
+            {
+                problema = "";
+                estoque = Convert.ToDouble(dtEstoque.Rows[iDtEstoque]["QUANTIDADEESTOQUE"]);
+                qtdPedida = Convert.ToDouble(dtItem.Rows[iDtItem]["QUANTIDADE"]);
+                if (estoque < qtdPedida)
+                {
+                    pedidoComEstoqueOK = false;
+                    if (!Parametro.UsarReferenciaProduto)
+                        problema += "->Item cod " + dtItem.Rows[iDtItem]["COD_PRODUTO"] + " requeridos " + qtdPedida + " disponível " + estoque + "    ";
+                    else
+                    {
+                        referencia = D.Bd.T("Select COALESCE(referencia,'') from produto where CODIGO = " + dtItem.Rows[iDtItem]["COD_PRODUTO"]);
+                        problema += "->Item ref " + referencia + " requeridos " + qtdPedida + " disponível " + estoque + "    ";
+                    }
+                }
+             }
+            qEstoqueUpdate = @"
+            update 
+                    TMP_SALDO_NEOSYNC set 
+            QUANTIDADEESTOQUE = QUANTIDADEESTOQUE - " + qtdPedida + " " +
+            " where COD_LOJA = " + codLoja + " and COD_PRODUTO = '" + dtItem.Rows[iDtItem]["COD_PRODUTO"] + "'";
+            bd.ExecuteNonQuery(qEstoque);
+            return true;
+        }
+
+        private void btnProcurar_Click(object sender, EventArgs e)
+        {
+            //Apenas para chamar os validate dos controles
+            grpPropriedades.Focus();
+            Application.DoEvents();
+            Cursor.Current = Cursors.WaitCursor;
+            dgvRelatorio.Rows.Clear();
+
+            codVendedor=cbxVendedor.SelectedValue.ToString();
+            codLoja = cbxLoja.SelectedValue.ToString();
+            bool pedidoComGradeBool = false;
+            string qItens = "";
+            string qPedido = "";
+            DataTable dtItem;
+            string problema="";
+
+            double pedidoTotal = 0;
+
+            try
+            {
+                D.Bd.ExecuteNonQuery("Drop table TMP_SALDO_NEOSYNC");
+            }
+            catch { }
+
+            //Caso não consiga remover a tabela por ela esta em uso
+            try
+            {
+                D.Bd.ExecuteNonQuery("Delete from TMP_SALDO_NEOSYNC");
+            }
+            catch { }
+
+            try
+            {
+                D.Bd.ExecuteNonQuery("Drop table TMP_SALDOGRADE_NEOSYNC");
+            }
+            catch { }
+
+            //Caso não consiga remover a tabela por ela esta em uso
+            try
+            {
+                D.Bd.ExecuteNonQuery("Delete from TMP_SALDOGRADE_NEOSYNC");
+            }
+            catch { }
+
+            //CREATE GLOBAL TEMPORARY TABLE TMP_SALDO
+            string saldoTabelaTemporariaCria = @"
+
+                CREATE TABLE TMP_SALDO_NEOSYNC (
+                    COD_LOJA                        DM_PESSOA NOT NULL /* DM_PESSOA = CHAR(6) NOT NULL */,
+                    COD_PRODUTO                     DM_PRODUTO NOT NULL /* DM_PRODUTO = CHAR(8) NOT NULL */,
+                    QUANTIDADEESTOQUE               DM_DOUBLE DEFAULT 0 NOT NULL /* DM_DOUBLE = DOUBLE PRECISION */,
+                    QUANTIDADEEMPENHADA             T_CURRENCY_NULL DEFAULT 0 /* T_CURRENCY_NULL = NUMERIC(18,4) */
+            );";
+
+            string sqlSaldoTabelaTemporariaPreenche = @"
+               insert 
+                    into 
+               TMP_SALDO_NEOSYNC   (COD_LOJA, COD_PRODUTO, QUANTIDADEESTOQUE, QUANTIDADEEMPENHADA)
+                           select 
+                                COD_LOJA, COD_PRODUTO, QUANTIDADEESTOQUE, QUANTIDADEEMPENHADA
+                           FROM 
+                                saldo
+                           where
+                                1 = 1;";
+
+            bd.ExecuteNonQuery(saldoTabelaTemporariaCria);
+            bd.ExecuteNonQuery(sqlSaldoTabelaTemporariaPreenche);
+            
+            string saldoGradeTabelaTemporariaCria = @"
+
+            CREATE TABLE TMP_SALDOGRADE_NEOSYNC (
+                COD_LOJA             DM_PESSOA NOT NULL /* DM_PESSOA = CHAR(6) NOT NULL */,
+                COD_PRODUTO          DM_PRODUTO NOT NULL /* DM_PRODUTO = CHAR(8) NOT NULL */,
+                COD_GRADE            DM_GRADE NOT NULL /* DM_GRADE = CHAR(2) */,
+                COD_ITEMGRADE        DM_ITEMGRADE NOT NULL /* DM_ITEMGRADE = CHAR(3) */,
+                COD_ATRIBUTO         DM_ATRIBUTO NOT NULL /* DM_ATRIBUTO = CHAR(2) */,
+                COD_ITEMATRIBUTO     DM_ITEMATRIBUTO NOT NULL /* DM_ITEMATRIBUTO = CHAR(3) */,
+                QUANTIDADEESTOQUE    DOUBLE PRECISION DEFAULT 0 NOT NULL
+            );";
+
+            string sqlSaldoGradeTabelaTemporariaPreenche = @"
+               insert 
+                    into 
+               TMP_SALDOGRADE_NEOSYNC   (COD_LOJA, COD_PRODUTO, COD_GRADE, COD_ITEMGRADE, COD_ATRIBUTO, COD_ITEMATRIBUTO, QUANTIDADEESTOQUE)
+                           select 
+                                COD_LOJA, COD_PRODUTO, COD_GRADE, COD_ITEMGRADE, COD_ATRIBUTO, COD_ITEMATRIBUTO, QUANTIDADEESTOQUE
+                           FROM 
+                                SALDOGRADE
+                           where
+                                1 = 1;";
+
+            bd.ExecuteNonQuery(saldoGradeTabelaTemporariaCria);
+            bd.ExecuteNonQuery(sqlSaldoGradeTabelaTemporariaPreenche);
+
+            //Seleciona todos os pedidos de todos os vendedores vendedor naquele período QUE ESTÃO EM ABERTO!!
+
+            qPedido = @"
+            select * 
+                from
+            pedido
+                where
+            status ='A' and tiporegistro='S' and cod_cedente='L" + codLoja +
+            "' and data between '" + dtpDe.Value.ToString("yyyy-M-d 00:00:00", D.CultureInfoBRA) + "' and '" +
+            dtpAte.Value.ToString("yyyy-M-d 23:59:59", D.CultureInfoBRA) + "' order by codigo asc";
+            
+
+           DataTable dtPedido = bd.DataTablePreenche(qPedido);
+
+           //try
+           //{
+                for (int iDtPedido = 0; iDtPedido < dtPedido.Rows.Count; ++iDtPedido)
+                {
+                    pedidoComEstoqueOK = true;
+                    qItens = @"select
+                                *
+                          from 
+                                 ITEMPEDIDOPRODUTO
+                          where 
+                                 COD_PEDIDO=" + dtPedido.Rows[iDtPedido]["CODIGO"];
+                    dtItem = bd.DataTablePreenche(qItens);
+
+                    for (int iDtItem = 0; iDtItem < dtItem.Rows.Count; ++iDtItem)
+                    {
+                        //Verificar se o produto tem grade
+                        if (D.Bd.N("SELECT count(*) from ITEMPEDIDOPRODUTOGRADE " +
+                            " WHERE COD_PRODUTO = " + dtItem.Rows[iDtItem]["COD_PRODUTO"] + 
+                            " and COD_PEDIDO = " + dtPedido.Rows[iDtPedido]["CODIGO"]) > 0)
+                        {
+                            //Processamento para a grade
+                            pedidoComGradeBool = true;
+                            pedidoComGradeProblemaDescrever(dtPedido,iDtPedido,dtItem,iDtItem);
+                        }else //Pedido não tem grade
+                            pedidoComGradeBool = true;
+                            pedidoSemGradeProblemaDescrever(dtPedido,iDtPedido,dtItem,iDtItem);
+                    }//Fim for todos os items do pedido (podendo ou não ter grade)
+
+                    dgvRelatorio.Rows.Add(1);
+                    dgvRelatorio[0, iDtPedido].Value = dtPedido.Rows[iDtPedido]["COD_FUNCIONARIO"];
+                    if (pedidoComEstoqueOK)
+                    {
+                        dgvRelatorio[2, iDtPedido].Value = "Sim";
+                    }
+                    else
+                    {
+                        dgvRelatorio[2, iDtPedido].Value = "Não";
+                        dgvRelatorio[6, iDtPedido].Value += problema;
+                    }
+                    dgvRelatorio[1, iDtPedido].Value = dtPedido.Rows[iDtPedido]["CODIGO"];
+                    dgvRelatorio[3, iDtPedido].Value = dtPedido.Rows[iDtPedido]["DATA"];
+                    dgvRelatorio[4, iDtPedido].Value = bd.I(@"
+                        select 
+                          count(*) from 
+                                 ITEMPEDIDOPRODUTO
+                          where 
+                                 COD_PEDIDO=" + dtPedido.Rows[iDtPedido]["CODIGO"]);
+                    pedidoTotal = Convert.ToDouble(dtPedido.Rows[iDtPedido]["TOTAL"]);
+                    dgvRelatorio[5, iDtPedido].Value = pedidoTotal.ToString("C");
+                }
+                try
+                {
+                    D.Bd.ExecuteNonQuery("Drop table TMP_SALDO_NEOSYNC");
+                }
+                catch { }
+
+                try
+                {
+                    D.Bd.ExecuteNonQuery("Drop table TMP_SALDOGRADE_NEOSYNC");
+                }
+                catch { }
+            //}
+            //catch (Exception ex)
+            //{
+            //    FE.Show("Erro gerando relatório", "Erro", ex.Message);
+            //}
+            //finally{
+            //    Cursor.Current = Cursors.Default;
+            //}
+        }
+
+        private void dgvRelatorio_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                FE.Show(dgvRelatorio[6, e.RowIndex].Value.ToString(), "");
+            }
+            catch { }
+        }
+
+        private void dtpDe_Leave(object sender, EventArgs e)
+        {
+            validateChamar();
+        }
+
+        private void validateChamar(){
+            btnProcurar.Focus();
+        }
+
+        private void dtpAte_Leave(object sender, EventArgs e)
+        {
+            validateChamar();
+        }
+
+        private void cbxLoja_Leave(object sender, EventArgs e)
+        {
+            validateChamar();
+        }
+
+        private void cbxVendedor_Leave(object sender, EventArgs e)
+        {
+            validateChamar();
+        }
+    }
+}

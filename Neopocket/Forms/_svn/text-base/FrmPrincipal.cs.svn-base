@@ -1,0 +1,170 @@
+﻿using System;
+using System.Windows.Forms;
+using Neopocket.Utils;
+using Neopocket.Core;
+
+namespace Neopocket.Forms
+{
+    /// <summary>
+    /// Formulário principal do NeoPocket, provê as opções de menu para o usuário.
+    /// </summary>
+    public partial class FrmPrincipal : FormBase
+    {
+        #region [ Construtor ]
+
+        public FrmPrincipal()
+        {
+            InitializeComponent();
+            //Código para ser removido no futuro, usado apenas para forçar sincronização após a atualização
+
+//            int pm = Globals.Bd.I(@"
+//                SELECT     COUNT(contribuinte_icms) 
+//                           FROM         cliente
+//                           WHERE     (contribuinte_icms IS NOT NULL)");
+
+//            if (pm == 0)
+//            {
+//                MessageBox.Show("A última atualização requer uma sincronização para receber os dados dos contribuites do ICMS");
+//                Cursor.Current = Cursors.WaitCursor;
+//                Util.FormExibir(new FrmSincronizacao());
+//            }
+                
+
+        }
+
+        #endregion
+
+        #region [ Menu ]
+
+        #region [ Relatorios ]
+
+        #region [ Clientes ]
+
+        /* Ordenados por cidade */
+        private void menuItemRelClienteOrdCidade_Click(object sender, EventArgs e)
+        {
+            Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.RelatorioVer;
+            Util.FormExibir(new FrmRelatorioClienteCidade());
+        }
+
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        #region [ Botões ]
+
+        /* Clientes */
+        private void btnCliente_Click(object sender, EventArgs e)
+        {
+            Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.ClienteADefinir;
+            Util.FormExibir(new FrmClienteLista());
+        }
+
+        /* Pedido */
+        private void btnPedido_Click(object sender, EventArgs e)
+        {
+            Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.PedidoADefinir;
+            Util.FormExibir(new FrmClienteLista());
+        }
+
+        /* Sincronização */
+        private void btnSincronizar_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            Util.FormExibir(new FrmSincronizacao());
+        }
+
+        /* Produto */
+        private void btnProduto_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            Util.FormExibir(new FrmProdutoLista());
+        }
+
+        /* Configurações */
+        private void picConfiguracoesDeAcesso_Click(object sender, EventArgs e)
+        {
+            Util.FormExibir(new FrmConfiguracaoDeAcesso());
+        }
+
+        #endregion
+
+        #region [ Load ]
+
+        private void FrmPrincipal_Load(object sender, EventArgs e)
+        {
+            inputPanel.Enabled = false;
+
+            this.MostraPedidosRestantes();
+        }
+
+        #endregion
+
+        #region [ Pedidos restantes ]
+
+        /// <summary>
+        /// Verifica a existência de pedidos restantes e exibe a quantidade de pedidos
+        /// restantes, caso a cota de pedidos esteja terminada exibe uma mensagem avisando
+        /// ao usuário.
+        /// </summary>
+        private void MostraPedidosRestantes()
+        {
+            try
+            {
+                if (Pedido.PedidosAEnviar())
+                {
+                    lblPedidosAEnviar.Visible = true;
+
+                    if (Pedido.PedidosRestantes == 1)
+                    {
+                        lblPedidosAEnviar.Text = Pedido.PedidosRestantes + " pedido restante";
+                    }
+                    else if (Pedido.PedidosRestantes == 0)
+                    {
+                        lblPedidosAEnviar.Text = "Nenhum pedido poderá ser feito até a próxima sincronização.";
+                    }
+                    else
+                        lblPedidosAEnviar.Text = Pedido.PedidosRestantes + " pedidos restantes";
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion   
+
+        #region [ Focus do formulário ]
+
+        private void FrmPrincipal_GotFocus(object sender, EventArgs e)
+        {
+            this.MostraPedidosRestantes();
+        }
+
+        #endregion
+
+        private void menuItemRelPedidos_Click(object sender, EventArgs e)
+        {
+            Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.RelatorioVer;
+            Util.FormExibir(new FrmRelatorioPedido());
+        }
+
+        private void menuItemRelClienteSemPedido_Click(object sender, EventArgs e)
+        {
+            Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.RelatorioVer;
+            Util.FormExibir(new FrmRelatorioClienteSemPedido());
+        }
+
+        private void btnRota_Click(object sender, EventArgs e)
+        {
+            Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.RotaSeguir;
+            Util.FormExibir(new FrmRotaProcessa());
+        }
+
+
+    }
+}

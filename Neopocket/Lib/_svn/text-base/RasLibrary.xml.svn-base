@@ -1,0 +1,1776 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RasLibrary</name>
+    </assembly>
+    <members>
+        <member name="T:RasLibrary.RasDevInfo">
+            <summary>
+            This class contains information that describes a Telephony API (TAPI) device capable of establishing a RAS connection. It is returned by the EnumDevices function.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasDevInfo.#ctor">
+            <summary>
+            Creates a ResDevInfo object.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasDevInfo.DeviceType">
+            <summary>
+            Specifies a string indicating the RAS device type referenced by DeviceName.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasDevInfo.DeviceName">
+            <summary>
+            Specifies a string containing the name of a TAPI device.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasEntry">
+            <summary>
+            This class contains parameters which describe a phonebook entry.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasEntry.#ctor">
+            <summary>
+            Creates a RasEntry object.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.Options">
+            <summary>
+            Specifies connection options. See the RasEntryOptions class for further informations about the available options.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.CountryID">
+            <summary>
+            Specifies the TAPI country/region identifier.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.CountryCode">
+            <summary>
+            Specifies the country/region code portion of the phone number.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.AreaCode">
+            <summary>
+            Specifies a string that contains the area code.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.LocalPhoneNumber">
+            <summary>
+            Specifies a string that contains the primary telephone number.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.AlternateOffset">
+            <summary>
+            Specifies the offset, in bytes, from the beginning of the structure to a list of consecutive strings. The strings are alternate phone numbers that RAS dials in the order listed if the primary number (LocalPhoneNumber) fails to connect. This feature is currently not supported and the value of the AlternateOffset property must be set to zero.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.IpAddress">
+            <summary>
+            Specifies the IP address to be used while this connection is active.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.IpAddressDns">
+            <summary>
+            Specifies the IP address of the DNS server to be used while this connection is active.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.IpAddressDnsAlt">
+            <summary>
+            Specifies the IP address of a secondary or backup DNS server to be used while this connection is active.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.IpAddressWins">
+            <summary>
+            Specifies the IP address of the WINS server to be used while this connection is active.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.IpAddressWinsAlt">
+            <summary>
+            Specifies the IP address of a secondary WINS server to be used while this connection is active.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.FrameSize">
+            <summary>
+            Specifies the network protocol frame size. The value should be either 1006 or 1500.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.NetworkProtocols">
+            <summary>
+            Specifies the network protocols to negotiate. Only the TCP/IP protocol seems supported.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.FramingProtocol">
+            <summary>
+            Specifies the framing protocol used by the server. PPP is the emerging standard. SLIP is used mainly in UNIX environments.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.Script">
+            <summary>
+            Specifies a string containing the name of the script file. The file name should be a full path.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.AutoDialDll">
+            <summary>
+            Specifies a string containing the full path and file name of the dynamic-link library (DLL) for the customized AutoDial handler.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.AutoDialFunction">
+            <summary>
+            Specifies a string containing the exported name of the function for the customized AutoDial handler. An AutoDial DLL must provide both ANSI and Unicode versions of the function handler. However, do not include the A or W suffix in the name specified by AutoDialFunction.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.DeviceType">
+            <summary>
+            Specifies a string that indicates the RAS device type referenced by DeviceName.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.DeviceName">
+            <summary>
+            Specifies a string that contains the name of a TAPI device to use with this phonebook entry, for example XYZ Corp 28800 External.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.X25PadType">
+            <summary>
+            Specifies a string that identifies the X.25 PAD type.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.X25Address">
+            <summary>
+            Specifies a string that identifies the X.25 address to connect to.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.X25Facilities">
+            <summary>
+            Specifies a string that specifies the facilities to request from the X.25 host at connection.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.X25UserData">
+            <summary>
+            Specifies a string that specifies additional connection information supplied to the X.25 host at connection.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.Channels">
+            <summary>
+            Specifies the number of channels supported by the device, where 1 is mono, 2 is stereo, and so on.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntry.CustomAuthKey">
+            <summary>
+            Specifies the EAP extension type to be used.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasConnStatus">
+            <summary>
+            This class describes the current status of a remote access connection. It is returned by the GetConnectStatus function.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasConnStatus.#ctor">
+            <summary>
+            Creates a RasConnStatus object.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasConnStatus.State">
+            <summary>
+            Indicates the current state of the Dial connection process; that is, the piece of the Dial process that is currently executing.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasConnStatus.Error">
+            <summary>
+            If nonzero, indicates the reason for failure. For a more descriptive error message use the GetDescriptionFromErrorCode method of the RasException class.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasConnStatus.DeviceType">
+            <summary>
+            A string that specifies the type of the current device, if available. For example, common device types supported by RAS are "modem", "pad", "switch", "ISDN", or "null".
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasConnStatus.DeviceName">
+            <summary>
+            A string that specifies the name of the current device, if available. This would be the name of the modem — for example, "Hayes SmartModem 2400"; the name of the PAD, for example "US Sprint"; or the name of a switch device, for example "Racal-Guardata".
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasConnStatus.PhoneNumber">
+            <summary>
+            A string that indicates the phone number dialed for this specific connection.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasConnState">
+            <summary>
+            This enum indicates the states the Dial connection process can assume.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.OpenPort">
+            <summary>
+            The communication port is about to be opened.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.PortOpened">
+            <summary>
+            The communication port has been opened successfully.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.ConnectDevice">
+            <summary>
+            A device is about to be connected.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.DeviceConnected">
+            <summary>
+            A device has connected successfully.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.AllDevicesConnected">
+            <summary>
+            All devices in the device chain have successfully connected. At this point, the physical link is established.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.Authenticate">
+            <summary>
+            The authentication process is starting. Remote access does not allow the remote client to generate any traffic on the LAN until authentication has been successfully completed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.AuthNotify">
+            <summary>
+            An authentication event has occurred. If Error is zero, this event will be immediately followed by one of the more specific authentication states following. If Error is nonzero, authentication has failed, and the error value indicates why.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.AuthRetry">
+            <summary>
+            The client has requested another validation attempt with a new user name/password/domain.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.AuthCallback">
+            <summary>
+            The remote access server has requested a callback number. This occurs only if the user has "Set By Caller" callback privilege on the server.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.AuthChangePassword">
+            <summary>
+            The client has requested to change the password on the account.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.AuthProject">
+            <summary>
+            The projection phase is starting.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.AuthLinkSpeed">
+            <summary>
+            The link-speed calculation phase is starting.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.AuthAck">
+            <summary>
+            An authentication request is being acknowledged.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.ReAuthenticate">
+            <summary>
+            Reauthentication (after callback) is starting.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.Authenticated">
+            <summary>
+            The client has successfully completed authentication.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.PrepareForCallback">
+            <summary>
+            The line is about to disconnect in preparation for callback.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.WaitForModemReset">
+            <summary>
+            The client is delaying in order to give the modem time to reset itself in preparation for callback.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.WaitForCallback">
+            <summary>
+            The client is waiting for an incoming call from the remote access server.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.Projected">
+            <summary>
+            This state occurs after the RASCS_AuthProject state. It indicates that projection result information is available.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.Interactive">
+            <summary>
+            This state has a value of RASCS_PAUSED and corresponds to the terminal state supported by RASPHONE.EXE.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.RetryAuthentication">
+            <summary>
+            This state corresponds to the retry authentication state supported by RASPHONE.EXE.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.CallbackSetByCaller">
+            <summary>
+            This state corresponds to the callback state supported by RASPHONE.EXE.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.PasswordExpired">
+            <summary>
+            This state corresponds to the change password state supported by RASPHONE.EXE.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.Connected">
+            <summary>
+            This state has a value of RASCS_DONE and corresponds to successful connection.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasConnState.Disconnected">
+            <summary>
+            Disconnection or failed connection.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasEntryOptions">
+            <summary>
+            This class wraps around the options field of a RasEntry object providing a more convenient way to access its bits through named boolean properties.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasEntryOptions.#ctor(System.UInt32)">
+            <summary>
+            Creates an instance of a RasEntryOptions class around its 32 bit unsigned value representation.
+            </summary>
+            <param name="data">The entry options packed into a 32 bit unsigned value.</param>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.Data">
+            <summary>
+            The raw 32 bit unsigned value representing the entry options bitmask.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.UseCountryAndAreaCodes">
+            <summary>
+            If this flag is set, the dwCountryID, dwCountryCode, and szAreaCode members are used to construct the phone number. If this flag is not set, these members are ignored.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.SpecificIpAddr">
+            <summary>
+            If this flag is set, RAS tries to use the IP address specified by ipaddr as the IP address for the dial-up connection. If this flag is not set, the value of the ipaddr member is ignored.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.SpecificNameServers">
+            <summary>
+            If this flag is set, RAS uses the IpAddressDns, IpAddressDnsAlt, IpAddressWins, and IpAddressWinsAlt members to specify the name server addresses for the dial-up connection. If this flag is not set, RAS ignores these members.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.IpHeaderCompression">
+            <summary>
+            If this flag is set, RAS negotiates to use IP header compression on PPP connections. If this flag is not set, IP header compression is not negotiated.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.RemoteDefaultGateway">
+            <summary>
+            This flag is set only when a new RASENTRY structure is populated with default values. The OS ignores this flag and does not modify the default route.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.DisableLcpExtensions">
+            <summary>
+            If this flag is set, RAS disables the PPP LCP extensions defined in RFC 1570. This may be necessary to connect to certain older PPP implementations but it interferes with features such as server callback. Do not set this flag unless specifically required.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.TerminalBeforeDial">
+            <summary>
+            If this flag is set a terminal screen should be displayed before RAS attempts to dial a connection.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.TerminalAfterDial">
+            <summary>
+            If this flag is set a terminal screen should be displayed after the modem connection has been completed.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.ModemLights">
+            <summary>
+            This flag is currently ignored.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.SwCompression">
+            <summary>
+            If this flag is set, software compression is negotiated on the link. Setting this flag causes the PPP driver to attempt to negotiate CCP with the server. This flag should be set by default, but clearing it can reduce the negotiation period if the server does not support a compatible compression protocol.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.RequireEncryptedPw">
+            <summary>
+            If this flag is set, only password schemes that provide enhanced security can be used to authenticate the client with the server. This prevents the PPP driver from using the PAP plaintext authentication protocol to authenticate the client. The CHAP and SPAP authentication protocols are also supported. Clear this flag for increased interoperability, and set it for enhanced security.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.RequireMsEncryptedPw">
+            <summary>
+            If this flag is set, only the Microsoft CHAP password scheme can be used to authenticate the client with the server. This prevents the PPP driver from using the PPP plaintext authentication protocol or MD5-CHAP. The flag should be cleared for maximum interoperability and should be set for the highest level of security. This flag takes precedence over RequireEncryptedPw.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.RequireDataEncryption">
+            <summary>
+            If this flag is set, data encryption must be negotiated successfully or the connection should be dropped. This flag is ignored unless RequireMsEncryptedPw is also set.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.NetworkLogon">
+            <summary>
+            If this flag is set, RAS logs on to the network after the point-to-point connection is established.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.UseLogonCredentials">
+            <summary>
+            If this flag is set, RAS uses the user name, password, and domain of the currently logged-on user when dialing this entry. This flag is ignored unless RequireMsEncryptedPw is also set.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.PromoteAlternates">
+            <summary>
+            This flag has an effect when alternate phone numbers are defined by the AlternateOffset member. If this flag is set, an alternate phone number that connects successfully becomes the primary phone number, and the current primary phone number is moved to the alternate list.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.DialAsLocalCall">
+            <summary>
+            If this flag is set, RAS constructs the phone number as a local call, including the area code if it is different from the area code at the current location. This flag corresponds to the force local option in various dialog boxes.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.ProhibitPAP">
+            <summary>
+            If this flag is set, the use of the Password Authentication Protocol (PAP) authentication method is disabled. If the flag is not set, then the client can negotiate the use of the PAP authentication method with the server.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.ProhibitCHAP">
+            <summary>
+            If this flag is set, the use of the Challenge Handshake Authentication Protocol (CHAP) authentication method is disabled. If this flag is not set, the client can negotiate the use of the CHAP authentication method with the server.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.ProhibitMsCHAP">
+            <summary>
+            If this flag is set, the use of the Microsoft Challenge Handshake Authentication Protocol (MSCHAP) authentication method is disabled. If this flag is not set, the client can negotiate the use of the MSCHAP authentication method with the server.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.ProhibitMsCHAP2">
+            <summary>
+            If this flag is set, the use of the Microsoft Challenge Handshake Authentication Protocol version 2.0 (MSCHAPv2) authentication method is disabled. If this flag is not set, the client can negotiate the use of the MSCHAPv2 authentication method with the server.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.ProhibitEAP">
+            <summary>
+            If this flag is set, the use of the Extensible Authentication Protocol (EAP) authentication method is disabled. If this flag is not set, the client can negotiate the use of the EAP authentication method with the server.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.PreviewUserPw">
+            <summary>
+            If this flag is set, RAS will display a username and password dialog box before dialing.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasEntryOptions.CustomScript">
+            <summary>
+            This flag must be set for RAS to invoke a custom-scripting DLL after establishing the connection to the server.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.Ras">
+            <summary>
+            This class maps over the RAS API to handle remote access services.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.Ras.LOCAL_BUFFER_SIZE">
+            <summary>
+            The size of the local I/O buffer with the native functions (must be a multiple of 4).
+            </summary>
+        </member>
+        <member name="M:RasLibrary.Ras.GetUInt(System.Byte[],System.Int32)">
+            <summary>
+            Extracts an unsigned int value from an array of bytes.
+            </summary>
+            <param name="data">The array of bytes from which to extract the value.</param>
+            <param name="offset">The position (in bytes) into the array from where the value should be extracted.</param>
+            <returns>The value extracted from the specified position.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.SetUInt(System.Byte[],System.Int32,System.UInt32)">
+            <summary>
+            Writes an unsigned int value into an array of bytes.
+            </summary>
+            <param name="data">The array of bytes into which to write the value.</param>
+            <param name="offset">The position (in bytes) into the array where the value should be put.</param>
+            <param name="value">The value to be written at the specified position into the array.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.GetString(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Extracts a UNICODE string from an array of bytes.
+            </summary>
+            <param name="data">The array of bytes from which to extract the string.</param>
+            <param name="offset">The position (in bytes) into the array from where the string should be extracted.</param>
+            <param name="numChars">The maximum expected length of the string (in chars).</param>
+            <returns>The string extracted from the specified position.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.SetString(System.Byte[],System.Int32,System.String)">
+            <summary>
+            Writes a UNICODE string into an array of bytes.
+            </summary>
+            <param name="data">The array of bytes into which to write the string.</param>
+            <param name="offset">The position (in bytes) into the array where to put the string.</param>
+            <param name="value">The value of the string to be written.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.GetBit(System.UInt32,System.Byte)">
+            <summary>
+            Inspects the value of a single bit into a bitmask.
+            </summary>
+            <param name="data">The unsigned int representing the bitmask.</param>
+            <param name="bit">The position of the bit to be inspected (0-based).</param>
+            <returns>True if the value of the specified bit is 1, false otherwise.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.SetBit(System.UInt32@,System.Byte,System.Boolean)">
+            <summary>
+            Writes the value of a single bit into a bitmask.
+            </summary>
+            <param name="data">The unsigned int representing the bitmask.</param>
+            <param name="bit">The position of the bit to be written (0-based).</param>
+            <param name="value">True if the bit must be set to 1, false otherwise.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.EncodeRasDialParams(RasLibrary.RasDialParams)">
+            <summary>
+            Encodes the parameters of a RasDialParams object into an array of bytes representing the native structure.
+            </summary>
+            <param name="rasDialParams">The RasDialParams object containing the parameters mapped as properties.</param>
+            <returns>An array of bytes containing the encoded parameters.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.DecodeRasDialParams(System.Byte[])">
+            <summary>
+            Decodes the native structure parameters from its array of bytes representation into a RasDialParams object.
+            </summary>
+            <param name="buffer">The array of bytes containing the encoded parameters.</param>
+            <returns>A RasDialParams object containing the parameters mapped as properties.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.ValidateEntryName(System.String)">
+            <summary>
+            This function validates the format of a connection entry name. It must contain at least one non-white-space alpha-numeric character.
+            </summary>
+            <param name="entryName">A string that contains an entry name. The entry name must include at least one alphanumeric character and be a valid registry key name. The entry name cannot begin with a backslash ("\").</param>
+            <returns>True if the specified entry name is a valid name. False otherwise.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.SetEntryProperties(System.String,RasLibrary.RasEntry,System.Byte[])">
+            <summary>
+            This function changes the connection information for an entry in the phonebook or creates a new phonebook entry.
+            </summary>
+            <param name="entryName">A string that contains an entry name. If the entry name matches an existing entry, SetEntryProperties modifies the properties of that entry. If the entry name does not match an existing entry, SetEntryProperties creates a new phonebook entry. For new entries, call the ValidateEntryName function to validate the entry name before calling SetEntryProperties.</param>
+            <param name="rasEntry">A class that contains the new connection data to be associated with the phonebook entry specified by the entryName parameter.</param>
+            <param name="deviceConfig">A buffer that contains device-specific configuration information. This is opaque TAPI device configuration information. For more information about TAPI device configuration, see the lineGetDevConfig function in the Win32 Telephony (TAPI) Programmer's Reference.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.GetEntryProperties(System.String,RasLibrary.RasEntry@,System.Byte[]@)">
+            <summary>
+            This function retrieves the properties of a phonebook entry.
+            </summary>
+            <param name="entryName">A string that contains an existing entry name.</param>
+            <param name="rasEntry">This class receives the connection data associated with the phonebook entry specified by the entryName parameter.</param>
+            <param name="deviceConfig">A buffer that receives device-specific configuration information. This is opaque TAPI device configuration information that you should not manipulate directly. This parameter can be NULL. For more information about TAPI device configuration, see the lineGetDevConfig function in the Microsoft Win32 Telephony (TAPI) Programmer's Reference.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.DeleteEntry(System.String)">
+            <summary>
+            This function deletes an entry from the phonebook.
+            </summary>
+            <param name="entryName">The name of an existing entry to be deleted.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.RenameEntry(System.String,System.String)">
+            <summary>
+            This function changes the name of an entry in the phonebook.
+            </summary>
+            <param name="oldEntryName">A string that contains an existing entry name.</param>
+            <param name="newEntryName">A string that contains the new entry name. Before calling RenameEntry, call the ValidateEntryName function to validate the new entry name.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.SetEntryDialParams(System.String,RasLibrary.RasDialParams,System.Boolean)">
+            <summary>
+            This function changes the connection information saved by the last successful call to the Dial or GetEntryDialParams function for a specified phonebook entry.
+            </summary>
+            <param name="entryName">A string that contains an existing entry name.</param>
+            <param name="rasDialParams">A class that contains the connection parameters to be associated with the phonebook entry.</param>
+            <param name="removePassword">Boolean value that specifies whether to remove the phonebook entry's stored password for the user specified by rasDialParams->UserName. If RemovePassword is TRUE, the password is removed.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.GetEntryDialParams(System.String,RasLibrary.RasDialParams@,System.Boolean@)">
+            <summary>
+            This function retrieves the connection information saved by the last successful call to the Dial function for a specified phonebook entry.
+            </summary>
+            <param name="entryName">A string that contains an existing entry name.</param>
+            <param name="rasDialParams">On output, the class receives the connection parameters associated with the specified phonebook entry.</param>
+            <param name="passwordRetrieved">A flag that indicates whether the function retrieved the password associated with the user name for the phonebook entry.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.EnumEntries">
+            <summary>
+            This function lists all entry names in a remote access phonebook.
+            </summary>
+            <returns>An array of strings representing entry names from the phonebook.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.EnumConnections">
+            <summary>
+            This function lists all active RAS connections. It returns each connection's handle and phonebook entry name.
+            </summary>
+            <returns>An array of RasConn objects containing informations about active connections.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.EnumDevices">
+            <summary>
+            This function returns the name and type of all available RAS-capable devices.
+            </summary>
+            <returns>An array of RasDevInfo objects containing devices informations.</returns>
+        </member>
+        <member name="M:RasLibrary.Ras.DevConfigDialogEdit(System.String,System.String,System.IntPtr,System.Byte[],System.Byte[]@)">
+            <summary>
+            This function is used to display the configuration dialog for the device-specific settings of a RAS device.
+            </summary>
+            <param name="deviceName">A string that contains the name of a TAPI device to use with this phonebook entry, for example XYZ Corp 28800 External. To enumerate the number of available RAS-capable devices, use the lineInitialize function.</param>
+            <param name="deviceType">A string that indicates the RAS device type referenced by DeviceName. </param>
+            <param name="ownerWindowHandle">Handle to a window to which the dialog box is attached. Can be NULL to indicate that any window created during the function should have no owner window.</param>
+            <param name="deviceConfigIn">A buffer that contains device-specific configuration information. This is opaque TAPI device configuration information. For more information about TAPI device configuration, see the lineGetDevConfig function in the Win32 Telephony (TAPI) Programmer's Reference.</param>
+            <param name="deviceConfigOut">A buffer that is used to return the modified device-specific configuration information.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.Dial(RasLibrary.RasDialParams,System.IntPtr,System.IntPtr@)">
+            <summary>
+            This function establishes a RAS connection between a RAS client and a RAS server. The connection data includes callback and user authentication information.
+            </summary>
+            <param name="rasDialParams">A class that specifies calling parameters for the RAS connection.</param>
+            <param name="notifierWindowHandle">A window handle to receive Dial event notifications. If this parameter is not NULL, Dial sends the window a message for each Dial event. Additionally, the Dial call operates asynchronously: Dial returns immediately, before the connection is established, and uses the window to communicate its progress. If notifier is NULL, the Dial call operates synchronously: Dial does not return until the connection attempt has completed successfully or failed.</param>
+            <param name="connectionHandle">If Dial succeeds, it stores a handle to the RAS connection into connectionHandle.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.HangUp(System.IntPtr)">
+            <summary>
+            This function terminates a remote access connection. The connection is specified with a RAS connection handle.
+            </summary>
+            <param name="connectionHandle">Handle to the remote access connection to terminate. This is a handle returned from a previous call to Dial or EnumConnections.</param>
+        </member>
+        <member name="M:RasLibrary.Ras.GetConnectStatus(System.IntPtr)">
+            <summary>
+            This function retrieves information on the current status of the specified remote access connection. An application can use this call to determine when an asynchronous Dial call is complete.
+            </summary>
+            <param name="connectionHandle">Specifies the remote access connection for which to retrieve the status. This handle must have been obtained from Dial or EnumConnections.</param>
+            <returns>A RasConnStatus object that receives the status information.</returns>
+        </member>
+        <member name="T:RasLibrary.RasConn">
+            <summary>
+            This class provides data about a remote access connection. It is returned by the EnumConnections function.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasConn.#ctor">
+            <summary>
+            Creates a RasConn object.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasConn.ConnectionHandle">
+            <summary>
+            Handle to the remote access connection. This handle is used in other remote access API calls.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasConn.EntryName">
+            <summary>
+            A string that specifies the phonebook entry used to establish the remote access connection. If the connection was established using an empty entry name, this string consists of a period (.) followed by the connection phone number.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasNetworkProtocols">
+            <summary>
+            This class specifies the network protocols to negotiate as specified in the NetworkProtocols property of the RasEntry class.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasNetworkProtocols.#ctor(System.UInt32)">
+            <summary>
+            Creates an instance of a RasNetworkProtocols class around its 32 bit unsigned value representation.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasNetworkProtocols.Data">
+            <summary>
+            The raw 32 bit unsigned value representing the network protocols bitmask.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasNetworkProtocols.NetBEUI">
+            <summary>
+            If this flag is set negotiation of the NetBEUI protocol is enabled.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasNetworkProtocols.IPX">
+            <summary>
+            If this flag is set negotiation of the IPX protocol is enabled.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasNetworkProtocols.IP">
+            <summary>
+            If this flag is set negotiation of the IP protocol is enabled.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasDialParams">
+            <summary>
+            This class contains parameters used to establish a remote access connection.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasDialParams.#ctor">
+            <summary>
+            Creates a RasDialParams object.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasDialParams.EntryName">
+            <summary>
+            Specifies a string that contains the phonebook entry to use to establish the connection.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasDialParams.PhoneNumber">
+            <summary>
+            Specifies a string that contains an overriding phone number.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasDialParams.CallbackNumber">
+            <summary>
+            Specifies a string that contains a callback phone number.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasDialParams.UserName">
+            <summary>
+            Specifies a string that contains the user's user name. This string is used to authenticate the user's access to the remote access server.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasDialParams.Password">
+            <summary>
+            Specifies a string that contains the user's password. This string is used to authenticate the user's access to the remote access server.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasDialParams.Domain">
+            <summary>
+            Specifies a string that contains the domain on which authentication is to occur.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasFramingProtocols">
+            <summary>
+            This class specifies the framing protocol used by the server as specified in the FramingProtocols property of the RasEntry class.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasFramingProtocols.#ctor(System.UInt32)">
+            <summary>
+            Creates an instance of a RasFramingProtocols class around its 32 bit unsigned value representation.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasFramingProtocols.Data">
+            <summary>
+            The raw 32 bit unsigned value representing the framing protocols bitmask.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasFramingProtocols.PPP">
+            <summary>
+            If this flag is set the framing protocol based on PPP is enabled.
+            </summary>
+        </member>
+        <member name="P:RasLibrary.RasFramingProtocols.Slip">
+            <summary>
+            If this flag is set the framing protocol based on Slip is enabled.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasException">
+            <summary>
+            This class inherits from the Exception class and it is thrown when a RAS related exception occurs.
+            </summary>
+        </member>
+        <member name="M:RasLibrary.RasException.#ctor(System.Int32)">
+            <summary>
+            Creates a RasException object. The constructor automatically creates an appropriate message based on the description of the provided error code and puts the error code into a publicly available property.
+            </summary>
+            <param name="rasErrorCode">The RAS specific error code as given by one of the native functions.</param>
+        </member>
+        <member name="M:RasLibrary.RasException.GetDescriptionFromErrorCode(System.Int32)">
+            <summary>
+            Translates a RAS specific error code into its description.
+            </summary>
+            <param name="rasErrorCode">The RAS error code.</param>
+            <returns>A brief description of the specified error code.</returns>
+        </member>
+        <member name="P:RasLibrary.RasException.RasErrorCode">
+            <summary>
+            Contains the RAS related error code number.
+            </summary>
+        </member>
+        <member name="T:RasLibrary.RasErrorCode">
+            <summary>
+            This enum contains a list of RAS related error codes.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.PENDING">
+            <summary>
+            An operation is pending.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INVALID_PORT_HANDLE">
+            <summary>
+            The port handle is invalid.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PORT_ALREADY_OPEN">
+            <summary>
+            The port is already open.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BUFFER_TOO_SMALL">
+            <summary>
+            Caller's buffer is too small.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRONG_INFO_SPECIFIED">
+            <summary>
+            Wrong information specified.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_SET_PORT_INFO">
+            <summary>
+            Cannot set port information.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PORT_NOT_CONNECTED">
+            <summary>
+            The port is not connected.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_EVENT_INVALID">
+            <summary>
+            The event is invalid.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DEVICE_DOES_NOT_EXIST">
+            <summary>
+            The device does not exist.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DEVICETYPE_DOES_NOT_EXIST">
+            <summary>
+            The device type does not exist.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BUFFER_INVALID">
+            <summary>
+            The buffer is invalid.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_ROUTE_NOT_AVAILABLE">
+            <summary>
+            The route is not available.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_ROUTE_NOT_ALLOCATED">
+            <summary>
+            The route is not allocated.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INVALID_COMPRESSION_SPECIFIED">
+            <summary>
+            Invalid compression specified.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OUT_OF_BUFFERS">
+            <summary>
+            Out of buffers.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PORT_NOT_FOUND">
+            <summary>
+            The port was not found.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_ASYNC_REQUEST_PENDING">
+            <summary>
+            An asynchronous request is pending.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_ALREADY_DISCONNECTING">
+            <summary>
+            The port or device is already disconnecting.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PORT_NOT_OPEN">
+            <summary>
+            The port is not open.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PORT_DISCONNECTED">
+            <summary>
+            The port is disconnected.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_ENDPOINTS">
+            <summary>
+            There are no endpoints.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_OPEN_PHONEBOOK">
+            <summary>
+            Cannot open the phone book file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_LOAD_PHONEBOOK">
+            <summary>
+            Cannot load the phone book file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_FIND_PHONEBOOK_ENTRY">
+            <summary>
+            Cannot find the phone book entry.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_WRITE_PHONEBOOK">
+            <summary>
+            Cannot write the phone book file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CORRUPT_PHONEBOOK">
+            <summary>
+            Invalid information found in the phone book.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_LOAD_STRING">
+            <summary>
+            Cannot load a string.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_KEY_NOT_FOUND">
+            <summary>
+            Cannot find key.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DISCONNECTION">
+            <summary>
+            The port was disconnected.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_REMOTE_DISCONNECTION">
+            <summary>
+            The port was disconnected by the remote machine.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_HARDWARE_FAILURE">
+            <summary>
+            The port was disconnected due to hardware failure.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_USER_DISCONNECTION">
+            <summary>
+            The port was disconnected by the user.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INVALID_SIZE">
+            <summary>
+            The structure size is incorrect.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PORT_NOT_AVAILABLE">
+            <summary>
+            The port is already in use or is not configured for Remote Access dialout.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_PROJECT_CLIENT">
+            <summary>
+            Cannot register your computer on the remote network.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNKNOWN">
+            <summary>
+            Unknown error.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRONG_DEVICE_ATTACHED">
+            <summary>
+            The wrong device is attached to the port.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BAD_STRING">
+            <summary>
+            The string could not be converted.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_REQUEST_TIMEOUT">
+            <summary>
+            The request has timed out.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_GET_LANA">
+            <summary>
+            No asynchronous net available.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NETBIOS_ERROR">
+            <summary>
+            A NetBIOS error has occurred.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SERVER_OUT_OF_RESOURCES">
+            <summary>
+            The server cannot allocate NetBIOS resources needed to support the client.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NAME_EXISTS_ON_NET">
+            <summary>
+            One of your NetBIOS names is already registered on the remote network.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SERVER_GENERAL_NET_FAILURE">
+            <summary>
+            A network adapter at the server failed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.WARNING_MSG_ALIAS_NOT_ADDED">
+            <summary>
+            You will not receive network message popups.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_AUTH_INTERNAL">
+            <summary>
+            Internal authentication error.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_RESTRICTED_LOGON_HOURS">
+            <summary>
+            The account is not permitted to log on at this time of day.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_ACCT_DISABLED">
+            <summary>
+            The account is disabled.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PASSWD_EXPIRED">
+            <summary>
+            The password has expired.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_DIALIN_PERMISSION">
+            <summary>
+            The account does not have Remote Access permission.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SERVER_NOT_RESPONDING">
+            <summary>
+            The Remote Access server is not responding.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_FROM_DEVICE">
+            <summary>
+            Your modem (or other connecting device) has reported an error.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNRECOGNIZED_RESPONSE">
+            <summary>
+            Unrecognized response from the device.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_MACRO_NOT_FOUND">
+            <summary>
+            A macro required by the device was not found in the device .INF file section.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_MACRO_NOT_DEFINED">
+            <summary>
+            A command or response in the device .INF file section refers to an undefined macro
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_MESSAGE_MACRO_NOT_FOUND">
+            <summary>
+            The "message" macro was not found in the device .INF file section.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DEFAULTOFF_MACRO_NOT_FOUND">
+            <summary>
+            The "defaultoff" macro in the device .INF file section contains an undefined macro
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_FILE_COULD_NOT_BE_OPENED">
+            <summary>
+            The device .INF file could not be opened.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DEVICENAME_TOO_LONG">
+            <summary>
+            The device name in the device .INF or media .INI file is too long.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DEVICENAME_NOT_FOUND">
+            <summary>
+            The media .INI file refers to an unknown device name.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_RESPONSES">
+            <summary>
+            The device .INF file contains no responses for the command.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_COMMAND_FOUND">
+            <summary>
+            The device .INF file is missing a command.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRONG_KEY_SPECIFIED">
+            <summary>
+            Attempted to set a macro not listed in device .INF file section.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNKNOWN_DEVICE_TYPE">
+            <summary>
+            The media .INI file refers to an unknown device type.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_ALLOCATING_MEMORY">
+            <summary>
+            Cannot allocate memory.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PORT_NOT_CONFIGURED">
+            <summary>
+            The port is not configured for Remote Access.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DEVICE_NOT_READY">
+            <summary>
+            Your modem (or other connecting device) is not functioning.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_READING_INI_FILE">
+            <summary>
+            Cannot read the media .INI file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_CONNECTION">
+            <summary>
+            The connection dropped.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BAD_USAGE_IN_INI_FILE">
+            <summary>
+            The usage parameter in the media .INI file is invalid.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_READING_SECTIONNAME">
+            <summary>
+            Cannot read the section name from the media .INI file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_READING_DEVICETYPE">
+            <summary>
+            Cannot read the device type from the media .INI file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_READING_DEVICENAME">
+            <summary>
+            Cannot read the device name from the media .INI file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_READING_USAGE">
+            <summary>
+            Cannot read the usage from the media .INI file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_READING_MAXCONNECTBPS">
+            <summary>
+            Cannot read the maximum connection BPS rate from the media .INI file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_READING_MAXCARRIERBPS">
+            <summary>
+            Cannot read the maximum carrier BPS rate from the media .INI file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_LINE_BUSY">
+            <summary>
+            The line is busy.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_VOICE_ANSWER">
+            <summary>
+            A person answered instead of a modem.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_ANSWER">
+            <summary>
+            There is no answer.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_CARRIER">
+            <summary>
+            Cannot detect carrier.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_DIALTONE">
+            <summary>
+            There is no dial tone.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_IN_COMMAND">
+            <summary>
+            General error reported by device.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRITING_SECTIONNAME">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRITING_DEVICETYPE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRITING_DEVICENAME">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRITING_MAXCONNECTBPS">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRITING_MAXCARRIERBPS">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRITING_USAGE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRITING_DEFAULTOFF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_READING_DEFAULTOFF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_EMPTY_INI_FILE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_AUTHENTICATION_FAILURE">
+            <summary>
+            Access denied because username and/or password is invalid on the domain.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PORT_OR_DEVICE">
+            <summary>
+            Hardware failure in port or attached device.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NOT_BINARY_MACRO">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DCB_NOT_FOUND">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_STATE_MACHINES_NOT_STARTED">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_STATE_MACHINES_ALREADY_STARTED">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PARTIAL_RESPONSE_LOOPING">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNKNOWN_RESPONSE_KEY">
+            <summary>
+            A response keyname in the device .INF file is not in the expected format.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_RECV_BUF_FULL">
+            <summary>
+            The device response caused buffer overflow.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CMD_TOO_LONG">
+            <summary>
+            The expanded command in the device .INF file is too long.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNSUPPORTED_BPS">
+            <summary>
+            The device moved to a BPS rate not supported by the COM driver.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNEXPECTED_RESPONSE">
+            <summary>
+            Device response received when none expected.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INTERACTIVE_MODE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BAD_CALLBACK_NUMBER">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INVALID_AUTH_STATE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRITING_INITBPS">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_X25_DIAGNOSTIC">
+            <summary>
+            X.25 diagnostic indication.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_ACCT_EXPIRED">
+            <summary>
+            The account has expired.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CHANGING_PASSWORD">
+            <summary>
+            Error changing password on domain.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OVERRUN">
+            <summary>
+            Serial overrun errors were detected while communicating with your modem.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_RASMAN_CANNOT_INITIALIZE">
+            <summary>
+            RasMan initialization failure. Check the event log.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BIPLEX_PORT_NOT_AVAILABLE">
+            <summary>
+            Biplex port is initializing. Wait a few seconds and redial.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_ACTIVE_ISDN_LINES">
+            <summary>
+            No active ISDN lines are available.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_ISDN_CHANNELS_AVAILABLE">
+            <summary>
+            Not enough ISDN channels are available to make the call.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_TOO_MANY_LINE_ERRORS">
+            <summary>
+            Too many errors occurred because of poor phone line quality.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_IP_CONFIGURATION">
+            <summary>
+            The Remote Access IP configuration is unusable.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_IP_ADDRESSES">
+            <summary>
+            No IP addresses are available in the static pool of Remote Access IP addresses.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_TIMEOUT">
+            <summary>
+            PPP timeout.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_REMOTE_TERMINATED">
+            <summary>
+            PPP terminated by remote machine.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_NO_PROTOCOLS_CONFIGURED">
+            <summary>
+            No PPP control protocols configured.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_NO_RESPONSE">
+            <summary>
+            Remote PPP peer is not responding.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_INVALID_PACKET">
+            <summary>
+            The PPP packet is invalid.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PHONE_NUMBER_TOO_LONG">
+            <summary>
+            The phone number, including prefix and suffix, is too long.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_IPXCP_NO_DIALOUT_CONFIGURED">
+            <summary>
+            The IPX protocol cannot dial-out on the port because the computer is an IPX router.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_IPXCP_NO_DIALIN_CONFIGURED">
+            <summary>
+            The IPX protocol cannot dial-in on the port because the IPX router is not installed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_IPXCP_DIALOUT_ALREADY_ACTIVE">
+            <summary>
+            The IPX protocol cannot be used for dial-out on more than one port at a time.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_ACCESSING_TCPCFGDLL">
+            <summary>
+            Cannot access TCPCFG.DLL.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_IP_RAS_ADAPTER">
+            <summary>
+            Cannot find an IP adapter bound to Remote Access.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SLIP_REQUIRES_IP">
+            <summary>
+            SLIP cannot be used unless the IP protocol is installed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PROJECTION_NOT_COMPLETE">
+            <summary>
+            Computer registration is not complete.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PROTOCOL_NOT_CONFIGURED">
+            <summary>
+            The protocol is not configured.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_NOT_CONVERGING">
+            <summary>
+            The PPP negotiation is not converging.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_CP_REJECTED">
+            <summary>
+            The PPP control protocol for this network protocol is not available on the server.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_LCP_TERMINATED">
+            <summary>
+            The PPP link control protocol terminated.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_REQUIRED_ADDRESS_REJECTED">
+            <summary>
+            The requested address was rejected by the server.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_NCP_TERMINATED">
+            <summary>
+            The remote computer terminated the control protocol.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_LOOPBACK_DETECTED">
+            <summary>
+            Loopback detected.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_PPP_NO_ADDRESS_ASSIGNED">
+            <summary>
+            The server did not assign an address.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_USE_LOGON_CREDENTIALS">
+            <summary>
+            The remote server cannot use the Windows NT encrypted password.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_TAPI_CONFIGURATION">
+            <summary>
+            The TAPI devices configured for Remote Access failed to initialize or were not installed correctly.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_LOCAL_ENCRYPTION">
+            <summary>
+            The local computer does not support encryption.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_REMOTE_ENCRYPTION">
+            <summary>
+            The remote server does not support encryption.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_REMOTE_REQUIRES_ENCRYPTION">
+            <summary>
+            The remote server requires encryption.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_IPXCP_NET_NUMBER_CONFLICT">
+            <summary>
+            Cannot use the IPX net number assigned by the remote server. Check the event log.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INVALID_SMM">
+            <summary>
+            An essential file is missing.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SMM_UNINITIALIZED">
+            <summary>
+            An essential file failed to initialize.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_MAC_FOR_PORT">
+            <summary>
+            MAC not found.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SMM_TIMEOUT">
+            <summary>
+            The system timed out while trying to load an essential file.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BAD_PHONE_NUMBER">
+            <summary>
+            Invalid phone number.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRONG_MODULE">
+            <summary>
+            Invalid authentication attempt.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INVALID_CALLBACK_NUMBER">
+            <summary>
+            The callback number contains an invalid character. Only the following characters are allowed: 0 to 9, T, P, W, (,), -, @, and space.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SCRIPT_SYNTAX">
+            <summary>
+            A syntax error was encountered while processing a script.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_HANGUP_FAILED">
+            <summary>
+            The connection could not be disconnected because it was created by the multi-protocol router.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BUNDLE_NOT_FOUND">
+            <summary>
+            The system could not find the multi-link bundle.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_DO_CUSTOMDIAL">
+            <summary>
+            The system cannot perform automated dial because this entry has a custom dialer specified.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DIAL_ALREADY_IN_PROGRESS">
+            <summary>
+            This connection is already being dialed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_RASAUTO_CANNOT_INITIALIZE">
+            <summary>
+            Remote access services could not be started automatically. Additional information is provided in the event log.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CONNECTION_ALREADY_SHARED">
+            <summary>
+            Internet connection sharing is already enabled on the connection.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SHARING_CHANGE_FAILED">
+            <summary>
+            ERROR_SHARING_CHANGE_FAILED
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SHARING_ROUTER_INSTALL">
+            <summary>
+            An error occurred while routing capabilities were being enabled.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SHARE_CONNECTION_FAILED">
+            <summary>
+            An error occurred while Internet connection sharing was being enabled for the connection.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SHARING_PRIVATE_INSTALL">
+            <summary>
+            ERROR_SHARING_PRIVATE_INSTALL
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CANNOT_SHARE_CONNECTION">
+            <summary>
+            Internet connection sharing cannot be enabled. There are two or more LAN connections in addition to the connection to be shared.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_SMART_CARD_READER">
+            <summary>
+            No smart card reader is installed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SHARING_ADDRESS_EXISTS">
+            <summary>
+            Internet connection sharing cannot be enabled. A LAN connection is already configured with the IP address required for automatic IP addressing.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_CERTIFICATE">
+            <summary>
+            The system could not find any certificate.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SHARING_MULTIPLE_ADDRESSES">
+            <summary>
+            Internet connection sharing cannot be enabled. The LAN connection selected on the private network has more than one IP address configured. Reconfigure the LAN connection with a single IP address before enabling Internet connection sharing.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_FAILED_TO_ENCRYPT">
+            <summary>
+            The connection attempt failed because of failure to encrypt data.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BAD_ADDRESS_SPECIFIED">
+            <summary>
+            The specified destination is not reachable.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CONNECTION_REJECT">
+            <summary>
+            The remote machine rejected the connection attempt.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CONGESTION">
+            <summary>
+            The connection attempt failed because the network is busy.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INCOMPATIBLE">
+            <summary>
+            The remote computer's network hardware is incompatible with the type of call requested.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NUMBERCHANGED">
+            <summary>
+            The connection attempt failed because the destination number has changed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_TEMPFAILURE">
+            <summary>
+            The connection attempt failed because of a temporary failure. Try connecting again.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_BLOCKED">
+            <summary>
+            The call was blocked by the remote computer.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_DONOTDISTURB">
+            <summary>
+            The call could not be connected because the destination has invoked the Do Not Disturb feature.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OUTOFORDER">
+            <summary>
+            The connection attempt failed because the modem on the remote computer is out of order.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNABLE_TO_AUTHENTICATE_SERVER">
+            <summary>
+            It was not possible to verify the identity of the server.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SMART_CARD_REQUIRED">
+            <summary>
+            To dial out using this connection, you must use a smart card.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_INVALID_FUNCTION_FOR_ENTRY">
+            <summary>
+            An attempted function is not valid for this connection.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CERT_FOR_ENCRYPTION_NOT_FOUND">
+            <summary>
+            The encryption attempt failed because no valid certificate was found.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SHARING_RRAS_CONFLICT">
+            <summary>
+            Network Address Translation (NAT) is currently installed as a routing protocol, and must be removed before enabling Internet Connection Sharing.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_SHARING_NO_PRIVATE_LAN">
+            <summary>
+            Internet Connection Sharing cannot be enabled. The LAN connection selected as the private network is either not present, or is disconnected from the network. Please ensure that the LAN adapter is connected before enabling Internet Connection Sharing.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_DIFF_USER_AT_LOGON">
+            <summary>
+            You cannot dial using this connection at logon time, because it is configured to use a user name different than the one on the smart card. If you want to use it at logon time, you must configure it to use the user name on the smart card.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_REG_CERT_AT_LOGON">
+            <summary>
+            You cannot dial using this connection at logon time, because it is not configured to use a smart card. If you want to use it at logon time, you must edit the properties of this connection so that it uses a smart card.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OAKLEY_NO_CERT">
+            <summary>
+            The L2TP connection attempt failed because there is no valid machine certificate on your computer for security authentication.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OAKLEY_AUTH_FAIL">
+            <summary>
+            The L2TP connection attempt failed because the security layer could not authenticate the remote computer.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OAKLEY_ATTRIB_FAIL">
+            <summary>
+            The L2TP connection attempt failed because the security layer could not negotiate compatible parameters with the remote computer.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OAKLEY_GENERAL_PROCESSING">
+            <summary>
+            The L2TP connection attempt failed because the security layer encountered a processing error during initial negotiations with the remote computer.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OAKLEY_NO_PEER_CERT">
+            <summary>
+            The L2TP connection attempt failed because certificate validation on the remote computer failed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OAKLEY_NO_POLICY">
+            <summary>
+            The L2TP connection attempt failed because security policy for the connection was not found.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OAKLEY_TIMED_OUT">
+            <summary>
+            The L2TP connection attempt failed because security negotiation timed out.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_OAKLEY_ERROR">
+            <summary>
+            The L2TP connection attempt failed because an error occurred while negotiating security.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNKNOWN_FRAMED_PROTOCOL">
+            <summary>
+            The Framed Protocol RADIUS attribute for this user is not PPP.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_WRONG_TUNNEL_TYPE">
+            <summary>
+            The Tunnel Type RADIUS attribute for this user is not correct.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_UNKNOWN_SERVICE_TYPE">
+            <summary>
+            The Service Type RADIUS attribute for this user is neither Framed nor Callback Framed.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_CONNECTING_DEVICE_NOT_FOUND">
+            <summary>
+            A connection to the remote computer could not be established because the modem was not found or was busy.
+            </summary>
+        </member>
+        <member name="F:RasLibrary.RasErrorCode.ERROR_NO_EAPTLS_CERTIFICATE">
+            <summary>
+            A certificate could not be found that can be used with this Extensible Authentication Protocol.
+            </summary>
+        </member>
+    </members>
+</doc>

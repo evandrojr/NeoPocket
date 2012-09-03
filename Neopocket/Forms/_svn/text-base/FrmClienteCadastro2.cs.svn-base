@@ -1,0 +1,151 @@
+﻿using System;
+using System.Data;
+using System.Windows.Forms;
+using Neopocket.Utils;
+
+namespace Neopocket.Forms
+{
+    /// <summary>
+    /// Segunda tela de cadastro do cliente
+    /// </summary>
+    public partial class FrmClienteCadastro2 : FormBase
+    {
+        #region [ Construtor ]
+
+        public FrmClienteCadastro2()
+        {
+            InitializeComponent();
+            notification.Caption = "Neo";
+        }
+
+        #endregion
+
+        #region [ Fase anterior ]
+
+        private void btnAnterior_Click(object sender, EventArgs e)
+        {
+            Util.FormExibir(new FrmClienteCadastro1());
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Próxima fase ]
+
+        private void btnProximo_Click(object sender, EventArgs e)
+        {
+            if (this.ValidaCampos())
+            {
+                this.Concluir();
+            }
+        }
+
+        #endregion
+
+        #region [ Validação ]
+
+        /// <summary>
+        /// Validação dos campos do formulário
+        /// </summary>
+        /// <returns>Boolean</returns>
+        private Boolean ValidaCampos()
+        {
+            Boolean validacaoPanel = Util.ValidarPanel(this.pnlValidacao, this.notification);
+
+            if (!Validator.ValidaCEP(txtCEP.Text))
+            {
+                notification.Text = " CEP inválido !";
+                notification.Visible = true;
+                return false;
+            }
+
+            return validacaoPanel;
+        }
+
+        #endregion
+
+        #region [ Conclusão da fase ]
+
+        private void Concluir()
+        {
+            Globals.Cliente.Endereco = txtEndereco.Text;
+            Globals.Cliente.Bairro = txtBairro.Text;
+            DataRowView drCidade = (DataRowView)cboCidade.SelectedItem;
+            Globals.Cliente.Cidade = (int)drCidade["id_cidade"];
+            Globals.Cliente.Telefone = txtTelefone.Text;
+            Globals.Cliente.Cep = txtCEP.Text;
+
+            Util.FormExibir(new FrmClienteCadastro3());
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Cancelamento ]
+
+        private void mnuCancelar_Click(object sender, EventArgs e)
+        {
+            inputPanel.Enabled = false;
+            DialogResult result = MessageBox.Show("Deseja realmente cancelar o cadastro?", "Neo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            if (result == DialogResult.Yes)
+                this.Close();
+        }
+
+        #endregion
+
+        #region [ Load ]
+
+        private void FrmClienteCadastro2_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                DataTable dtCidades;
+                dtCidades = Globals.Bd.DataTablePreenche("Select id_cidade, descricao from cidade order by descricao", "cidade");
+                cboCidade.DataSource = dtCidades;
+                cboCidade.DisplayMember = "descricao";
+                cboCidade.ValueMember = "id_cidade";
+
+                this.Carregar();
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega as informações do cliente ]
+
+        public void Carregar()
+        {
+            if (!String.IsNullOrEmpty(Globals.Cliente.Endereco))
+            {
+                txtEndereco.Text = Globals.Cliente.Endereco;
+            }
+            if (!String.IsNullOrEmpty(Globals.Cliente.Bairro))
+            {
+                txtBairro.Text = Globals.Cliente.Bairro;
+            }
+            if (!String.IsNullOrEmpty(Globals.Cliente.Telefone))
+            {
+                txtTelefone.Text = Globals.Cliente.Telefone;
+            }
+            if (!String.IsNullOrEmpty(Globals.Cliente.Cep))
+            {
+                txtCEP.Text = Globals.Cliente.Cep;
+            }
+            if (Globals.Cliente.Cidade != 0)
+            {
+                cboCidade.SelectedValue = Globals.Cliente.Cidade;
+            }
+            else
+            {
+                cboCidade.SelectedText = "Salvador";
+            }
+        }
+
+        #endregion
+    }
+}

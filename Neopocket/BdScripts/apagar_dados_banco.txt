@@ -1,0 +1,26 @@
+﻿Delete from atributo;
+Delete from cidade;
+Delete from cliente;
+Delete from cliente_cadastrado;
+Delete from especie_financeira;
+Delete from forma_pagamento;
+Delete from forma_pagamento_tabela_preco;
+Delete from funcionario;
+Delete from grade;
+Delete from item_atributo;
+Delete from item_forma_pagamento;
+Delete from item_grade;
+Delete from item_pedido;
+Delete from item_pedido_grade;
+Delete from item_tabela_preco;
+Delete from motivo;
+Delete from parametro;
+Delete from pedido;
+Delete from produto;
+Delete from produto_grade;
+Delete from recusa;
+Delete from rota_cidade;
+Delete from saldo_grade;
+Delete from tabela_preco;
+Delete from visita;
+

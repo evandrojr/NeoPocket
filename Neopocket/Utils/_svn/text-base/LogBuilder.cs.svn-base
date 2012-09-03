@@ -1,0 +1,54 @@
+﻿namespace Neopocket.Utils
+{
+    using System.IO;
+    using System;
+
+    /// <summary>
+    /// Provê um ponto único do controle dos logs do NeoPocket
+    /// </summary>
+    public class LogBuilder
+    {
+        /// <summary>
+        /// Método responsável por escrever no log, só deixa escrever no log
+        /// se a mensagem passada não for vazia.
+        /// </summary>
+        /// <param name="caminhoLog">Caminho do arquivo de log</param>
+        /// <param name="mensagem">Mensagem a ser gravada</param>
+        public static void Append(String caminhoLog, String mensagem, Boolean usarFormatacao)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(mensagem))
+                    return;
+
+                if (usarFormatacao)
+                {
+                    String formatoMensagem = "[" + DateTime.Now.ToString() + "] {0}";
+                    mensagem = String.Format(formatoMensagem, mensagem);
+                }
+
+                using (FileStream sFileStream = File.Open(caminhoLog, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                {
+                    StreamWriter sWriter = new StreamWriter(sFileStream);
+                    sWriter.WriteLine(mensagem);
+                    sWriter.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Se ocorrer um erro na hora de salvar o log, não trava a aplicação!
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Apaga o arquivo de log
+        /// </summary>
+        /// <param name="caminhoLog">Caminho do log</param>
+        public static void Clear(String caminhoLog)
+        {
+            if (File.Exists(caminhoLog))
+                File.Delete(caminhoLog);
+        }
+    }
+}

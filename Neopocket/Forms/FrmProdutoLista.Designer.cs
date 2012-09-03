@@ -1,0 +1,203 @@
+﻿namespace Neopocket.Forms
+{
+    partial class FrmProdutoLista
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.inputPanel = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
+            this.txtProduto = new System.Windows.Forms.TextBox();
+            this.btnBuscar = new System.Windows.Forms.Button();
+            this.pnlFiltroInterno = new System.Windows.Forms.Panel();
+            this.radNome = new System.Windows.Forms.RadioButton();
+            this.radCodigo = new System.Windows.Forms.RadioButton();
+            this.lblProduto = new System.Windows.Forms.Label();
+            this.grdProduto = new Neo.Pocket.Controls.NeoDataGrid();
+            this.NeoPager = new Neo.Pocket.Controls.NeoDataGridPager();
+            this.NeoTableStyle = new System.Windows.Forms.DataGridTableStyle();
+            this.pnlFiltro = new System.Windows.Forms.Panel();
+            this.pnlPaginacao = new System.Windows.Forms.Panel();
+            this.pnlGrid = new System.Windows.Forms.Panel();
+            this.pnlFiltroInterno.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdProduto)).BeginInit();
+            this.pnlFiltro.SuspendLayout();
+            this.pnlPaginacao.SuspendLayout();
+            this.pnlGrid.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // txtProduto
+            // 
+            this.txtProduto.Location = new System.Drawing.Point(60, 4);
+            this.txtProduto.Multiline = true;
+            this.txtProduto.Name = "txtProduto";
+            this.txtProduto.Size = new System.Drawing.Size(174, 18);
+            this.txtProduto.TabIndex = 8;
+            this.txtProduto.GotFocus += new System.EventHandler(this.txtProduto_GotFocus);
+            this.txtProduto.LostFocus += new System.EventHandler(this.txtProduto_LostFocus);
+            // 
+            // btnBuscar
+            // 
+            this.btnBuscar.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular);
+            this.btnBuscar.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.btnBuscar.Location = new System.Drawing.Point(182, 28);
+            this.btnBuscar.Name = "btnBuscar";
+            this.btnBuscar.Size = new System.Drawing.Size(52, 22);
+            this.btnBuscar.TabIndex = 6;
+            this.btnBuscar.Text = " Buscar";
+            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
+            // 
+            // pnlFiltroInterno
+            // 
+            this.pnlFiltroInterno.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.pnlFiltroInterno.Controls.Add(this.radNome);
+            this.pnlFiltroInterno.Controls.Add(this.radCodigo);
+            this.pnlFiltroInterno.Location = new System.Drawing.Point(5, 28);
+            this.pnlFiltroInterno.Name = "pnlFiltroInterno";
+            this.pnlFiltroInterno.Size = new System.Drawing.Size(132, 22);
+            // 
+            // radNome
+            // 
+            this.radNome.Checked = true;
+            this.radNome.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.radNome.Location = new System.Drawing.Point(69, 2);
+            this.radNome.Name = "radNome";
+            this.radNome.Size = new System.Drawing.Size(58, 17);
+            this.radNome.TabIndex = 1;
+            this.radNome.Text = "Nome ";
+            this.radNome.CheckedChanged += new System.EventHandler(this.radNome_CheckedChanged);
+            // 
+            // radCodigo
+            // 
+            this.radCodigo.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.radCodigo.Location = new System.Drawing.Point(5, 1);
+            this.radCodigo.Name = "radCodigo";
+            this.radCodigo.Size = new System.Drawing.Size(68, 20);
+            this.radCodigo.TabIndex = 2;
+            this.radCodigo.Text = "Código";
+            this.radCodigo.CheckedChanged += new System.EventHandler(this.radCodigo_CheckedChanged);
+            // 
+            // lblProduto
+            // 
+            this.lblProduto.Location = new System.Drawing.Point(5, 5);
+            this.lblProduto.Name = "lblProduto";
+            this.lblProduto.Size = new System.Drawing.Size(49, 17);
+            this.lblProduto.Text = "Produto";
+            // 
+            // grdProduto
+            // 
+            this.grdProduto.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.grdProduto.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grdProduto.Location = new System.Drawing.Point(0, 0);
+            this.grdProduto.Name = "grdProduto";
+            this.grdProduto.Pager = this.NeoPager;
+            this.grdProduto.Size = new System.Drawing.Size(240, 215);
+            this.grdProduto.TabIndex = 11;
+            this.grdProduto.TableStyles.Add(this.NeoTableStyle);
+            // 
+            // NeoPager
+            // 
+            this.NeoPager.BackColor = System.Drawing.SystemColors.Control;
+            this.NeoPager.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NeoPager.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.NeoPager.Location = new System.Drawing.Point(0, 0);
+            this.NeoPager.Name = "NeoPager";
+            this.NeoPager.Owner = this.grdProduto;
+            this.NeoPager.PageIndex = 0;
+            this.NeoPager.PageSize = 100;
+            this.NeoPager.Size = new System.Drawing.Size(240, 23);
+            this.NeoPager.TabIndex = 12;
+            // 
+            // pnlFiltro
+            // 
+            this.pnlFiltro.BackColor = System.Drawing.SystemColors.Control;
+            this.pnlFiltro.Controls.Add(this.btnBuscar);
+            this.pnlFiltro.Controls.Add(this.pnlFiltroInterno);
+            this.pnlFiltro.Controls.Add(this.lblProduto);
+            this.pnlFiltro.Controls.Add(this.txtProduto);
+            this.pnlFiltro.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlFiltro.Location = new System.Drawing.Point(0, 0);
+            this.pnlFiltro.Name = "pnlFiltro";
+            this.pnlFiltro.Size = new System.Drawing.Size(240, 56);
+            // 
+            // pnlPaginacao
+            // 
+            this.pnlPaginacao.BackColor = System.Drawing.Color.Transparent;
+            this.pnlPaginacao.Controls.Add(this.NeoPager);
+            this.pnlPaginacao.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlPaginacao.Location = new System.Drawing.Point(0, 271);
+            this.pnlPaginacao.Name = "pnlPaginacao";
+            this.pnlPaginacao.Size = new System.Drawing.Size(240, 23);
+            // 
+            // pnlGrid
+            // 
+            this.pnlGrid.BackColor = System.Drawing.Color.Transparent;
+            this.pnlGrid.Controls.Add(this.grdProduto);
+            this.pnlGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlGrid.Location = new System.Drawing.Point(0, 56);
+            this.pnlGrid.Name = "pnlGrid";
+            this.pnlGrid.Size = new System.Drawing.Size(240, 215);
+            // 
+            // FrmProdutoLista
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(240, 294);
+            this.Controls.Add(this.pnlGrid);
+            this.Controls.Add(this.pnlPaginacao);
+            this.Controls.Add(this.pnlFiltro);
+            this.MinimizeBox = false;
+            this.Name = "FrmProdutoLista";
+            this.Text = "NeoPocket";
+            this.Load += new System.EventHandler(this.FrmProdutoLista_Load);
+            this.pnlFiltroInterno.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdProduto)).EndInit();
+            this.pnlFiltro.ResumeLayout(false);
+            this.pnlPaginacao.ResumeLayout(false);
+            this.pnlGrid.ResumeLayout(false);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private Microsoft.WindowsCE.Forms.InputPanel inputPanel;
+        private System.Windows.Forms.TextBox txtProduto;
+        private System.Windows.Forms.Button btnBuscar;
+        private System.Windows.Forms.Panel pnlFiltroInterno;
+        private System.Windows.Forms.RadioButton radNome;
+        private System.Windows.Forms.RadioButton radCodigo;
+        private System.Windows.Forms.Label lblProduto;
+        private Neo.Pocket.Controls.NeoDataGrid grdProduto;
+        private Neo.Pocket.Controls.NeoDataGridPager NeoPager;
+        private System.Windows.Forms.DataGridTableStyle NeoTableStyle;
+        private System.Windows.Forms.Panel pnlFiltro;
+        private System.Windows.Forms.Panel pnlPaginacao;
+        private System.Windows.Forms.Panel pnlGrid;
+    }
+}

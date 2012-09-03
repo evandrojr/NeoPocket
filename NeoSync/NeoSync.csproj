@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2F7C7147-27C5-4F44-819D-670FF8A5F852}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NeoSync</RootNamespace>
+    <AssemblyName>NeoSync</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>neosync.ico</ApplicationIcon>
+    <StartupObject>NeoSync.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=2.5.2.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL" />
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ShowLib\Csv.cs">
+      <Link>lib\Csv.cs</Link>
+    </Compile>
+    <Compile Include="..\ShowLib\Debug.cs">
+      <Link>lib\Debug.cs</Link>
+    </Compile>
+    <Compile Include="..\ShowLib\FrmException.cs">
+      <Link>lib\FrmException.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ShowLib\FrmException.designer.cs">
+      <Link>lib\FrmException.designer.cs</Link>
+      <DependentUpon>FrmException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ShowLib\FrmNotification.cs">
+      <Link>lib\FrmNotification.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ShowLib\FrmNotification.designer.cs">
+      <Link>lib\FrmNotification.designer.cs</Link>
+      <DependentUpon>FrmNotification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ShowLib\Ftp.cs">
+      <Link>lib\Ftp.cs</Link>
+    </Compile>
+    <Compile Include="..\ShowLib\Mail.cs">
+      <Link>lib\Mail.cs</Link>
+    </Compile>
+    <Compile Include="..\ShowLib\Zip.cs">
+      <Link>lib\Zip.cs</Link>
+    </Compile>
+    <Compile Include="Bd.cs" />
+    <Compile Include="config\D.cs" />
+    <Compile Include="Core\Op.cs" />
+    <Compile Include="DadoImportacao.cs" />
+    <Compile Include="FrmPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPrincipal.Designer.cs">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmRelPedido.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmRelPedido.Designer.cs">
+      <DependentUpon>FrmRelPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapeamentoBdCsv.cs" />
+    <Compile Include="Parametro.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="..\ShowLib\FrmException.resx">
+      <Link>lib\FrmException.resx</Link>
+      <DependentUpon>FrmException.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ShowLib\FrmNotification.resx">
+      <Link>lib\FrmNotification.resx</Link>
+      <DependentUpon>FrmNotification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPrincipal.resx">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmRelPedido.resx">
+      <DependentUpon>FrmRelPedido.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="doc\Roteiro de um procedimento de instalacao do pocket na WGS.docx" />
+    <None Include="neosync.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Roteiro.cs" />
+    <Compile Include="Tabela.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FirebirdSql.Data.FirebirdClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\fundo.jpg" />
+    <Content Include="img\neosync.ico" />
+    <Content Include="img\pocketpc.ico" />
+    <Content Include="img\pocket.jpg" />
+    <Content Include="lib\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="media\tada.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\neosync.png" />
+    <Content Include="neosync.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

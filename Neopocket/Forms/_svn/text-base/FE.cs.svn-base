@@ -1,0 +1,82 @@
+﻿using System;
+using System.Windows.Forms;
+
+namespace Neopocket.Forms
+{
+    /// <summary>
+    /// Formulário de exibição de mensagens
+    /// </summary>
+    public partial class FE : FormBase
+    {
+        #region [ Construtor ]
+
+        public FE()
+        {
+            InitializeComponent();
+        }
+
+        public FE(String title, String message)
+        {
+            InitializeComponent();
+            Text = title;
+            txtMensagem.Text = message;
+            txtDetalhes.Visible = false;
+        }
+
+        public FE(String title, String message, String details)
+        {
+            InitializeComponent();
+            Text = title;
+            txtMensagem.Text = message;
+            txtDetalhes.Text = details;
+        }
+
+        #endregion
+
+        #region [ Exibição ]
+
+        public static void Show(String message, String title)
+        {
+            FE f = new FE(title, message);
+            f.ShowDialog();
+        }
+
+        public static void Show(String message, String title, String details)
+        {
+            FE f = new FE(title, message, details);
+            f.ShowDialog();
+        }
+
+        public static void Show(String message, String title, Exception ex)
+        {
+            FE f = new FE(title, message, ex.Message + " StackTrace " + ex.StackTrace);
+            f.ShowDialog();
+        }
+
+        public static void Show(Exception ex)
+        {
+            FE f = new FE("Aviso", ex.Message, ex.StackTrace);
+            f.ShowDialog();
+        }
+
+        #endregion
+
+        #region [ Fechamento ]
+
+        private void btClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Detalhes ]
+
+        private void txtDetalhes_Click(object sender, EventArgs e)
+        {
+            txtDetalhes.Visible = true;
+        }
+
+        #endregion
+    }
+}

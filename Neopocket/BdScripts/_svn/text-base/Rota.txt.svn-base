@@ -1,0 +1,31 @@
+﻿SELECT     rota_cidade.id_rota, cliente.id_cliente, cliente.cliente_nome, rota_cidade.id_cidade, rota_cidade.cidade, rota_cidade.id_uf, COALESCE (visita.status, 0) 
+                      AS status
+FROM         rota_cidade INNER JOIN
+                      cliente ON rota_cidade.id_funcionario = cliente.id_funcionario LEFT OUTER JOIN
+                      visita ON cliente.id_cliente = visita.id_cliente AND cliente.id_funcionario = visita.id_funcionario
+WHERE     (cliente.id_funcionario = 101)
+ORDER BY rota_cidade.visitacao_ordem, cliente.visitacao_ordem;
+
+
+
+Query para gerar dados falsos
+
+
+
+
+UPDATE    rota_cidade
+SET              visitacao_ordem = id_cidade;
+
+
+UPDATE    cliente
+SET              visitacao_ordem = id_cliente;
+
+
+
+
+
+update 
+		rota_cidade
+		
+set 
+		id_funcionario=101;

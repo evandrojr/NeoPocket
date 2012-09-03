@@ -1,0 +1,1055 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlServerCe;
+using System.IO;
+using System.Text;
+using System.Windows.Forms; // Just because of the progress bar
+using Neopocket.Utils;
+
+namespace Neopocket.Core
+{
+    public static class Sincronizacao
+    {
+        #region [ Atributos ]
+
+        static MapeamentoBdCsv d = null;
+        public static string ArquivoEnviarNome = "", ArquivoClientesReceberNomeBase = "";
+        public static string ArquivoComumReceberNome = "STORE_RM.zip";
+        static List<string> lstArquivosParaCompactar = new List<string>();
+        public static string ClienteEnviarNome, PedidoEnviarNome, ItensPedidoEnviarNome, ItensPedidoGradeEnviarNome, RecusaEnviarNome;
+        private static bool pedidosNaoForamFeitos = false;
+        private static bool clientesNaoForamCadastrados = false;
+        private static bool recusasNaoForamCadastradas = false;
+        public static List<Guid> LstClienteNovoId = new List<Guid>();
+        public static List<Guid> LstPedidoNovoId = new List<Guid>();
+        public static List<int> LstRecusaNovoId = new List<int>();
+
+        /// <summary>
+        /// Nome do arquivo de log em questão
+        /// </summary>
+        private static String logName = String.Empty;
+
+        #endregion
+
+        #region [ Inicia o processo de sincronização ]
+
+        public static void Iniciar()
+        {
+            try
+            {
+                // Limpa a lista de arquivos para compactar
+                    lstArquivosParaCompactar.Clear();
+
+                // Cria a pasta de logs
+                if (!Directory.Exists(Globals.APP_LOGDIRECTORY))
+                {
+                    Directory.CreateDirectory(Globals.APP_LOGDIRECTORY);
+
+                    String strData = "D{0}M{1}A{2}H{3}MI{4}";
+                    strData = String.Format(strData, DateTime.Now.Day,
+                                                     DateTime.Now.Month,
+                                                     DateTime.Now.Year,
+                                                     DateTime.Now.Hour,
+                                                     DateTime.Now.Minute);
+
+                    logName = String.Format(Globals.APP_LOGFILENAME, "Sincronizacao", strData);
+                }
+                else
+                {
+                    /* Deleta todos os logs antigos, pois os 
+                     * logs serão armazenados por dia.
+                     */
+                    DirectoryInfo di = new DirectoryInfo(Globals.APP_LOGDIRECTORY);
+                    FileInfo[] rgFiles = di.GetFiles();
+
+                    if (rgFiles.Length > 0)
+                    {
+                        // Log mais antigo
+                        DateTime? menorData = null;
+
+                        foreach (FileInfo fi in rgFiles)
+                        {
+                            #region [ Recupera a string da hora no nome do arquivo ]
+
+                            String strDataGerada = String.Empty;
+                            Int32 dia = 0;
+                            Int32 mes = 0;
+                            Int32 ano = 0;
+                            Int32 hora = 0;
+                            Int32 minuto = 0;
+
+                            try
+                            {
+                                strDataGerada = fi.FullName.Substring(fi.FullName.LastIndexOf("-") + 1);
+                                dia = Int32.Parse(strDataGerada.Substring(1, strDataGerada.IndexOf("M") - 1));
+                                strDataGerada = strDataGerada.Substring(strDataGerada.IndexOf("M"));
+                                mes = Int32.Parse(strDataGerada.Substring(1, strDataGerada.IndexOf("A") - 1));
+                                strDataGerada = strDataGerada.Substring(strDataGerada.IndexOf("A"));
+                                ano = Int32.Parse(strDataGerada.Substring(1, strDataGerada.IndexOf("H") - 1));
+                                strDataGerada = strDataGerada.Substring(strDataGerada.IndexOf("H"));
+                                hora = Int32.Parse(strDataGerada.Substring(1, strDataGerada.IndexOf("MI") - 1));
+                                strDataGerada = strDataGerada.Substring(strDataGerada.IndexOf("MI"));
+                                minuto = Int32.Parse(strDataGerada.Replace(".txt", "").Substring(strDataGerada.IndexOf("MI") + 2));
+                            }
+                            catch { }
+
+                            #endregion
+
+                            #region [ Transforma a string da data do nome do arquivo em DATETIME ]
+
+                            DateTime? dtGeracao = null;
+
+                            try
+                            {
+                                dtGeracao = new DateTime(ano, mes, dia, hora, minuto, 0);
+                            }
+                            catch { }
+
+                            #endregion
+
+                            /* Caso o nome do arquivo não esteja corrompido */
+                            if (dtGeracao != null)
+                            {
+                                /* Se a data de geração for menor que a de hoje, apaga o log*/
+                                if (dtGeracao.Value.Date < DateTime.Now.Date)
+                                {
+                                    try
+                                    {
+                                        fi.Delete();
+                                    }
+                                    catch { }
+                                }
+                                else
+                                {
+                                    /* Gerar o nome do proximo log caso ainda não 
+                                     * tenha gerado o limite logs naquele dia. */
+                                    if (rgFiles.Length < Globals.APP_LOG_MAX)
+                                    {
+                                        String strData = "D{0}M{1}A{2}H{3}MI{4}";
+                                        strData = String.Format(strData, DateTime.Now.Day,
+                                                                         DateTime.Now.Month,
+                                                                         DateTime.Now.Year,
+                                                                         DateTime.Now.Hour,
+                                                                         DateTime.Now.Minute);
+
+                                        logName = String.Format(Globals.APP_LOGFILENAME, "Sincronizacao", strData);
+                                    }
+                                    else // Já gerou o limte de logs, então o log em questão deve ser o mais antigo
+                                    {
+                                        if (menorData == null)
+                                        {
+                                            menorData = dtGeracao;
+                                        }
+                                        else
+                                        {
+                                            if (dtGeracao < menorData)
+                                                menorData = dtGeracao;
+                                        }
+                                    }
+                                }
+                            }
+                            else // Se o nome do arquivo estava corrumpido, deleta o arquivo
+                            {
+                                try
+                                {
+                                    fi.Delete();
+                                }
+                                catch { }
+                            }
+                        }
+
+                        if (rgFiles.Length >= Globals.APP_LOG_MAX)
+                        {
+                            // Encontrou o log mais antigo para apagar
+                            if (menorData != null)
+                            {
+                                String strData = "D{0}M{1}A{2}H{3}MI{4}";
+                                strData = String.Format(strData, menorData.Value.Day,
+                                                             menorData.Value.Month,
+                                                             menorData.Value.Year,
+                                                             menorData.Value.Hour,
+                                                             menorData.Value.Minute);
+
+                                String logApagar = String.Format(Globals.APP_LOGFILENAME, "Sincronizacao", strData);
+                                File.Delete(Globals.APP_LOGDIRECTORY + logApagar);
+
+                                /* Cria o nome do novo log */
+                                strData = "D{0}M{1}A{2}H{3}MI{4}";
+                                strData = String.Format(strData, DateTime.Now.Day,
+                                                                 DateTime.Now.Month,
+                                                                 DateTime.Now.Year,
+                                                                 DateTime.Now.Hour,
+                                                                 DateTime.Now.Minute);
+
+                                logName = String.Format(Globals.APP_LOGFILENAME, "Sincronizacao", strData);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        String strData = "D{0}M{1}A{2}H{3}MI{4}";
+                        strData = String.Format(strData, DateTime.Now.Day,
+                                                         DateTime.Now.Month,
+                                                         DateTime.Now.Year,
+                                                         DateTime.Now.Hour,
+                                                         DateTime.Now.Minute);
+                        logName = String.Format(Globals.APP_LOGFILENAME, "Sincronizacao", strData);
+                    }
+                }
+
+                // Inicia o processo de gravação do log da sincronização
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Iniciando sincronização", true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Falha ao iniciar processo de sincronização", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Seleciona clientes para envio ]
+
+        /// <summary>
+        /// Seleciona todos os clientes com Status = N ( Novo )
+        /// </summary>
+        public static void ClientesSelecionarParaEnvioCSV()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Selecionando clientes novos para envio", true);
+
+                clientesNaoForamCadastrados = false;
+
+                // Busca a quantidade de clientes novos
+                Int32 numeroClientesNovos = Globals.Bd.I("SELECT COUNT(*) FROM cliente WHERE status = 'N'", false);
+                if (numeroClientesNovos > 0)
+                {
+                    LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Total de clientes(s) = " + numeroClientesNovos.ToString(), true);
+
+                    String qry = "SELECT * FROM cliente WHERE status = 'N'";
+
+                    DataTable dtClientesNovos = Globals.Bd.DataTablePreenche(qry);
+                    ClienteEnviarNome = MontarNomeArquivo("CLT") + ".csv";
+                    NeoCsv.Csv csv = new NeoCsv.Csv(Globals.APP_PATH + Globals.APP_SYNC_PATH + ClienteEnviarNome);
+                    csv.EscreveCsv(dtClientesNovos, Globals.APP_PATH + Globals.APP_SYNC_PATH + ClienteEnviarNome);
+                    lstArquivosParaCompactar.Add(Globals.APP_PATH + Globals.APP_SYNC_PATH + ClienteEnviarNome);
+                }
+                else
+                {
+                    LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Nenhum cliente foi cadastrado", true);
+                    clientesNaoForamCadastrados = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao selecionar clientes novos para envio", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Seleciona recusas para envio ]
+
+        /// <summary>
+        /// Seleciona todas as recusas com Status = N ( Nova )
+        /// </summary>
+        public static void RecusaSelecionarParaEnvioCSV()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Selecionando recusas novas para envio", true);
+
+                recusasNaoForamCadastradas = false;
+
+                Int32 numeroRecusasNovas = Globals.Bd.I("SELECT COUNT(*) FROM recusa WHERE status = 'N'", false);
+                if (numeroRecusasNovas > 0)
+                {
+                    LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Total de recusa(s) = " + numeroRecusasNovas.ToString(), true);
+                    String qry = "SELECT * FROM recusa WHERE status = 'N'";
+
+                    DataTable dtRecusasNovas = Globals.Bd.DataTablePreenche(qry);
+                    RecusaEnviarNome = MontarNomeArquivo("REC") + ".csv";
+                    NeoCsv.Csv csv = new NeoCsv.Csv(Globals.APP_PATH + Globals.APP_SYNC_PATH + RecusaEnviarNome);
+                    csv.EscreveCsv(dtRecusasNovas, Globals.APP_PATH + Globals.APP_SYNC_PATH + RecusaEnviarNome);
+                    lstArquivosParaCompactar.Add(Globals.APP_PATH + Globals.APP_SYNC_PATH + RecusaEnviarNome);
+                }
+                else
+                {
+                    LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Nenhuma recusa foi cadastrada", true);
+                    recusasNaoForamCadastradas = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao selecionar recusas novas para envio", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Seleciona pedidos para envio ]
+
+        /// <summary>
+        /// Seleciona todos os pedidos novos com Status = N ( Novo )
+        /// </summary>
+        public static void PedidosSelecionarParaEnvioCSV()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Selecionando pedidos novos para envio", true);
+
+                pedidosNaoForamFeitos = false;
+
+                Int32 numeroPedidosNovos = Globals.Bd.I("SELECT COUNT(id_pedido) FROM pedido WHERE status = 'N'", false);
+                if (numeroPedidosNovos > 0)
+                {
+                    LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Total de pedido(s) = " + numeroPedidosNovos.ToString(), true);
+                    String qry = "SELECT * FROM pedido WHERE status = 'N'";
+                    DataTable dtPedidosNovos = Globals.Bd.DataTablePreenche(qry);
+                    PedidoEnviarNome = MontarNomeArquivo("PEDIDOS") + ".csv";
+                    NeoCsv.Csv csv = new NeoCsv.Csv(Globals.APP_PATH + Globals.APP_SYNC_PATH + PedidoEnviarNome);
+                    csv.EscreveCsv(dtPedidosNovos, Globals.APP_PATH + Globals.APP_SYNC_PATH + PedidoEnviarNome);
+                    lstArquivosParaCompactar.Add(Globals.APP_PATH + Globals.APP_SYNC_PATH + PedidoEnviarNome);
+
+                    numeroPedidosNovos = -1;
+                    numeroPedidosNovos = Globals.Bd.I(@"
+                    SELECT
+                            count(pedido.id_pedido)
+                    FROM
+                            item_pedido INNER JOIN
+                            pedido ON item_pedido.id_pedido = pedido.id_pedido
+                    WHERE     
+                            (pedido.status = 'N')", false);
+
+                    if (numeroPedidosNovos > 0)
+                    {
+                        qry = @"
+                        select 
+                                item_pedido.*
+                        from 
+                                item_pedido, pedido
+                        where
+                                pedido.id_pedido=item_pedido.id_pedido
+                             and
+                                pedido.status = 'N'";
+                        dtPedidosNovos = Globals.Bd.DataTablePreenche(qry);
+                        ItensPedidoEnviarNome = MontarNomeArquivo("ITENSDOPEDIDO") + ".csv";
+                        csv.EscreveCsv(dtPedidosNovos, Globals.APP_PATH + Globals.APP_SYNC_PATH + ItensPedidoEnviarNome);
+                        lstArquivosParaCompactar.Add(Globals.APP_PATH + Globals.APP_SYNC_PATH + ItensPedidoEnviarNome);
+                    }
+
+                    numeroPedidosNovos = -1;
+                    numeroPedidosNovos = Globals.Bd.I(@"
+                    SELECT
+                            count(pedido.id_pedido)
+                    FROM
+                            item_pedido_grade INNER JOIN
+                            pedido ON item_pedido_grade.id_pedido = pedido.id_pedido
+                    WHERE     
+                            (pedido.status = 'N')", false);
+                    if (numeroPedidosNovos > 0)
+                    {
+                        qry = @"
+                        select 
+                                item_pedido_grade.*
+                        from 
+                                item_pedido_grade, pedido
+                        where
+                                pedido.id_pedido=item_pedido_grade.id_pedido
+                             and
+                                pedido.status = 'N'";
+                        dtPedidosNovos = Globals.Bd.DataTablePreenche(qry);
+                        ItensPedidoGradeEnviarNome = MontarNomeArquivo("ITEMDOPEDIDOGRADE") + ".csv";
+                        csv.EscreveCsv(dtPedidosNovos, Globals.APP_PATH + Globals.APP_SYNC_PATH + ItensPedidoGradeEnviarNome);
+                        lstArquivosParaCompactar.Add(Globals.APP_PATH + Globals.APP_SYNC_PATH + ItensPedidoGradeEnviarNome);
+                    }
+                }
+                else
+                {
+                    LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Nenhum pedido foi cadastrado", true);
+                    pedidosNaoForamFeitos = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao se0lecionar pedidos novos para envio", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Compacta arquivos para envio pro ftp ]
+
+        public static Boolean ArquivosCompactar()
+        {
+            try
+            {
+                if (pedidosNaoForamFeitos && clientesNaoForamCadastrados && recusasNaoForamCadastradas)
+                    return false;
+
+                StringBuilder sb = new StringBuilder();
+
+                DateTime agora = new DateTime();
+                agora = DateTime.Now;
+                sb.Append("POCKETRT_" + agora.Year + "-" + agora.Month.ToString().PadLeft(2, '0') + "-" + agora.Day.ToString().PadLeft(2, '0') + "_");
+                sb.Append(agora.Hour.ToString().PadLeft(2, '0') + "h" + agora.Minute.ToString().PadLeft(2, '0') + "m" + agora.Second.ToString().PadLeft(2, '0') + "s_Vendedor" + Globals.Funcionario.Id + ".zip");
+                ArquivoEnviarNome = sb.ToString();
+
+                Zip.ZipFiles(Globals.APP_PATH + Globals.APP_SYNC_PATH + ArquivoEnviarNome, lstArquivosParaCompactar);
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Compactando arquivos para envio", true);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao compactar arquivos para envio", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Descompacta arquivos recebidos ]
+
+        public static String ArquivosDescompactar()
+        {
+            try
+            {
+                String sucesso = String.Empty;
+                try
+                {
+                    Zip.UnzipFiles(Globals.APP_PATH + Globals.APP_SYNC_PATH + ArquivoComumReceberNome, Globals.APP_PATH + Globals.APP_SYNC_PATH);
+                    Zip.UnzipFiles(Globals.APP_PATH + Globals.APP_SYNC_PATH + ArquivoClientesReceberNomeBase + ".zip", Globals.APP_PATH + Globals.APP_SYNC_PATH);
+                }
+                catch (Exception ex)
+                {
+                    LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao descompactar arquivos recebidos", true);
+                    MessageBox.Show(ex.Message);
+                    sucesso = ex.Message;
+                    return sucesso;
+                }
+
+                return sucesso;
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Descompactando arquivos recebidos", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Remove os clientes antigos ]
+
+        public static void RemoveClientesAntigos()
+        {
+            try
+            {
+                //Vai remover tudo pois quando puxar já puxa correto
+                Globals.Bd.ExecuteNonQuery("DELETE FROM cliente");
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Limpando base de clientes", true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao limpar base de clientes", true);
+                throw ex;
+            }
+
+        }
+
+        #endregion
+
+        #region [ Unindo clientes antigos com os novos ]
+
+        /// <summary>
+        /// Unindo clientes antigos com os novos
+        /// </summary>
+        public static void CarregaClienteCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Unindo clientes antigos com os novos", true);
+                String clienteArquivoNome = ("CLR") + Globals.Funcionario.Id.ToString().PadLeft(6, '0') + ".csv";
+                d = new MapeamentoBdCsv("cliente", Globals.APP_PATH + Globals.APP_SYNC_PATH + clienteArquivoNome, Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_cliente", "CODIGO");
+                d.laT("id_cliente_pocket", "COD_CLIENTE_POCKET");
+                d.laT("id_tabela_preco", "COD_TABELAPRECO");
+                d.laT("cliente_nome", "NOME");
+                d.laT("cliente_nome_reduzido", "NOMEREDUZIDO");
+                d.laT("tipo_pessoa", "TIPOPESSOA");
+                d.laT("telefone", "TELEFONE");
+                d.laT("cgc_cpf", "CGC_CPF");
+                d.laT("rg_inscricao", "RG_INSCRICAO");
+                d.laT("endereco", "ENDERECO");
+                d.laT("bairro", "BAIRRO");
+                d.laT("cidade", "COD_CIDADE");
+                d.laT("uf_cod", "COD_UF");
+                d.laT("cep", "CEP");
+                d.laT("comprador_nome", "NOME_COMPRADOR");
+                d.laR("limite_credito", "LIMITECREDITO");
+                d.laD("nascimento", "NASCIMENTO");
+                d.laT("id_forma_pagamento", "COD_FORMAPAGAMENTO");
+                d.laT("dia_visita", "DIA_VISITA");
+                d.laT("id_funcionario", "COD_FUNCIONARIO");
+                d.laT("intervalo", "INTERVALO");
+                d.laT("banco_codigo", "COD_BANCO_REF");
+                d.laT("agencia_codigo", "COD_AGENCIA_REF");
+                d.laT("agencia_telefone", "TELEFONE_AGENCIA");
+                d.laT("referencia_comercial1", "REFERENCIA_COMERCIAL1");
+                d.laT("referencia_comercial1_telefone", "TELEFONE_REFERENCIA1");
+                d.laT("referencia_comercial2", "REFERENCIA_COMERCIAL2");
+                d.laT("referencia_comercial2_telefone", "TELEFONE_REFERENCIA2");
+                d.laB("lista_negra", "LISTANEGRA");
+                d.laR("bdi", "BDI");
+                d.laR("montante_aberto", "MONTANTE_ABERTO");
+                d.laR("montante_vencido", "MONTANTE_VENCIDO");
+                d.laR("montante_a_vencer", "MONTANTE_A_VENCER");
+                d.laT("maior_vencimento", "MAIOR_VENCIMENTO");
+                d.laB("ativo", "ATIVO");
+                d.laT("visitacao_ordem", "ORDEM_VISITA");
+                d.laB("contribuinte_icms","CONTRIBUINTE_ICMS");
+                d.Executar(false);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao unir clientes antigos com os novos", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega registro de todos os clientes ]
+
+        public static void ClientesCastradosCarregar()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando registro de todos os clientes", true);
+                String clientesCadastradosArquivoEnviarNome = "CLIENTESCADASTRADOS.csv";
+                d = new MapeamentoBdCsv("cliente_cadastrado", Globals.APP_PATH + Globals.APP_SYNC_PATH + clientesCadastradosArquivoEnviarNome, Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("cnpj_cpf", "CPNJ_CPF");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar registro de todos os clientes", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega registro das rotas das cidades ]
+
+        public static void RotaCidadeCarregar()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando rotas das cidades", true);
+                String rotaCidadeArquivoEnviarNome = "ROTACIDADE.csv";
+                d = new MapeamentoBdCsv("rota_cidade", Globals.APP_PATH + Globals.APP_SYNC_PATH + rotaCidadeArquivoEnviarNome, Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_rota", "COD_PERCURSO");
+                d.laT("id_funcionario","COD_VENDEDOR");
+                d.laT("id_cidade","COD_CIDADE");
+                d.laT("cidade","CIDADE");
+                d.laT("id_uf","COD_UF");
+                d.laT("visitacao_ordem", "ORDEM_VISITA");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar registro de todos os clientes", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+
+        #region [ Carrega registro de todos os produtos ]
+
+        public static void CarregaProdutoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando registro de todos os produtos", true);
+                d = new MapeamentoBdCsv("produto", Globals.APP_PATH + Globals.APP_SYNC_PATH + "PRODUTO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_produto", "CODIGO");
+                d.laT("nome", "DESCRICAO");
+                d.laT("referencia", "REFERENCIA");
+                d.laT("id_unidade_venda", "COD_UNIDADE_VENDA");
+                d.laT("id_grade", "COD_GRADE");
+                d.laR("preco_venda", "PRECOVENDA");
+                d.laR("preco_promocao", "PRECOPROMOCAO");
+                d.laT("estoque", "QUANTIDADEESTOQUE");
+                d.laT("venda_fracionada", "FRACIONADA");
+                d.laR("unidade_fator", "UNIDADE_FATOR");
+                d.laD("promocao_data_inicio", "DATAINICIOPROMOCAO");
+                d.laD("promocao_data_final", "DATAFIMPROMOCAO");
+                d.laB("permitir_venda_nao_contribuinte", "PERMITIR_VENDA_NAO_CONTRIBUINTE");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar registro de todos os produtos", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega registro de todos os vendedores ]
+
+        public static void CarregaVendedorCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando registro de todos os vendedores", true);
+                d = new MapeamentoBdCsv("funcionario", Globals.APP_PATH + Globals.APP_SYNC_PATH + "FUNCIONARIO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id", "CODIGO");
+                d.laT("nome", "NOME");
+                d.laT("desconto_maximo", "DESCONTO_MAXIMO");
+                d.laT("acrescimo_maximo", "ACRESCIMO_MAXIMO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar registro de todos os vendedores", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega registro de todas as cidades ]
+
+        public static void CarregaCidadeCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando registro de todas as cidades", true);
+                d = new MapeamentoBdCsv("cidade", Globals.APP_PATH + Globals.APP_SYNC_PATH + "CIDADE.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_cidade", "CODIGO");
+                d.laT("descricao", "DESCRICAO");
+                d.laT("uf_cod", "COD_UF");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar registro de todas as cidades", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todas as especies financeiras ]
+
+        public static void CarregaEspecieFinanceiraCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando registro de todas as espécies financeiras", true);
+                d = new MapeamentoBdCsv("especie_financeira", Globals.APP_PATH + Globals.APP_SYNC_PATH + "ESPECIEFINANCEIRA.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_especie_financeira", "CODIGO");
+                d.laT("descricao", "DESCRICAO");
+                d.laB("verifica_credito", "VERIFICA_CREDITO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar registro de todas as espécies financeiras", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega os registro de todos ítens da tabela de preço ]
+
+        public static void CarregaItemTabelaPrecoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando registro de todos os itens da tabela de preço", true);
+                d = new MapeamentoBdCsv("item_tabela_preco", Globals.APP_PATH + Globals.APP_SYNC_PATH + "ITEMTABELAPRECO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_tabela_preco", "COD_TABELAPRECO");
+                d.laT("id_produto", "COD_PRODUTO");
+                d.laT("tipo_valor", "TIPOVALOR");
+                d.laR("valor1", "VALOR");
+                d.laT("qtd_minima1", "QTD_MINIMA");
+                d.laR("valor2", "VALOR1");
+                d.laT("qtd_minima2", "QTD_MINIMA1");
+                d.laR("valor3", "VALOR2");
+                d.laT("qtd_minima3", "QTD_MINIMA2");
+                d.laR("valor4", "VALOR3");
+                d.laT("qtd_minima4", "QTD_MINIMA3");
+                d.laR("desconto_maximo", "DESCONTO_MAXIMO");
+                d.laR("acrescimo_maximo", "ACRESCIMO_MAXIMO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar registro de todos os itens da tabela de preço", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todas as formas de pagamento ]
+
+        public static void CarregaFormaPagamentoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando formas de pagamento", true);
+                d = new MapeamentoBdCsv("forma_pagamento", Globals.APP_PATH + Globals.APP_SYNC_PATH + "FORMADEPAGAMENTO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_forma_pagamento", "CODIGO");
+                d.laT("descricao", "DESCRICAO");
+                d.laT("no_parcelas", "PARCELAS");
+                d.laT("prazo_medio", "PRAZO_MEDIO");
+                d.laR("parcela_minima", "PARCELA_MINIMA");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar formas de pagamento", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todos os itens de forma de pagamento ]
+
+        public static void CarregaItemFormaPagamentoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando os ítems das formas de pagamento", true);
+                d = new MapeamentoBdCsv("item_forma_pagamento", Globals.APP_PATH + Globals.APP_SYNC_PATH + "ITEMFORMAPAGAMENTO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_forma_pagamento", "COD_FORMAPAGAMENTO");
+                d.laT("id_especie_financeira", "COD_ESPECIEFINANCEIRA");
+                d.laT("id_item_forma_pagamento", "CODIGO");
+                d.laR("prazo_vencimento", "PRAZOVENCIMENTO");
+                d.laT("percentual_pagamento", "PERCENTUALPAGAMENTO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar os ítems das formas de pagamento", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todas as formas de pagamento das tabelas de preço ]
+
+        public static void CarregaFormaPagamentoTabelaPrecoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando as formas de pagamento das tabelas de preço", true);
+                d = new MapeamentoBdCsv("forma_pagamento_tabela_preco", Globals.APP_PATH + Globals.APP_SYNC_PATH + "FORMAPAGAMENTOTABELAPRECO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_tabela_preco", "COD_TABELAPRECO");
+                d.laT("id_forma_pagamento", "COD_FORMAPAGAMENTO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar as formas de pagamento das tabelas de preço", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todos os atributos ]
+
+        public static void CarregaAtributoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando atributos", true);
+                d = new MapeamentoBdCsv("atributo", Globals.APP_PATH + Globals.APP_SYNC_PATH + "ATRIBUTO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_atributo", "CODIGO");
+                d.laT("descricao", "DESCRICAO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar atributos", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todas as grades ]
+
+        public static void CarregaGradeCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando as grades", true);
+                d = new MapeamentoBdCsv("grade", Globals.APP_PATH + Globals.APP_SYNC_PATH + "GRADE.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_grade", "CODIGO");
+                d.laT("descricao", "DESCRICAO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar as grades", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todos os itens do atributo ]
+
+        public static void CarregaItemAtributoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando o registro de todos os itens do atributo", true);
+                d = new MapeamentoBdCsv("item_atributo", Globals.APP_PATH + Globals.APP_SYNC_PATH + "ITEMATRIBUTO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_item_atributo", "COD_ATRIBUTO");
+                d.laT("id_atributo", "CODIGO");
+                d.laT("descricao", "DESCRICAO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar o registro de todos os itens do atributo", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todos os itens da grade ]
+
+        public static void CarregaItemGradeCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando tabela ítem grade", true);
+                d = new MapeamentoBdCsv("item_grade", Globals.APP_PATH + Globals.APP_SYNC_PATH + "ITEMGRADE.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_item_grade", "CODIGO");
+                d.laT("id_grade", "COD_GRADE");
+                d.laT("descricao", "DESCRICAO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar tabela ítem grade", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro de todos os parametros ]
+
+        public static void CarregaParametroCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando parâmetros", true);
+                d = new MapeamentoBdCsv("parametro", Globals.APP_PATH + Globals.APP_SYNC_PATH + "PARAMETRO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("nome", "NOME");
+                d.laT("tipo", "TIPO");
+                d.laT("valor", "VALOR");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, " Erro ao carregar parâmetros", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega o registro do saldo da grade ]
+
+        public static void CarregaSaldoGradeCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando saldo grade", true);
+                d = new MapeamentoBdCsv("saldo_grade", Globals.APP_PATH + Globals.APP_SYNC_PATH + "SALDOGRADE.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_produto", "COD_PRODUTO");
+                d.laT("id_grade", "COD_GRADE");
+                d.laT("id_item_grade", "COD_ITEMGRADE");
+                d.laT("id_atributo", "COD_ATRIBUTO");
+                d.laT("id_item_atributo", "COD_ITEMATRIBUTO");
+                d.laT("estoque", "QUANTIDADEESTOQUE");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Eror ao carregar saldo grade", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega todos os registros de tabela de preço ]
+
+        public static void CarregaTabelaPrecoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando tabelas de preço", true);
+                d = new MapeamentoBdCsv("tabela_preco", Globals.APP_PATH + Globals.APP_SYNC_PATH + "TABELAPRECO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_tabela_preco", "CODIGO");
+                d.laT("descricao", "DESCRICAO");
+                d.laR("ajuste_percentual", "PERCENTUALAJUSTE");
+                d.laT("tipo", "TIPOAJUSTE");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar tabelas de preço", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega todos os registros de motivos ]
+
+        public static void CarregaTabelaMotivoCsv()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Carregando motivos", true);
+                d = new MapeamentoBdCsv("motivo", Globals.APP_PATH + Globals.APP_SYNC_PATH + "MOTIVO.csv", Globals.Bd, Globals.APP_LOGDIRECTORY + logName);
+                d.laT("id_motivo", "CODIGO");
+                d.laT("descricao", "DESCRICAO");
+                d.Executar(true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao carregar motivos", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Reindexando produtos para habilitar paginação ]
+
+        public static void ProdutosReindexar()
+        {
+            try
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Reindexando produtos para habilitar paginação", true);
+                int idAtual = 1;
+
+                SqlCeTransaction dbTrans = null;
+                StringBuilder sb;
+                List<int> lstId = Globals.Bd.ListInt("select id_produto from produto order by nome");
+                foreach (int i in lstId)
+                {
+                    dbTrans = Globals.Bd.Con.BeginTransaction();
+                    sb = new StringBuilder("update produto set id_temp=");
+
+                    sb.Append(idAtual).Append(" where id_produto=").Append(i);
+
+                    Globals.Bd.ExecuteNonQuery(sb.ToString(), dbTrans);
+                    dbTrans.Commit();
+                    ++idAtual;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao reindexar produtos para habilitar paginação", true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Upload e Download ]
+
+        public static void Upload(string arquivoLocal, string arquivoRemoto, NeoFileSystemService.NeoFileSystemService fileSystemService)
+        {
+            try
+            {
+                System.IO.BinaryReader br = new
+                            System.IO.BinaryReader(System.IO.File.Open(arquivoLocal, System.IO.FileMode.Open,
+                            System.IO.FileAccess.Read));
+
+                byte[] buffer = br.ReadBytes(Convert.ToInt32(br.BaseStream.Length));
+                br.Close();
+                fileSystemService.FilePut(buffer, arquivoRemoto);
+
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, arquivoLocal + " enviado para " + arquivoRemoto, true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao enviar " + arquivoLocal + " para " + arquivoRemoto, true);
+                throw ex;
+            }
+        }
+
+        public static void Download(string remoteFile, string localFile, NeoFileSystemService.NeoFileSystemService fileSystemService)
+        {
+            try
+            {
+                Byte[] fileData = fileSystemService.FileGet(remoteFile);
+                FileStream file = File.Create(localFile);
+                file.Write(fileData, 0, fileData.Length);
+                file.Close();
+
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, remoteFile + " baixado para " + localFile, true);
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + logName, "Erro ao baixar " + remoteFile + " para " + localFile, true);
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #region [ Utils ]
+
+        private static StringBuilder MontaCodigoVendedor(String codigoVendedor)
+        {
+            StringBuilder nomeDoArquivo = new StringBuilder();
+            nomeDoArquivo.Append("Vend").Append(codigoVendedor);
+            return nomeDoArquivo;
+        }
+
+        private static StringBuilder MontarNomeArquivo(String nomeDaTabela)
+        {
+            StringBuilder s = new StringBuilder();
+            s.Append(nomeDaTabela);
+            s.Append("Ano" + System.DateTime.Parse(DateTime.Now.ToString()).ToString("yyyy"));
+            s.Append("Mes" + System.DateTime.Parse(DateTime.Now.ToString()).ToString("MM"));
+            s.Append("Dia" + System.DateTime.Parse(DateTime.Now.ToString()).ToString("dd") + "_h");
+            s.Append(System.DateTime.Parse(DateTime.Now.ToString()).ToString("HH") + "m");
+            s.Append(System.DateTime.Parse(DateTime.Now.ToString()).ToString("mm") + "s");
+            s.Append(System.DateTime.Parse(DateTime.Now.ToString()).ToString("ss") + "_");
+            s.Append(MontaCodigoVendedor(Globals.Funcionario.Id.ToString()));
+            return s;
+        }
+
+        #endregion
+    }
+}

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.net.eti.br/services/NeoFileSystemService" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.net.eti.br/services/NeoFileSystemService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.net.eti.br/services/NeoFileSystemService">
+      <s:element name="DirList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="dir" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DirListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DirListResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ValidationSoapHeader" type="tns:ValidationSoapHeader" />
+      <s:complexType name="ValidationSoapHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Directory" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="FileList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="dir" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileListResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Md5">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="input" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Md5Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Md5Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="filename" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileGetResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilePut">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="buffer" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="filename" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilePutResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="hi6">
+        <s:complexType />
+      </s:element>
+      <s:element name="hi6Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="hi6Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DirListSoapIn">
+    <wsdl:part name="parameters" element="tns:DirList" />
+  </wsdl:message>
+  <wsdl:message name="DirListSoapOut">
+    <wsdl:part name="parameters" element="tns:DirListResponse" />
+  </wsdl:message>
+  <wsdl:message name="DirListValidationSoapHeader">
+    <wsdl:part name="ValidationSoapHeader" element="tns:ValidationSoapHeader" />
+  </wsdl:message>
+  <wsdl:message name="FileListSoapIn">
+    <wsdl:part name="parameters" element="tns:FileList" />
+  </wsdl:message>
+  <wsdl:message name="FileListSoapOut">
+    <wsdl:part name="parameters" element="tns:FileListResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileListValidationSoapHeader">
+    <wsdl:part name="ValidationSoapHeader" element="tns:ValidationSoapHeader" />
+  </wsdl:message>
+  <wsdl:message name="Md5SoapIn">
+    <wsdl:part name="parameters" element="tns:Md5" />
+  </wsdl:message>
+  <wsdl:message name="Md5SoapOut">
+    <wsdl:part name="parameters" element="tns:Md5Response" />
+  </wsdl:message>
+  <wsdl:message name="Md5ValidationSoapHeader">
+    <wsdl:part name="ValidationSoapHeader" element="tns:ValidationSoapHeader" />
+  </wsdl:message>
+  <wsdl:message name="FileGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileGet" />
+  </wsdl:message>
+  <wsdl:message name="FileGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileGetValidationSoapHeader">
+    <wsdl:part name="ValidationSoapHeader" element="tns:ValidationSoapHeader" />
+  </wsdl:message>
+  <wsdl:message name="FilePutSoapIn">
+    <wsdl:part name="parameters" element="tns:FilePut" />
+  </wsdl:message>
+  <wsdl:message name="FilePutSoapOut">
+    <wsdl:part name="parameters" element="tns:FilePutResponse" />
+  </wsdl:message>
+  <wsdl:message name="FilePutValidationSoapHeader">
+    <wsdl:part name="ValidationSoapHeader" element="tns:ValidationSoapHeader" />
+  </wsdl:message>
+  <wsdl:message name="hi6SoapIn">
+    <wsdl:part name="parameters" element="tns:hi6" />
+  </wsdl:message>
+  <wsdl:message name="hi6SoapOut">
+    <wsdl:part name="parameters" element="tns:hi6Response" />
+  </wsdl:message>
+  <wsdl:portType name="NeoFileSystemServiceSoap">
+    <wsdl:operation name="DirList">
+      <wsdl:input message="tns:DirListSoapIn" />
+      <wsdl:output message="tns:DirListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileList">
+      <wsdl:input message="tns:FileListSoapIn" />
+      <wsdl:output message="tns:FileListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Md5">
+      <wsdl:input message="tns:Md5SoapIn" />
+      <wsdl:output message="tns:Md5SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileGet">
+      <wsdl:input message="tns:FileGetSoapIn" />
+      <wsdl:output message="tns:FileGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FilePut">
+      <wsdl:input message="tns:FilePutSoapIn" />
+      <wsdl:output message="tns:FilePutSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="hi6">
+      <wsdl:input message="tns:hi6SoapIn" />
+      <wsdl:output message="tns:hi6SoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NeoFileSystemServiceSoap" type="tns:NeoFileSystemServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DirList">
+      <soap:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/DirList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:DirListValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileList">
+      <soap:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/FileList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:FileListValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Md5">
+      <soap:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/Md5" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:Md5ValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGet">
+      <soap:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/FileGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:FileGetValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilePut">
+      <soap:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/FilePut" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:FilePutValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="hi6">
+      <soap:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/hi6" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="NeoFileSystemServiceSoap12" type="tns:NeoFileSystemServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DirList">
+      <soap12:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/DirList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:DirListValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileList">
+      <soap12:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/FileList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:FileListValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Md5">
+      <soap12:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/Md5" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:Md5ValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGet">
+      <soap12:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/FileGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:FileGetValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilePut">
+      <soap12:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/FilePut" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:FilePutValidationSoapHeader" part="ValidationSoapHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="hi6">
+      <soap12:operation soapAction="http://www.net.eti.br/services/NeoFileSystemService/hi6" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NeoFileSystemService">
+    <wsdl:port name="NeoFileSystemServiceSoap" binding="tns:NeoFileSystemServiceSoap">
+      <soap:address location="http://neo.eti.br/neofilesystemwebservice/neofilesystemservice.asmx" />
+    </wsdl:port>
+    <wsdl:port name="NeoFileSystemServiceSoap12" binding="tns:NeoFileSystemServiceSoap12">
+      <soap12:address location="http://neo.eti.br/neofilesystemwebservice/neofilesystemservice.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

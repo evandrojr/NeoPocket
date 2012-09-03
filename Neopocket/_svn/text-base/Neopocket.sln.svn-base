@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neopocket", "Neopocket.csproj", "{55504DD1-6E90-4396-BA1A-5B564E67B344}"
+EndProject
+Project("{B900F1C2-3D47-4FEC-85B3-04AAF18C3634}") = "NeoPocket_instalador", "..\neopocket_instalador\NeoPocket_instalador.vddproj", "{E888FF9C-F641-46F7-B37D-06A2A4776A15}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E888FF9C-F641-46F7-B37D-06A2A4776A15}.Debug|Any CPU.ActiveCfg = Debug
+		{E888FF9C-F641-46F7-B37D-06A2A4776A15}.Debug|Any CPU.Build.0 = Debug
+		{E888FF9C-F641-46F7-B37D-06A2A4776A15}.Release|Any CPU.ActiveCfg = Release
+		{E888FF9C-F641-46F7-B37D-06A2A4776A15}.Release|Any CPU.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

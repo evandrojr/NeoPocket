@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/neopocket/!svn/ver/70/Neopocket/Core
+END
+Funcionario.cs
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/neopocket/!svn/ver/14/Neopocket/Core/Funcionario.cs
+END
+Produto.cs
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/neopocket/!svn/ver/14/Neopocket/Core/Produto.cs
+END
+Grade.cs
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/neopocket/!svn/ver/14/Neopocket/Core/Grade.cs
+END
+Recusa.cs
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/neopocket/!svn/ver/14/Neopocket/Core/Recusa.cs
+END
+Sincronizacao.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/neopocket/!svn/ver/60/Neopocket/Core/Sincronizacao.cs
+END
+Cliente.cs
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/neopocket/!svn/ver/67/Neopocket/Core/Cliente.cs
+END
+Pedido.cs
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/neopocket/!svn/ver/70/Neopocket/Core/Pedido.cs
+END
+Rota.cs
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/neopocket/!svn/ver/70/Neopocket/Core/Rota.cs
+END
+DadoImportacao.cs
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/neopocket/!svn/ver/14/Neopocket/Core/DadoImportacao.cs
+END
+MapeamentoBdCsv.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/neopocket/!svn/ver/71/Neopocket/Core/MapeamentoBdCsv.cs
+END
+Parametro.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/neopocket/!svn/ver/14/Neopocket/Core/Parametro.cs
+END

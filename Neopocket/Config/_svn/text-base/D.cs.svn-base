@@ -1,0 +1,39 @@
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Web;
+using NeoPocketUpdater;
+
+
+namespace Config
+{
+    public class D
+    {
+        public static bool ModoTeste = false;
+        public static Bd Bd;
+        public static string AplicacaoDiretorio = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase) + @"\";
+        public static string BancoArquivo = "pocketdb.sdf";
+        public static Funcionario Funcionario = new Funcionario();
+        public static string ConexaoParamentros = "data source=" + AplicacaoDiretorio + BancoArquivo + ";Max Buffer Size=4096;Password=j$dqapc10;";
+        public static System.Globalization.CultureInfo CultureInfoBRA = new System.Globalization.CultureInfo("pt-br");
+        public static System.Globalization.CultureInfo CultureInfoEUA = new System.Globalization.CultureInfo("en-us");
+        public static string LogImportacaoArquivo = "LogImportacao.txt";
+        public static string TabelasXmlDiretorio = @"Tabelas\";
+        public static string TabelasSincronizacaoDiretorio = @"SincDado\";
+        public static string FtpServidor;  // Nunca tem a barra ao final
+        public static string FtpDiretorio; // Quando não vazio, sempre tem uma barra '/' ao final
+        public static string FtpUsuario;   // Somente o nome do usuário FTP, sem barras
+        public static string FtpSenha;     // Somente a senha do usuário FTP
+        public static string UsuarioNome;  // Nome do usuário do sistema no Pocket
+        public static string UsuarioSenha; // Senha do usuário do sistema no Pocket
+        public static bool CliqueUnico = false;
+        public static string LogDebug = "log.txt";
+        public static FrmMain FrmMainRef = null;
+        public static string ValidationSoapHeaderDevToken = "hd83hjd%ns";
+
+        static D(){ 
+        }
+
+    }
+}

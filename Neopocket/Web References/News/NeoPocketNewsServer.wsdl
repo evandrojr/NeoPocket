@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://neotecnologia.net/webservice/neopocketnews" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://neotecnologia.net/webservice/neopocketnews" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://neotecnologia.net/webservice/neopocketnews">
+      <s:element name="GetNews">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetNewsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetNewsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetNews">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="text" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="codigo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetNewsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SetNewsResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetNews2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="text" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="codigo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetNews2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SetNews2Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetNewsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNews" />
+  </wsdl:message>
+  <wsdl:message name="GetNewsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetNewsSoapIn">
+    <wsdl:part name="parameters" element="tns:SetNews" />
+  </wsdl:message>
+  <wsdl:message name="SetNewsSoapOut">
+    <wsdl:part name="parameters" element="tns:SetNewsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetNews2SoapIn">
+    <wsdl:part name="parameters" element="tns:SetNews2" />
+  </wsdl:message>
+  <wsdl:message name="SetNews2SoapOut">
+    <wsdl:part name="parameters" element="tns:SetNews2Response" />
+  </wsdl:message>
+  <wsdl:portType name="NewsSoap">
+    <wsdl:operation name="GetNews">
+      <wsdl:input message="tns:GetNewsSoapIn" />
+      <wsdl:output message="tns:GetNewsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetNews">
+      <wsdl:input message="tns:SetNewsSoapIn" />
+      <wsdl:output message="tns:SetNewsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetNews2">
+      <wsdl:input message="tns:SetNews2SoapIn" />
+      <wsdl:output message="tns:SetNews2SoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NewsSoap" type="tns:NewsSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetNews">
+      <soap:operation soapAction="http://neotecnologia.net/webservice/neopocketnews/GetNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetNews">
+      <soap:operation soapAction="http://neotecnologia.net/webservice/neopocketnews/SetNews" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetNews2">
+      <soap:operation soapAction="http://neotecnologia.net/webservice/neopocketnews/SetNews2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="NewsSoap12" type="tns:NewsSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetNews">
+      <soap12:operation soapAction="http://neotecnologia.net/webservice/neopocketnews/GetNews" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetNews">
+      <soap12:operation soapAction="http://neotecnologia.net/webservice/neopocketnews/SetNews" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetNews2">
+      <soap12:operation soapAction="http://neotecnologia.net/webservice/neopocketnews/SetNews2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="News">
+    <wsdl:port name="NewsSoap" binding="tns:NewsSoap">
+      <soap:address location="http://xxxcnn7767.hospedagemdesites.ws/webservice/neopocketnews/NeoPocketNewsServer.asmx" />
+    </wsdl:port>
+    <wsdl:port name="NewsSoap12" binding="tns:NewsSoap12">
+      <soap12:address location="http://xxxcnn7767.hospedagemdesites.ws/webservice/neopocketnews/NeoPocketNewsServer.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

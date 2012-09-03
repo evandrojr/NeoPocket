@@ -1,0 +1,53 @@
+﻿SELECT     SUM(valor_unitario * desconto * quantidade) AS valor
+FROM         item_pedido
+GROUP BY id_produto, id_pedido
+
+
+SELECT     pedido.id_pedido, pedido.data, pedido.status,
+                          (SELECT     SUM(valor_unitario * desconto * quantidade) AS valor
+                            FROM          item_pedido 
+                            GROUP BY id_produto, id_pedido) AS  
+
+
+FROM         pedido WHERE
+
+
+pegar os pedidos
+
+SELECT P.ID_PEDIDO,(SELECT IP.VALOR_UNITARIO * IP.QUANTIDADE FROM IP JOIN P ON P.ID_PEDIDO = IP.ID_PEDIDO) AS TOTAL, SUM(TOTAL)
+FROM P 
+GROUP BY P.ID_PEDIDO
+
+SELECT P.ID_PEDIDO,
+              (SELECT IP.VALOR_UNITARIO * IP.QUANTIDADE FROM
+                                   IP JOIN P 
+                                    ON P.ID_PEDIDO = IP.ID_PEDIDO)
+                        AS TOTAL, SUM(TOTAL)
+FROM P 
+GROUP BY P.ID_PEDIDO
+
+
+
+SELECT        pedido.id_pedido, pedido.id_cliente_pocket, pedido.data, pedido.status, 
+FROM            pedido INNER JOIN
+                         item_pedido ON pedido.id_pedido = item_pedido.id_pedido
+WHERE        (pedido.id_cliente_pocket = 1)
+
+SELECT        item_pedido.valor_unitario * item_pedido.desconto * item_pedido.quantidade AS Valor
+FROM            item_pedido
+where  
+id_pedido=1
+
+
+(SELECT        item_pedido.valor_unitario * item_pedido.desconto * item_pedido.quantidade
+FROM            item_pedido
+where  
+id_pedido=1) as Valor
+
+
+
+SELECT        saldo_grade.estoque, item_grade.descricao, item_atributo.descricao AS Expr1, atributo.descricao AS Expr2
+FROM            saldo_grade INNER JOIN
+                         item_grade ON saldo_grade.id_item_grade = item_grade.id_item_grade AND saldo_grade.id_grade = item_grade.id_grade INNER JOIN
+                         atributo ON saldo_grade.id_atributo = atributo.id_atributo INNER JOIN
+                         item_atributo ON atributo.id_atributo = item_atributo.id_atributo

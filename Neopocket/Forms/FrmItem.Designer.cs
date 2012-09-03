@@ -1,0 +1,387 @@
+﻿namespace Neopocket.Forms
+{
+    partial class FrmItem
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.MainMenu mainMenu;
+            this.mnuIncluir = new System.Windows.Forms.MenuItem();
+            this.mnuVoltar = new System.Windows.Forms.MenuItem();
+            this.inputPanel = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
+            this.lblCodigo = new System.Windows.Forms.Label();
+            this.lblProduto = new System.Windows.Forms.Label();
+            this.lblPreco = new System.Windows.Forms.Label();
+            this.lblDesconto = new System.Windows.Forms.Label();
+            this.lblQuantidade = new System.Windows.Forms.Label();
+            this.lblTotal = new System.Windows.Forms.Label();
+            this.txtCodProduto = new System.Windows.Forms.TextBox();
+            this.txtNomeProduto = new System.Windows.Forms.TextBox();
+            this.txtPreco = new System.Windows.Forms.TextBox();
+            this.btnDescontoMenos = new System.Windows.Forms.Button();
+            this.txtPercentualAjuste = new System.Windows.Forms.TextBox();
+            this.txtQtd = new System.Windows.Forms.TextBox();
+            this.btnQtdMais = new System.Windows.Forms.Button();
+            this.btnQtdMenos = new System.Windows.Forms.Button();
+            this.txtTotal = new System.Windows.Forms.TextBox();
+            this.txtEstoque = new System.Windows.Forms.TextBox();
+            this.lblEstoque = new System.Windows.Forms.Label();
+            this.lblReferencia = new System.Windows.Forms.Label();
+            this.txtReferencia = new System.Windows.Forms.TextBox();
+            this.lblCreditoRestante = new System.Windows.Forms.Label();
+            this.txtCreditoRestante = new System.Windows.Forms.TextBox();
+            this.btnDescontoMais = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.txtPedidoTotal = new System.Windows.Forms.TextBox();
+            this.labelTotalPedido = new System.Windows.Forms.Label();
+            this.lblPrecoUnitario = new System.Windows.Forms.Label();
+            this.txtPrecoUnitario = new System.Windows.Forms.TextBox();
+            mainMenu = new System.Windows.Forms.MainMenu();
+            this.SuspendLayout();
+            // 
+            // mainMenu
+            // 
+            mainMenu.MenuItems.Add(this.mnuIncluir);
+            mainMenu.MenuItems.Add(this.mnuVoltar);
+            // 
+            // mnuIncluir
+            // 
+            this.mnuIncluir.Text = "Incluir";
+            this.mnuIncluir.Click += new System.EventHandler(this.mnuIncluir_Click);
+            // 
+            // mnuVoltar
+            // 
+            this.mnuVoltar.Text = "Voltar";
+            this.mnuVoltar.Click += new System.EventHandler(this.mnuVoltar_Click);
+            // 
+            // lblCodigo
+            // 
+            this.lblCodigo.Location = new System.Drawing.Point(3, 3);
+            this.lblCodigo.Name = "lblCodigo";
+            this.lblCodigo.Size = new System.Drawing.Size(98, 20);
+            this.lblCodigo.Text = "Código Produto:";
+            // 
+            // lblProduto
+            // 
+            this.lblProduto.Location = new System.Drawing.Point(3, 31);
+            this.lblProduto.Name = "lblProduto";
+            this.lblProduto.Size = new System.Drawing.Size(53, 20);
+            this.lblProduto.Text = "Produto:";
+            // 
+            // lblPreco
+            // 
+            this.lblPreco.Location = new System.Drawing.Point(3, 145);
+            this.lblPreco.Name = "lblPreco";
+            this.lblPreco.Size = new System.Drawing.Size(108, 20);
+            this.lblPreco.Text = "Preço: (R$)";
+            // 
+            // lblDesconto
+            // 
+            this.lblDesconto.Location = new System.Drawing.Point(3, 102);
+            this.lblDesconto.Name = "lblDesconto";
+            this.lblDesconto.Size = new System.Drawing.Size(88, 20);
+            this.lblDesconto.Text = "Desconto: (%)";
+            // 
+            // lblQuantidade
+            // 
+            this.lblQuantidade.Location = new System.Drawing.Point(3, 124);
+            this.lblQuantidade.Name = "lblQuantidade";
+            this.lblQuantidade.Size = new System.Drawing.Size(100, 20);
+            this.lblQuantidade.Text = "Quantidade:";
+            // 
+            // lblTotal
+            // 
+            this.lblTotal.Location = new System.Drawing.Point(3, 211);
+            this.lblTotal.Name = "lblTotal";
+            this.lblTotal.Size = new System.Drawing.Size(100, 20);
+            this.lblTotal.Text = "Total item:";
+            // 
+            // txtCodProduto
+            // 
+            this.txtCodProduto.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtCodProduto.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.txtCodProduto.Location = new System.Drawing.Point(119, 2);
+            this.txtCodProduto.Name = "txtCodProduto";
+            this.txtCodProduto.ReadOnly = true;
+            this.txtCodProduto.Size = new System.Drawing.Size(106, 21);
+            this.txtCodProduto.TabIndex = 9;
+            // 
+            // txtNomeProduto
+            // 
+            this.txtNomeProduto.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtNomeProduto.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular);
+            this.txtNomeProduto.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.txtNomeProduto.Location = new System.Drawing.Point(63, 24);
+            this.txtNomeProduto.Multiline = true;
+            this.txtNomeProduto.Name = "txtNomeProduto";
+            this.txtNomeProduto.ReadOnly = true;
+            this.txtNomeProduto.Size = new System.Drawing.Size(162, 30);
+            this.txtNomeProduto.TabIndex = 10;
+            // 
+            // txtPreco
+            // 
+            this.txtPreco.BackColor = System.Drawing.Color.White;
+            this.txtPreco.ForeColor = System.Drawing.Color.Black;
+            this.txtPreco.Location = new System.Drawing.Point(117, 143);
+            this.txtPreco.Name = "txtPreco";
+            this.txtPreco.Size = new System.Drawing.Size(108, 21);
+            this.txtPreco.TabIndex = 11;
+            this.txtPreco.Validating += new System.ComponentModel.CancelEventHandler(this.txtPrecoUnitario_Validating);
+            // 
+            // btnDescontoMenos
+            // 
+            this.btnDescontoMenos.Location = new System.Drawing.Point(204, 99);
+            this.btnDescontoMenos.Name = "btnDescontoMenos";
+            this.btnDescontoMenos.Size = new System.Drawing.Size(21, 21);
+            this.btnDescontoMenos.TabIndex = 15;
+            this.btnDescontoMenos.Text = "-";
+            this.btnDescontoMenos.Click += new System.EventHandler(this.btnDescontoMenos_Click);
+            // 
+            // txtPercentualAjuste
+            // 
+            this.txtPercentualAjuste.Location = new System.Drawing.Point(117, 99);
+            this.txtPercentualAjuste.Name = "txtPercentualAjuste";
+            this.txtPercentualAjuste.Size = new System.Drawing.Size(54, 21);
+            this.txtPercentualAjuste.TabIndex = 13;
+            this.txtPercentualAjuste.Text = "0";
+            this.txtPercentualAjuste.Validating += new System.ComponentModel.CancelEventHandler(this.txtPercentualAjuste_Validating);
+            // 
+            // txtQtd
+            // 
+            this.txtQtd.Location = new System.Drawing.Point(117, 121);
+            this.txtQtd.Name = "txtQtd";
+            this.txtQtd.Size = new System.Drawing.Size(54, 21);
+            this.txtQtd.TabIndex = 13;
+            this.txtQtd.Text = "0";
+            this.txtQtd.Validating += new System.ComponentModel.CancelEventHandler(this.txtQtd_Validating);
+            // 
+            // btnQtdMais
+            // 
+            this.btnQtdMais.Location = new System.Drawing.Point(177, 121);
+            this.btnQtdMais.Name = "btnQtdMais";
+            this.btnQtdMais.Size = new System.Drawing.Size(21, 21);
+            this.btnQtdMais.TabIndex = 1;
+            this.btnQtdMais.Text = " +";
+            this.btnQtdMais.Click += new System.EventHandler(this.btnQtdMais_Click);
+            // 
+            // btnQtdMenos
+            // 
+            this.btnQtdMenos.Location = new System.Drawing.Point(204, 121);
+            this.btnQtdMenos.Name = "btnQtdMenos";
+            this.btnQtdMenos.Size = new System.Drawing.Size(21, 21);
+            this.btnQtdMenos.TabIndex = 15;
+            this.btnQtdMenos.Text = " - ";
+            this.btnQtdMenos.Click += new System.EventHandler(this.btnQtdMenos_Click);
+            // 
+            // txtTotal
+            // 
+            this.txtTotal.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtTotal.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.txtTotal.Location = new System.Drawing.Point(117, 209);
+            this.txtTotal.Name = "txtTotal";
+            this.txtTotal.ReadOnly = true;
+            this.txtTotal.Size = new System.Drawing.Size(108, 21);
+            this.txtTotal.TabIndex = 16;
+            // 
+            // txtEstoque
+            // 
+            this.txtEstoque.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtEstoque.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.txtEstoque.Location = new System.Drawing.Point(117, 187);
+            this.txtEstoque.Name = "txtEstoque";
+            this.txtEstoque.ReadOnly = true;
+            this.txtEstoque.Size = new System.Drawing.Size(108, 21);
+            this.txtEstoque.TabIndex = 23;
+            // 
+            // lblEstoque
+            // 
+            this.lblEstoque.Location = new System.Drawing.Point(4, 189);
+            this.lblEstoque.Name = "lblEstoque";
+            this.lblEstoque.Size = new System.Drawing.Size(53, 20);
+            this.lblEstoque.Text = "Estoque:";
+            // 
+            // lblReferencia
+            // 
+            this.lblReferencia.Location = new System.Drawing.Point(3, 81);
+            this.lblReferencia.Name = "lblReferencia";
+            this.lblReferencia.Size = new System.Drawing.Size(72, 20);
+            this.lblReferencia.Text = "Referência:";
+            // 
+            // txtReferencia
+            // 
+            this.txtReferencia.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtReferencia.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.txtReferencia.Location = new System.Drawing.Point(117, 77);
+            this.txtReferencia.Name = "txtReferencia";
+            this.txtReferencia.ReadOnly = true;
+            this.txtReferencia.Size = new System.Drawing.Size(108, 21);
+            this.txtReferencia.TabIndex = 31;
+            // 
+            // lblCreditoRestante
+            // 
+            this.lblCreditoRestante.Location = new System.Drawing.Point(3, 168);
+            this.lblCreditoRestante.Name = "lblCreditoRestante";
+            this.lblCreditoRestante.Size = new System.Drawing.Size(100, 20);
+            this.lblCreditoRestante.Text = "Crédito restante:";
+            // 
+            // txtCreditoRestante
+            // 
+            this.txtCreditoRestante.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtCreditoRestante.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.txtCreditoRestante.Location = new System.Drawing.Point(117, 165);
+            this.txtCreditoRestante.Name = "txtCreditoRestante";
+            this.txtCreditoRestante.ReadOnly = true;
+            this.txtCreditoRestante.Size = new System.Drawing.Size(108, 21);
+            this.txtCreditoRestante.TabIndex = 41;
+            // 
+            // btnDescontoMais
+            // 
+            this.btnDescontoMais.Location = new System.Drawing.Point(177, 99);
+            this.btnDescontoMais.Name = "btnDescontoMais";
+            this.btnDescontoMais.Size = new System.Drawing.Size(21, 21);
+            this.btnDescontoMais.TabIndex = 14;
+            this.btnDescontoMais.Text = " +";
+            this.btnDescontoMais.Click += new System.EventHandler(this.btnDescontoMais_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(4, 303);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(87, 100);
+            // 
+            // txtPedidoTotal
+            // 
+            this.txtPedidoTotal.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtPedidoTotal.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.txtPedidoTotal.Location = new System.Drawing.Point(117, 231);
+            this.txtPedidoTotal.Name = "txtPedidoTotal";
+            this.txtPedidoTotal.ReadOnly = true;
+            this.txtPedidoTotal.Size = new System.Drawing.Size(108, 21);
+            this.txtPedidoTotal.TabIndex = 52;
+            // 
+            // labelTotalPedido
+            // 
+            this.labelTotalPedido.Location = new System.Drawing.Point(3, 233);
+            this.labelTotalPedido.Name = "labelTotalPedido";
+            this.labelTotalPedido.Size = new System.Drawing.Size(100, 20);
+            this.labelTotalPedido.Text = "Total pedido:";
+            // 
+            // lblPrecoUnitario
+            // 
+            this.lblPrecoUnitario.Location = new System.Drawing.Point(3, 60);
+            this.lblPrecoUnitario.Name = "lblPrecoUnitario";
+            this.lblPrecoUnitario.Size = new System.Drawing.Size(108, 20);
+            this.lblPrecoUnitario.Text = "Preco unitário:";
+            // 
+            // txtPrecoUnitario
+            // 
+            this.txtPrecoUnitario.AcceptsReturn = true;
+            this.txtPrecoUnitario.BackColor = System.Drawing.SystemColors.MenuText;
+            this.txtPrecoUnitario.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.txtPrecoUnitario.Location = new System.Drawing.Point(117, 55);
+            this.txtPrecoUnitario.Name = "txtPrecoUnitario";
+            this.txtPrecoUnitario.ReadOnly = true;
+            this.txtPrecoUnitario.Size = new System.Drawing.Size(108, 21);
+            this.txtPrecoUnitario.TabIndex = 65;
+            // 
+            // FrmItem
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(240, 350);
+            this.ControlBox = false;
+            this.Controls.Add(this.txtPrecoUnitario);
+            this.Controls.Add(this.lblPrecoUnitario);
+            this.Controls.Add(this.txtPedidoTotal);
+            this.Controls.Add(this.labelTotalPedido);
+            this.Controls.Add(this.btnDescontoMais);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.txtPreco);
+            this.Controls.Add(this.btnDescontoMenos);
+            this.Controls.Add(this.txtCreditoRestante);
+            this.Controls.Add(this.lblCreditoRestante);
+            this.Controls.Add(this.txtPercentualAjuste);
+            this.Controls.Add(this.lblReferencia);
+            this.Controls.Add(this.lblDesconto);
+            this.Controls.Add(this.txtReferencia);
+            this.Controls.Add(this.lblEstoque);
+            this.Controls.Add(this.txtEstoque);
+            this.Controls.Add(this.txtTotal);
+            this.Controls.Add(this.btnQtdMenos);
+            this.Controls.Add(this.btnQtdMais);
+            this.Controls.Add(this.txtQtd);
+            this.Controls.Add(this.txtNomeProduto);
+            this.Controls.Add(this.txtCodProduto);
+            this.Controls.Add(this.lblTotal);
+            this.Controls.Add(this.lblQuantidade);
+            this.Controls.Add(this.lblPreco);
+            this.Controls.Add(this.lblProduto);
+            this.Controls.Add(this.lblCodigo);
+            this.Menu = mainMenu;
+            this.MinimizeBox = false;
+            this.Name = "FrmItem";
+            this.Text = "NeoPocket";
+            this.Load += new System.EventHandler(this.FrmItem_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private Microsoft.WindowsCE.Forms.InputPanel inputPanel;
+        private System.Windows.Forms.MenuItem mnuIncluir;
+        private System.Windows.Forms.MenuItem mnuVoltar;
+        private System.Windows.Forms.Label lblCodigo;
+        private System.Windows.Forms.Label lblProduto;
+        private System.Windows.Forms.Label lblPreco;
+        private System.Windows.Forms.Label lblDesconto;
+        private System.Windows.Forms.Label lblQuantidade;
+        private System.Windows.Forms.Label lblTotal;
+        private System.Windows.Forms.TextBox txtCodProduto;
+        private System.Windows.Forms.TextBox txtNomeProduto;
+        private System.Windows.Forms.TextBox txtPreco;
+        private System.Windows.Forms.Button btnDescontoMenos;
+        private System.Windows.Forms.TextBox txtPercentualAjuste;
+        private System.Windows.Forms.TextBox txtQtd;
+        private System.Windows.Forms.Button btnQtdMais;
+        private System.Windows.Forms.Button btnQtdMenos;
+        private System.Windows.Forms.TextBox txtTotal;
+        private System.Windows.Forms.TextBox txtEstoque;
+        private System.Windows.Forms.Label lblEstoque;
+        private System.Windows.Forms.Label lblReferencia;
+        private System.Windows.Forms.TextBox txtReferencia;
+        private System.Windows.Forms.Label lblCreditoRestante;
+        private System.Windows.Forms.TextBox txtCreditoRestante;
+        private System.Windows.Forms.Button btnDescontoMais;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox txtPedidoTotal;
+        private System.Windows.Forms.Label labelTotalPedido;
+        private System.Windows.Forms.Label lblPrecoUnitario;
+        private System.Windows.Forms.TextBox txtPrecoUnitario;
+    }
+}

@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neopocket", "Neopocket\Neopocket.csproj", "{55504DD1-6E90-4396-BA1A-5B564E67B344}"
+EndProject
+Project("{B900F1C2-3D47-4FEC-85B3-04AAF18C3634}") = "NeoPocket_instalador", "neopocket_instalador\NeoPocket_instalador.vddproj", "{2D9DAAD0-B9E5-4439-8981-34707F6AC4CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoPocketUpdater", "NeoPocketUpdater\NeoPocketUpdater.csproj", "{5E615C11-8929-4474-A291-B3F07BF3E8D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Pocket.Controls", "Neo.Pocket.Controls\Neo.Pocket.Controls\Neo.Pocket.Controls.csproj", "{A20F0522-32BC-4CB3-9CAD-1DDD97A0BD82}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55504DD1-6E90-4396-BA1A-5B564E67B344}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{2D9DAAD0-B9E5-4439-8981-34707F6AC4CA}.Debug|Any CPU.ActiveCfg = Debug
+		{2D9DAAD0-B9E5-4439-8981-34707F6AC4CA}.Release|Any CPU.ActiveCfg = Release
+		{5E615C11-8929-4474-A291-B3F07BF3E8D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E615C11-8929-4474-A291-B3F07BF3E8D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E615C11-8929-4474-A291-B3F07BF3E8D1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5E615C11-8929-4474-A291-B3F07BF3E8D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E615C11-8929-4474-A291-B3F07BF3E8D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E615C11-8929-4474-A291-B3F07BF3E8D1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{A20F0522-32BC-4CB3-9CAD-1DDD97A0BD82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A20F0522-32BC-4CB3-9CAD-1DDD97A0BD82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A20F0522-32BC-4CB3-9CAD-1DDD97A0BD82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A20F0522-32BC-4CB3-9CAD-1DDD97A0BD82}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

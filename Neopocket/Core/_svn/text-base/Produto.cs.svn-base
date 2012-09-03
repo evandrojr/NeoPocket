@@ -1,0 +1,574 @@
+﻿using System;
+using System.Data.SqlServerCe;
+using Neopocket.Forms;
+using Neopocket.Utils;
+
+
+namespace Neopocket.Core
+{
+    public class Produto : ICloneable
+    {
+        public int Id; // = id_produto
+        private int quantidadeRequerida; // Número de ítens pedidos
+        public Pedido Pedido;
+        public Grade Grade;
+        //Chamado puro porque é o preço sem desconto
+        private double precoPuro; // Indica o valor do preço puro que pode ser qq EnumPrecoTipo
+        private double precoUtilizado; // Preço puro adicionando do desconto
+        private double desconto; // Desconto que pode ser tanto um valor monetário ou uma uma fração
+        public string Nome, Referencia, UnidadeVenda;
+        public EnumAcaoProduto AcaoProduto= EnumAcaoProduto.ItemAdicionar;
+        public EnumPreco PrecoTipo = EnumPreco.Indefinido;
+        public EnumDesconto DescontoTipo;
+        private double unidadeFator;
+
+        public double UnidadeFator
+        {
+            get {
+                if (unidadeFator > 0)
+                    return unidadeFator;
+                else
+                    return 1;
+                 }
+        }
+
+        public enum EnumAcaoProduto : byte
+        {
+            ItemAdicionar,
+            ItemAlterar,
+            ItemExcluir,
+        }
+ 
+        public enum EnumPreco : byte 
+        {
+            Indefinido,
+            ProdutoPrecoBase, 
+            ProdutoPromocao,
+            TabelaPrecoQtd1,
+            TabelaPrecoQtd2,
+            TabelaPrecoQtd3,
+            TabelaPrecoQtd4,
+        }
+
+        public enum EnumDesconto : byte
+        {
+            Valor, // =$
+            Porcentagem, // =%
+        }
+
+        //Campos que poder ter o valor = nulo!
+        public IntN IdGrade, estoque, IdItemPedido;
+        private DoubleN precoBase, precoPromocao; 
+        public DoubleN DescontoMaximo, AcrescimoMaximo;
+        public DateTimeN DtPromocaoInicio, DtPromocaoFinal;
+        public BoolN VendaFracionada;
+        public IntN[] ArQuantidadeMinima = new IntN[4];
+        public DoubleN[] ArPreco = new DoubleN[4];
+
+        public bool CarrregouPedidoGravado = false;
+        public char DescontoTipoBd; // Pode ser tanto $ para um valor específico ou % para um porcentagem no desconto
+        private bool produtoNaoConstaNaTabelaPrecoQuandoUsandoTabelaPreco = false;
+     
+        public Produto(Pedido pd)
+        {
+            PrecoTipo = EnumPreco.Indefinido;
+            Pedido = pd;
+        }
+
+        public Produto(Pedido pd, int _quantidade, double _valorUnitario, double _desconto) : this(pd)
+        {
+            CarrregouPedidoGravado = true;
+            quantidadeRequerida = _quantidade;
+            precoUtilizado = _valorUnitario;
+            desconto = _desconto;
+        }
+
+        object ICloneable.Clone()
+        {
+            // make memberwise copy
+            return this.MemberwiseClone();
+        }
+
+        public double PrecoPuro
+        {
+            get { return precoPuro; }
+        }
+
+        public void CarregarProduto(int id){
+            Id = id;
+
+            //Tem que colocar transação para não dar falta de memória
+            SqlCeTransaction bdTrans = null;
+            bdTrans = Globals.Bd.Con.BeginTransaction();
+            string sqlCarga = @"Select * from produto where id_produto=" + Id;
+            SqlCeDataReader rdCarga = Globals.Bd.Linha(sqlCarga, bdTrans);
+            Nome = Convert.ToString(rdCarga["nome"]);
+            Referencia = Convert.ToString(rdCarga["referencia"]);
+            UnidadeVenda = Convert.ToString(rdCarga["id_unidade_venda"]);
+            IdGrade= Bd.IntN(rdCarga, "id_grade");
+            VendaFracionada = Bd.BoolN(rdCarga,"venda_fracionada");
+            precoBase = Bd.DoubleN(rdCarga,"preco_venda");
+            precoPromocao = Bd.DoubleN(rdCarga,"preco_promocao");
+            DtPromocaoFinal = Bd.DateTimeN(rdCarga,"promocao_data_final");
+            DtPromocaoInicio = Bd.DateTimeN(rdCarga, "promocao_data_inicio");
+            estoque = Bd.IntN(rdCarga, "estoque");
+            unidadeFator = Convert.ToDouble(rdCarga["unidade_fator"]);
+
+            rdCarga.Close();
+            bdTrans.Commit();
+
+            string qry;
+            try
+            {
+                bdTrans = null;
+                bdTrans = Globals.Bd.Con.BeginTransaction();
+
+                if (Pedido.IdTabelaPreco != 0)
+                {
+                    qry = @"select count(*) from 
+                                item_tabela_preco
+                             where 
+                                id_tabela_preco=" + Pedido.IdTabelaPreco +
+                                    " and id_produto=" + Id;
+                    if (Globals.Bd.I(qry, bdTrans) > 0)
+                    {
+                        sqlCarga = @"Select * from
+                                        item_tabela_preco
+                                     where 
+                                        id_tabela_preco=" + Pedido.IdTabelaPreco +
+                                        " and id_produto=" + Id;
+                        rdCarga = Globals.Bd.Linha(sqlCarga, bdTrans);
+                        DescontoTipoBd = Convert.ToChar(rdCarga["tipo_valor"]);
+/*
+                         
+                        O sistema neostore só funciona com desconto do tipo % porcentagem
+                          
+                        if (DescontoTipoBd == '%')
+                            DescontoTipo = EnumDesconto.Porcentagem;
+                        else
+                            DescontoTipo = EnumDesconto.Valor;
+*/
+
+                        DescontoTipo = EnumDesconto.Porcentagem;
+
+                        for (int i = 1; i <= 4; ++i)
+                        {
+                            ArQuantidadeMinima[i - 1] = Bd.IntN(rdCarga, "qtd_minima" + i);
+                            if (DescontoTipo == EnumDesconto.Valor)
+                            {
+                                ArPreco[i - 1] = Bd.DoubleN(rdCarga, "valor" + i);
+                            }
+                            else
+                            {
+                                ArPreco[i - 1] = Bd.DoubleN(rdCarga, "valor" + i);
+                                //if (ArPreco[i - 1].Iniciada)
+                                //    ArPreco[i - 1].V = ArPreco[i - 1].V * precoBase.V + precoBase.V;
+                            }
+                        }
+                        DescontoMaximo = Bd.DoubleN(rdCarga, "desconto_maximo");
+                        AcrescimoMaximo = Bd.DoubleN(rdCarga, "acrescimo_maximo");
+                    }
+                    else //Não encontrou o produto na tabela de preço então pega o ajuste geral da tabela de preço
+                    {
+                        rdCarga = Globals.Bd.Linha(@"
+                        SELECT 
+                                AJUSTE_PERCENTUAL, TIPO 
+                        FROM 
+                                TABELA_PRECO
+                        WHERE
+                                ID_TABELA_PRECO=" + Pedido.IdTabelaPreco, bdTrans);
+                        //Acrescentar valor no preço
+                        if (rdCarga[1].ToString().ToUpper() == "A")
+                            precoBase.V = precoBase.V + precoBase.V * Convert.ToDouble(rdCarga[0]);
+                        else //Dar desconto
+                            precoBase.V = precoBase.V - precoBase.V * Convert.ToDouble(rdCarga[0]);
+                        produtoNaoConstaNaTabelaPrecoQuandoUsandoTabelaPreco = true;
+                        DescontoMaximo.V = 0;
+                        AcrescimoMaximo.V = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Pedido.IdTabelaPreco = 0;
+                FE.Show("Não foi possível encontrar um preço para esse produto na tabela selecionada, irei ignorar a tabela de preço e usar o preço base", "Neo", ex.Message);
+            }
+            finally
+            {
+                rdCarga.Close();
+                bdTrans.Commit();
+            }
+
+            if (Pedido.IdTabelaPreco == 0)
+            {
+                PrecoTipo = EnumPreco.ProdutoPrecoBase;
+                DescontoMaximo.V = 0;
+                AcrescimoMaximo.V = 0;
+                if (DtPromocaoFinal.Iniciada && DtPromocaoInicio.Iniciada && precoPromocao.Iniciada)
+                {
+                    // Está na promoção
+                    if (Pedido.Data >= DtPromocaoInicio.V && Pedido.Data <= DtPromocaoFinal.V)
+                    {
+                        PrecoTipo = EnumPreco.ProdutoPromocao;
+                    }
+                    else // Não está na promoção
+                    {
+                        PrecoTipo = EnumPreco.ProdutoPrecoBase;
+                    }
+                }
+            }
+        }
+
+        //Calcula e armazena os preços puros e com desconto
+        public void PrecosCalcularEGuardar()
+        {
+            precoPuroCalcularEGuardar();
+            precoUtilizadoCalcularEGuardar();
+        }
+
+        /// <summary>
+        /// Precisa ser chamada após gravar o preço para colocar o desconto
+        /// </summary>
+        private void precoUtilizadoCalcularEGuardar()
+        {
+            precoPuro = precoUtilizado;
+            //Não dá desconto no preço se a quantidade for zero ou se o desconto for zero
+            if (QuantidadeRequerida <= 0 || desconto == 0)
+                return;
+            if (DescontoTipo == EnumDesconto.Porcentagem)
+                precoUtilizado *= (100 - desconto) / 100;
+            else
+                precoUtilizado = precoUtilizado - desconto;
+        }
+
+        // Irá depender da quantitade, da data e da dataPromocao, neste caso o preço é variavel dependente
+        private void precoPuroCalcularEGuardar()
+        {
+            //Não tem tabela de preço
+            if (Pedido.IdTabelaPreco == 0)
+            {
+                PrecoTipo = EnumPreco.ProdutoPrecoBase;
+
+                //Checa promocao
+                if (DtPromocaoFinal.Iniciada && DtPromocaoInicio.Iniciada && precoPromocao.Iniciada)
+                {
+                    // Tá na promoção
+                    if (DateTime.Today >= DtPromocaoInicio.V && DateTime.Today <= DtPromocaoFinal.V)
+                    {
+                        PrecoTipo = EnumPreco.ProdutoPromocao;
+                        precoUtilizado = precoPromocao.V;
+                    }
+                    else//Nao está na promoção
+                    {
+                        PrecoTipo = EnumPreco.ProdutoPrecoBase;
+                        precoUtilizado = precoBase.V;
+                    }
+                }
+                else//Não está na promoção
+                {
+                    PrecoTipo = EnumPreco.ProdutoPrecoBase;
+                    precoUtilizado = precoBase.V;
+                }
+            }
+            else // Tem tabela de preço
+            {
+                if (produtoNaoConstaNaTabelaPrecoQuandoUsandoTabelaPreco)
+                {
+                    precoUtilizado = precoBase.V;
+                    return;
+                }
+                try
+                {
+                    bool achouFaixaDeQuantidade = false;
+                    for (int i = 3; i >= 0; --i)
+                    {
+                        if (ArQuantidadeMinima[i].Iniciada && ArPreco[i].Iniciada)
+                            if (quantidadeRequerida >= ArQuantidadeMinima[i].V && ArQuantidadeMinima[i].V > 0)
+                            {
+                                switch (i){
+                                    case 0:
+                                        PrecoTipo = EnumPreco.TabelaPrecoQtd1;
+                                        break;
+                                    case 1:
+                                        PrecoTipo = EnumPreco.TabelaPrecoQtd2;
+                                        break;
+                                    case 2:
+                                        PrecoTipo = EnumPreco.TabelaPrecoQtd3;
+                                        break;
+                                    case 3:
+                                        PrecoTipo = EnumPreco.TabelaPrecoQtd4;
+                                        break;
+                                    }
+                                precoUtilizado = ArPreco[i].V;
+                                achouFaixaDeQuantidade = true;
+                                break;
+                            }
+                    }
+                    if (achouFaixaDeQuantidade == false)
+                    {
+                        PrecoTipo = EnumPreco.ProdutoPrecoBase;
+                        precoUtilizado = precoBase.V;
+                    }
+                }
+                catch
+                {
+                    //Pega o preço base ou promoção caso não encontre
+
+                    //Checa promoção
+                    if (DtPromocaoFinal.Iniciada && DtPromocaoInicio.Iniciada && precoPromocao.Iniciada)
+                    {
+                        // Tá na promoção
+                        if (DateTime.Today >= DtPromocaoInicio.V && DateTime.Today <= DtPromocaoFinal.V)
+                        {
+                            PrecoTipo = EnumPreco.ProdutoPromocao;
+                            precoUtilizado = precoPromocao.V;
+                        }
+                        else//Não está na promoção
+                        {
+                            PrecoTipo = EnumPreco.ProdutoPrecoBase;
+                            precoUtilizado = precoBase.V;
+                        }
+                    }
+                    else//Nao está na promoção
+                    {
+                        precoUtilizado = precoBase.V;
+                    }
+                }
+            }
+        }
+
+        public double PrecoVendaTotal{
+            get{
+                return (quantidadeRequerida * precoUtilizado); 
+            }   
+        }
+
+        //Informa se um produto já está na lista de produtos carregados, se estiver marcado para deleção não vale
+        private bool itemConstaLogicamente()
+        {
+            if (this.Pedido.LstItem.Contains(this) && AcaoProduto != EnumAcaoProduto.ItemExcluir)
+                return true;
+            else
+                return false;
+        }
+
+        public double CreditoRestante
+        {
+            get
+            {
+                if (Globals.APP_ACAO != Neopocket.Utils.Enums.Acao.PedidoEdicao)
+                    return Globals.Pedido.CreditoRestante - PrecoVendaTotal;
+                else
+                {
+                    //Verifica se o item ja consta no pedido e estorna o crédito
+                    if (itemConstaLogicamente())
+                    {
+                        foreach (Produto original in Pedido.ItemCarregadosLst)
+                        {
+                            if (original.Id == this.Id)
+                            {
+                                return Globals.Pedido.CreditoRestante + original.PrecoVendaTotal - PrecoVendaTotal;
+                            }
+                        }
+                        //Não encontrou    
+                        return Globals.Pedido.CreditoRestante - PrecoVendaTotal;
+                    }else
+                        return Globals.Pedido.CreditoRestante - PrecoVendaTotal;
+                }
+            }
+        }
+
+        public double PrecoUtilizado
+        {
+            get { return precoUtilizado; }
+            set
+            {
+                double precoMinimo = 0;
+                double precoMaximo = 0;
+                //Caso o usuário tente digitar o preço manualmente, então deverá ver se é permitdo usar esse novo valor
+                if (Pedido.IdTabelaPreco == 0)
+                    throw new Exception("Não é permito alterar um produto caso uma tabela de preço não seja escolhida");
+                desconto = 0;
+                //Reseta o preço caso ja tivesse dado algum desconto antes
+                PrecosCalcularEGuardar();
+                //Se tentar reduzir o preço
+                if (value < precoUtilizado)
+                {
+                    if (DescontoMaximo.Iniciada == false)
+                        throw new Exception("Não foi possível encontrar o desconto máximo desse produto");
+
+                    if (DescontoTipo == EnumDesconto.Porcentagem)
+                    {
+                        precoMinimo = precoUtilizado - (precoUtilizado * (DescontoMaximo.V / 100));
+                    }
+                    else
+                    {
+                        precoMinimo = precoUtilizado - DescontoMaximo.V;
+                    }
+
+                    if (value < precoMinimo)
+                    {
+                        throw new Exception("Preço inferior ao preço mínimo, que é " + precoMinimo.ToString("C"));
+                    }
+                    else
+                    {
+                        if (DescontoTipo == EnumDesconto.Porcentagem)
+                        {
+                            desconto = (precoUtilizado - value) / precoUtilizado;
+                            desconto *= 100;
+                        }
+                        else
+                        {
+                            desconto = precoUtilizado - value;
+                        }
+                        precoUtilizado = value;
+                    }
+                }
+                else //Se tentar aumentar o preço
+                {
+                    if (AcrescimoMaximo.Iniciada == false)
+                        throw new Exception("Não foi possível encontrar o acréscimo máximo desse produto");
+
+                    if (DescontoTipo == EnumDesconto.Porcentagem)
+                    {
+                        precoMaximo = precoUtilizado + (precoUtilizado * (AcrescimoMaximo.V / 100));
+                    }
+                    else
+                    {
+                        precoMaximo = precoUtilizado + AcrescimoMaximo.V;
+                    }
+
+                    if (value > precoMaximo)
+                    {
+                        throw new Exception("Preço superior ao preço máximo que é " + precoMaximo.ToString("C"));
+                    }
+                    else
+                    {
+                        if (DescontoTipo == EnumDesconto.Porcentagem)
+                        {
+                            desconto = (precoUtilizado - value) / precoUtilizado;
+                            desconto *= 100;
+                        }
+                        else
+                        {
+                            desconto = precoUtilizado - value;
+                        }
+                        precoUtilizado = value;
+                    }
+                }
+                //Remove o desconto do pedido para evitar que seja dado um desconto superior ao desconto máximo
+                if (Pedido.Desconto > 0)
+                    Pedido.desconto = 0;
+            }
+        }
+
+        public int Estoque {
+            get
+            {
+                if (estoque.Iniciada)
+                    return estoque.V;
+                else
+                    return 0;
+            } 
+        }
+
+        public double Desconto
+        {
+            get{ return desconto; }
+            set
+            {
+                //double descontoBackup = desconto;
+
+                if (Pedido.IdTabelaPreco == 0 && value != 0)
+                    throw new Exception("Você não tem permissão dar desconto caso não seja selecionada uma tabela de preço");
+
+                if (DescontoMaximo.Iniciada == false && value > 0)
+                    throw new Exception("Não posso dar desconto nesse produto com essa tabela de preço");
+
+                if (AcrescimoMaximo.Iniciada == false && value < 0)
+                    throw new Exception("Não posso dar acréscimo nesse produto com essa tabela de preço");
+
+                if (value >= 0 && DescontoMaximo.Iniciada)
+                    if (value > DescontoMaximo.V)
+                        throw new Exception("Desconto maior que o máximo");
+                else
+                    if (AcrescimoMaximo.Iniciada)
+                        if ((value * -1) > AcrescimoMaximo.V)
+                            throw new Exception("Acréscimo maior que o máximo");
+
+                if (value >= 100 && Pedido.IdTabelaPreco != 0)
+                    if (DescontoTipo == EnumDesconto.Porcentagem)
+                        throw new Exception("Desconto não pode ser igual ou superior a 100%");
+                
+                //Reseta o desconto do pedido para evitar que seja dado um desconto superior ao desconto máximo
+                
+                if(Pedido.Desconto > 0 )
+                    Pedido.desconto = 0;
+                desconto = value;
+                PrecosCalcularEGuardar();
+            }
+        }
+
+        public int QuantidadeRequerida
+        {
+            get { return quantidadeRequerida; }
+            set
+            {
+                int quantidadeRequeridaOriginal = quantidadeRequerida;
+                if (value < 0)
+                    throw new Exception("Quantidade deve ser maior ou igual a zero");
+                else
+                    if (!Parametro.VenderSemEstoque && Estoque < value)
+                        throw new Exception("Quantidade requerida maior que estoque");
+                quantidadeRequerida = value;
+                PrecosCalcularEGuardar();
+                if (value > 0)
+                {
+                    try
+                    {
+                        VerificaItemPermitido();
+                    }
+                    catch (Exception ex)
+                    {
+                        quantidadeRequerida = quantidadeRequeridaOriginal;
+                        throw new Exception(ex.Message);
+                    }
+                }
+                //Reseta o desconto do pedido para evitar que seja dado um desconto superior ao desconto máximo
+                Pedido.desconto = 0;
+            }
+        }
+
+
+        /// <summary>
+        /// Verifica sem tem crédito levando em conta até mesmo o parâmetro Parametro.VerificarCreditoVendaAPrazo
+        /// </summary>
+        /// <returns></returns>
+        public bool CreditoDisponivelBool
+        {
+            get
+            {
+                if (!Parametro.VerificarCreditoVendaAPrazo)
+                    return true;
+                if ((Globals.Cliente.ListaNegra || CreditoRestante <= 0) && Globals.Pedido.EspecieFinanceiraVerificaCredito)
+                    return false;
+                else
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// Verifica se pode comprar a prazo, se estver na lista negra ja devolve false
+        /// Retorna true se tiver extrapolado o limite de credito para venda a prazo, falta checar se a venda é a prazo
+        /// </summary>
+        /// <returns></returns>
+        private void VerificaItemPermitido()
+        {
+            if (Globals.Cliente.ListaNegra && !CreditoDisponivelBool)
+                throw new Exception("Cliente está na lista negra e essa compra requer crédito");
+            if (CreditoRestante <= 0 && !CreditoDisponivelBool)
+                throw new Exception("Valor extrapola o limite de crédito");
+        }
+   }
+
+}

@@ -1,0 +1,109 @@
+﻿1354 est56 pd 5
+51 pd 3
+est 48 q 1 
+48+4
+52
+
+p1616 e169 q2
+
+
+
+achei, obrigado!
+Evandro diz:
+E para que serve o campo verifica_credito na tabela espécie financeira?
+Humberto diz:
+isso para verificar se vai verificar crédito ou não
+Humberto diz:
+se eu compro com aquela espécie e ela não verifica crédito, eu posso vender o estoque todo
+Evandro diz:
+eu também achava que fosse isso também, mas o cadastro da sanog não faz o menor sentido.
+Evandro diz:
+Dinheiro verifica crédito?
+Humberto diz:
+nao estao baixando o contas a receber e nem o limite de crédito
+Humberto diz:
+nap
+Humberto diz:
+nao
+Humberto diz:
+nao verifica
+Humberto diz:
+dinheiro eu vendo sem problema
+Evandro diz:
+No deles verifica!
+Humberto diz:
+está errado
+Evandro diz:
+1	DINHEIRO	True
+2	CHEQUE	True
+3	CREDICARD	False
+4	BALCAO AVISTA	False
+5	BALCAO CHEQUE	False
+6	CH DEVOLVIDO	True
+7	VISA ELECTRON	False
+Evandro diz:
+Por isso eu estava todo confuso
+Evandro diz:
+vou mandar um email para Juca pedido para eles corrigirem
+Evandro diz:
+Humberto, tem outra coisa
+Evandro diz:
+Estava pensando que depois que implantarmos o sistema em welington ficaremos sem dispositivos para testar o sistema.
+Evandro diz:
+O emulador funciona quase tudo, só não sincroniza
+Humberto diz:
+tem o meu
+Evandro diz:
+e vc vai ficar sem celular?
+Humberto diz:
+fica com vc.....
+Humberto diz:
+arrumo outro.....
+Evandro diz:
+OK
+Evandro diz:
+vou voltar a implementar as mudanças
+Evandro diz:
+Até +!
+Humberto diz:
+t+
+
+
+
+        public void PrecoVendaGrava()// Irá depender da quantitade da data e da dataPromocao
+        {
+                if (Pedido.IdTabelaPreco == 0)
+                {
+                    if(DtPromocaoFinal != null && DtPromocaoInicio!= null){
+                        if(DateTime.Today >= DtPromocaoInicio && DateTime.Today <= DtPromocaoFinal)
+                            precoVenda = (QuantidadeRequerida * Desconto * PrecoPromocao);
+                    }
+                    
+                }
+
+
+        }
+        
+        
+        
+cod produto c/ grade: 1317159        
+
+
+atributo.csv
+cidade.csv
+cliente.csv
+especie_financeira.csv
+forma_pagamento.csv
+funcionario.csv
+grade.csv
+item_atributo.csv
+item_grade.csv
+item_pedido.csv
+item_pedido_grade.csv
+item_tabela_preco.csv
+parametro.csv
+pedido.csv
+produto.csv
+produto_grade.csv
+saldo_grado.csv
+tabela_preco.csv

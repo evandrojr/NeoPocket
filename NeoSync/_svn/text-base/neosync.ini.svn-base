@@ -1,0 +1,4 @@
+﻿SERVER=localhost;DataBase=d:\base\em_uso\mba2001.fdb
+##SANOG ## SERVER=servidor-w2;DataBase=/neo/dados/mba2001.fdb
+##LOCAL ## DataBase=d:\base\em_uso\MBA2001.FDB
+#### ou assim para TCP/IP: SERVER=servidor-w2;DataBase=/neo/dados/mba2001.fdb

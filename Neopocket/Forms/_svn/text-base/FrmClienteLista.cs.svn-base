@@ -1,0 +1,479 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Windows.Forms;
+using Neopocket.Utils;
+using Neopocket.Core;
+using Microsoft.WindowsCE.Forms;
+
+namespace Neopocket.Forms
+{
+    /// <summary>
+    /// Formulário de listagem de clientes
+    /// </summary>
+    public partial class FrmClienteLista : FormBase
+    {
+        #region [ Construtor ]
+
+        public FrmClienteLista()
+            : base(false)
+        {
+            InitializeComponent();
+        }
+
+        #endregion
+
+        #region [ Load ]
+
+        private void FrmCliente_Load(object sender, EventArgs e)
+        {
+            #region Orientação da tela
+
+            //if (SystemSettings.ScreenOrientation != ScreenOrientation.Angle90)
+            //    SystemSettings.ScreenOrientation = ScreenOrientation.Angle90;
+
+            #endregion
+
+            #region Trata visibilidade da tela
+
+            if (Globals.APP_ACAO == Neopocket.Utils.Enums.Acao.PedidoADefinir)
+            {
+                btnEditar.Visible = false;
+                btnNovo.Visible = false;
+                btnPedido.Visible = true;
+                btnPedido.Location = btnNovo.Location;
+            }
+            else if (Globals.APP_ACAO == Neopocket.Utils.Enums.Acao.ClienteADefinir)
+            {
+                btnEditar.Visible = Parametro.ClienteEdicaoPermitida;
+                btnNovo.Visible = true;
+                btnPedido.Visible = false;
+            }
+
+            #endregion
+
+            #region Cria as colunas da NeoGrid
+
+            #region id_cliente_pocket
+
+            Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colIdStore = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+            colIdStore.HeaderText = "ID Store";
+            colIdStore.ReadOnly = true;
+            colIdStore.Owner = grdCliente;
+            colIdStore.MappingName = "id_cliente_pocket";
+            NeoTableStyle.GridColumnStyles.Add(colIdStore);
+
+            #endregion
+
+            #region cliente_nome_reduzido
+
+            Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colNomeReduzido = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+            colNomeReduzido.Width = 90;
+            colNomeReduzido.HeaderText = "Nome Fantasia";
+            colNomeReduzido.Owner = grdCliente;
+            colNomeReduzido.MappingName = "cliente_nome_reduzido";
+            colNomeReduzido.ReadOnly = true;
+            NeoTableStyle.GridColumnStyles.Add(colNomeReduzido);
+
+            #endregion
+
+            #region cliente_nome
+
+            Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colNome = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+            colNome.Width = 80;
+            colNome.HeaderText = "Nome";
+            colNome.Owner = grdCliente;
+            colNome.MappingName = "cliente_nome";
+            colNome.ReadOnly = true;
+            NeoTableStyle.GridColumnStyles.Add(colNome);
+
+            #endregion
+
+            #region id_cliente
+
+            Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn colIdCliente = new Neo.Pocket.Controls.NeoDataGridCustomTextBoxColumn();
+            colIdCliente.HeaderText = "ID";
+            colIdCliente.Owner = grdCliente;
+            colIdCliente.MappingName = "id_cliente";
+            colIdCliente.ReadOnly = true;
+            NeoTableStyle.GridColumnStyles.Add(colIdCliente);
+
+            #endregion
+
+            #endregion
+
+            UpdateView();
+            inputPanel.Enabled = false;
+        }
+
+        #endregion
+
+        #region [ Novo cliente ]
+
+        private void btNovo_Click(object sender, EventArgs e)
+        {
+            Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.ClienteCadastro;
+            Globals.Cliente = new Cliente();
+            Util.FormExibir(new FrmClienteCadastro1());
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Pega o cliente selecionado da listagem ]
+
+        /// <summary>
+        /// Busca o cliente selecionado na listagem, caso o cliente tenha o campo
+        /// id_cliente_pocket com valor, busca o cliente por este campo, senão busca o cliente
+        /// pelo campo id_cliente.
+        /// </summary>
+        /// <returns>Cliente</returns>
+        private void GetSelectedCliente()
+        {
+            Int32 i = grdCliente.CurrentRowIndex;
+            if (i == -1)
+                return;
+
+            Globals.Cliente = new Cliente();
+
+            // Coluna 0 = id_cliente_pocket (Guid)
+            // Coluna 3 = id_cliente (Int32)
+            if (!(grdCliente[i, 0] is DBNull))
+                Globals.Cliente.Carregar((Guid)(grdCliente[i, 0]), 0, Cliente.IdTipoEnum.IdPocket);
+            else
+                Globals.Cliente.Carregar(new Guid(), (Int32)(grdCliente[i, 3]), Cliente.IdTipoEnum.IdStore);
+        }
+
+        #endregion
+
+        #region [ Edição de um cliente ]
+
+        private void btnEditar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.GetSelectedCliente();
+
+                if (Globals.Cliente != null)
+                {
+                    Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.ClienteEdicao;
+                    Util.FormExibir(new FrmClienteCadastro1());
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        //#region [ Exclusão de um cliente ]
+
+        //private void btnExcluir_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        Int32 i = grdCliente.CurrentRowIndex;
+        //        if (i == -1)
+        //            return;
+
+        //        Globals.Cliente = new Cliente();
+
+        //        if (grdCliente[i, 0] != null)
+        //        {
+        //            Globals.Cliente.Id = (Guid)grdCliente[i, 0];
+
+        //            if (Globals.Cliente.Excluir(Globals.Cliente.Id))
+        //            {
+        //                MessageBox.Show("Dados excluidos com sucesso!");
+        //            }
+        //            else
+        //            {
+        //                MessageBox.Show("Dados não excluidos!");
+        //            }
+
+        //            this.UpdateView();
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Só é possível excluir clientes cadastrados no pocket!");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+        //        FE.Show(ex);
+        //    }
+        //}
+
+        //#endregion
+
+        #region [ Busca ]
+
+        private void btBuscar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                inputPanel.Enabled = false;
+                Cursor.Current = Cursors.WaitCursor;
+                Int32 colIndex = 0;
+
+                if (radCodigo.Checked)
+                {
+                    colIndex = 3;
+                }
+
+                if (radNome.Checked)
+                {
+                    colIndex = 2;
+                }
+
+                grdCliente.Search(colIndex, txtCliente.Text, Neo.Pocket.Controls.NeoDataGridSearchMode.Like);
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Listagem dos pedidos de um cliente ]
+
+        private void ListarPedidos()
+        {
+            try
+            {
+                this.GetSelectedCliente();
+
+                if (Globals.Cliente != null)
+                {
+                    Globals.Pedido = new Pedido();
+                    Pedido.IdClientePocket = Globals.Cliente.Id;
+
+                    try
+                    {
+                        Pedido.IdClienteStore = Globals.Cliente.IdStore;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Observação, este é um cliente que não foi cadastrado ainda no NeoStore.", "Observação");
+                    }
+
+                    Util.FormExibir(new FrmPedidoLista(this));
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Duplo click na listagem ]
+
+        private void grdCliente_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Int32 i = grdCliente.CurrentRowIndex;
+                if (i == -1)
+                    return;
+
+                if (Globals.APP_ACAO == Neopocket.Utils.Enums.Acao.PedidoADefinir)
+                {
+                    this.ListarPedidos();
+                }
+                else if (Globals.APP_ACAO == Neopocket.Utils.Enums.Acao.ClienteADefinir)
+                {
+                    Globals.Cliente = new Cliente();
+                    Globals.APP_ACAO = Neopocket.Utils.Enums.Acao.ClienteEdicao;
+                    FrmClienteCadastro1 f = new FrmClienteCadastro1();
+                    Cursor.Current = Cursors.WaitCursor;
+                    //CARREGAR CLIENTE!
+                    f.Show();
+                    Cursor.Current = Cursors.Default;
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Pedido ]
+
+        private void btnPedido_Click(object sender, EventArgs e)
+        {
+            Int32 i = grdCliente.CurrentRowIndex;
+            if (i == -1)
+                return;
+
+            if (Globals.APP_ACAO == Neopocket.Utils.Enums.Acao.PedidoADefinir)
+            {
+                ListarPedidos();
+            }
+        }
+
+        #endregion
+
+        #region [ Carrega a listagem ]
+
+        private void UpdateView()
+        {
+            try
+            {
+                DataTable dtClientes;
+                dtClientes = Globals.Bd.DataTablePreenche(@"Select id_cliente_pocket, cliente_nome_reduzido,cliente_nome,id_cliente 
+                                                  from cliente order by cliente_nome_reduzido", "cliente");
+                string qryAsterisco;
+                //Marcar os clientes que já fizeram pedido mas nao sincroniza
+                qryAsterisco = "Select id_cliente_pocket from pedido where status='N'";
+
+                List<Guid> lstClientesComPedido = Globals.Bd.ListGuid(qryAsterisco);
+
+                qryAsterisco = "Select id_cliente_store from pedido where status='N'";
+
+                List<int> lstClientesComPedidoInt = Globals.Bd.ListInt(qryAsterisco);
+
+                for (int i = 0; i < dtClientes.Rows.Count; ++i)
+                {
+                    try
+                    {
+                        if (lstClientesComPedido.Contains((Guid)dtClientes.Rows[i]["id_cliente_pocket"]))
+                        {
+                            dtClientes.Rows[i]["cliente_nome_reduzido"] = "*" + dtClientes.Rows[i]["cliente_nome_reduzido"];
+                            continue;
+                        }
+                    }
+                    catch { }
+                    try
+                    {
+                        if (lstClientesComPedidoInt.Contains((int)dtClientes.Rows[i]["id_cliente"]))
+                            dtClientes.Rows[i]["cliente_nome_reduzido"] = "*" + dtClientes.Rows[i]["cliente_nome_reduzido"];
+                    }
+                    catch { }
+                }
+
+                NeoTableStyle.MappingName = "cliente";
+                grdCliente.SetBackupDataSource(dtClientes);
+                grdCliente.DataSource = dtClientes;
+                grdCliente.Pager = NeoPager;
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Voltar ]
+
+        private void mnuVoltar_Click(object sender, EventArgs e)
+        {
+            Util.FormExibir(new FrmPrincipal());
+            this.Close();
+        }
+
+        #endregion
+
+        #region [ Focus dos componentes ]
+
+        private void txtCliente_GotFocus(object sender, EventArgs e)
+        {
+            inputPanel.Enabled = true;
+        }
+
+        private void txtCliente_LostFocus(object sender, EventArgs e)
+        {
+            inputPanel.Enabled = false;
+        }
+
+        #endregion
+
+        #region [ Radio buttons ]
+
+        private void radCodigo_CheckedChanged(object sender, EventArgs e)
+        {
+            txtCliente.Focus();
+        }
+
+        private void radNome_CheckedChanged(object sender, EventArgs e)
+        {
+            txtCliente.Focus();
+        }
+
+        #endregion
+
+        #region [ Recusa ]
+
+        private void mnuRecusa_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int i = grdCliente.CurrentRowIndex;
+                if (i == -1)
+                    return;
+
+                Globals.Recusa = new Recusa();
+                if (grdCliente[i, 1] == System.DBNull.Value)
+                {
+                    MessageBox.Show("Não se pode registrar recusa de clientes novos. \n Sincronize o dispositivo primeiro.");
+                }
+                else
+                {
+                    Recusa.IdCliente = Convert.ToInt32(grdCliente[i, 1]);
+                    Globals.Cliente = new Cliente();
+                    Globals.Cliente.Carregar(new Guid(), Recusa.IdCliente, Cliente.IdTipoEnum.IdStore);
+                    Util.FormExibir(new FrmRecusaLista());
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+        #region [ Detalhar cliente na listagem ]
+
+        private void grdCliente_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.GetSelectedCliente();
+
+                if (Globals.Cliente != null)
+                {
+                    notification.Text = Globals.Cliente.CidadeNome + ", " + Globals.Cliente.Bairro + ",  " + Globals.Cliente.Endereco;
+                    notification.Visible = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogBuilder.Append(Globals.APP_LOGDIRECTORY + Globals.APP_LOG_EXCEPTIONFILENAME, ex.Message, true);
+                FE.Show(ex);
+            }
+        }
+
+        #endregion
+
+    }
+}

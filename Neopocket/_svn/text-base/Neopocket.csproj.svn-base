@@ -1,0 +1,553 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{55504DD1-6E90-4396-BA1A-5B564E67B344}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Neopocket</RootNamespace>
+    <AssemblyName>Neopocket</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
+    <OSVersion>5.1</OSVersion>
+    <DeployDirSuffix>Neopocket</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+    <DeployDirPrefix>%25CSIDL_PROGRAM_FILES%25</DeployDirPrefix>
+    <ApplicationIcon>NeoPocket.ico</ApplicationIcon>
+    <StartupObject>Neopocket.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsCE.Forms" />
+    <Reference Include="mscorlib" />
+    <Reference Include="OpenNETCF.Windows.Forms, Version=2.3.0.39, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Smart Device Framework\Bin\OpenNETCF.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenNETCF.WindowsCE, Version=2.3.0.39, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Smart Device Framework\Bin\OpenNETCF.WindowsCE.dll</HintPath>
+    </Reference>
+    <Reference Include="RasLibrary, Version=1.0.0.28428, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\RasLibrary.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=3be235df1c8d2ad3, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Cliente.cs" />
+    <Compile Include="Forms\FrmRelatorioClienteSemPedido.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioClienteSemPedido.Designer.cs">
+      <DependentUpon>FrmRelatorioClienteSemPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormBase.Designer.cs">
+      <DependentUpon>FormBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmRecusa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRecusa.Designer.cs">
+      <DependentUpon>FrmRecusa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmRecusaLista.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRecusaLista.Designer.cs">
+      <DependentUpon>FrmRecusaLista.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioClienteCidade.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioClienteCidade.Designer.cs">
+      <DependentUpon>FrmRelatorioClienteCidade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioItensPedidos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioItensPedidos.Designer.cs">
+      <DependentUpon>FrmRelatorioItensPedidos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioLista.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioLista.Designer.cs">
+      <DependentUpon>FrmRelatorioLista.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioPedido.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRelatorioPedido.Designer.cs">
+      <DependentUpon>FrmRelatorioPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Grade.cs" />
+    <Compile Include="Forms\FrmRotaProcessa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRotaProcessa.Designer.cs">
+      <DependentUpon>FrmRotaProcessa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Rota.cs" />
+    <Compile Include="Utils\Crypt.cs" />
+    <Compile Include="Lib\CSV.cs" />
+    <Compile Include="Core\DadoImportacao.cs" />
+    <Compile Include="Utils\Bd.cs" />
+    <Compile Include="Lib\Estrutura.cs" />
+    <Compile Include="Utils\Fcn.cs" />
+    <Compile Include="Forms\FE.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FE.Designer.cs">
+      <DependentUpon>FE.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmClienteLista.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmClienteLista.Designer.cs">
+      <DependentUpon>FrmClienteLista.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmClienteCadastro1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmClienteCadastro1.Designer.cs">
+      <DependentUpon>FrmClienteCadastro1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmClienteCadastro2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmClienteCadastro2.Designer.cs">
+      <DependentUpon>FrmClienteCadastro2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmClienteCadastro3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmClienteCadastro3.Designer.cs">
+      <DependentUpon>FrmClienteCadastro3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmClienteCadastro4.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmClienteCadastro4.Designer.cs">
+      <DependentUpon>FrmClienteCadastro4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmConfiguracaoDeAcesso.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmConfiguracaoDeAcesso.Designer.cs">
+      <DependentUpon>FrmConfiguracaoDeAcesso.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmGrade.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmGrade.Designer.cs">
+      <DependentUpon>FrmGrade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmInformacoesDoCliente .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmInformacoesDoCliente .Designer.cs">
+      <DependentUpon>FrmInformacoesDoCliente .cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmItem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmItem.Designer.cs">
+      <DependentUpon>FrmItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmLogin.Designer.cs">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmOpcao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmOpcao.Designer.cs">
+      <DependentUpon>FrmOpcao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmPedido.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmPedido.Designer.cs">
+      <DependentUpon>FrmPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmPedidoLista.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmPedidoLista.Designer.cs">
+      <DependentUpon>FrmPedidoLista.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmPrincipal.Designer.cs">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmProdutoLista.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmProdutoLista.Designer.cs">
+      <DependentUpon>FrmProdutoLista.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmSincronizacao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSincronizacao.Designer.cs">
+      <DependentUpon>FrmSincronizacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Funcionario.cs" />
+    <Compile Include="Core\MapeamentoBdCsv.cs" />
+    <Compile Include="Lib\NeoGrade.cs" />
+    <Compile Include="Core\Parametro.cs" />
+    <Compile Include="Core\Pedido.cs">
+    </Compile>
+    <Compile Include="Core\Produto.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\FrmRelatorioClienteSemPedido.resx">
+      <DependentUpon>FrmRelatorioClienteSemPedido.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FE.resx">
+      <DependentUpon>FE.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormBase.resx">
+      <DependentUpon>FormBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmClienteLista.resx">
+      <DependentUpon>FrmClienteLista.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmClienteCadastro1.resx">
+      <DependentUpon>FrmClienteCadastro1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmClienteCadastro2.resx">
+      <DependentUpon>FrmClienteCadastro2.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmClienteCadastro3.resx">
+      <DependentUpon>FrmClienteCadastro3.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmClienteCadastro4.resx">
+      <DependentUpon>FrmClienteCadastro4.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmConfiguracaoDeAcesso.resx">
+      <DependentUpon>FrmConfiguracaoDeAcesso.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmGrade.resx">
+      <DependentUpon>FrmGrade.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmInformacoesDoCliente .resx">
+      <DependentUpon>FrmInformacoesDoCliente .cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmItem.resx">
+      <DependentUpon>FrmItem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmLogin.resx">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmOpcao.resx">
+      <DependentUpon>FrmOpcao.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmPedido.resx">
+      <DependentUpon>FrmPedido.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmPedidoLista.resx">
+      <DependentUpon>FrmPedidoLista.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmPrincipal.resx">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmProdutoLista.resx">
+      <DependentUpon>FrmProdutoLista.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmRecusa.resx">
+      <DependentUpon>FrmRecusa.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmRecusaLista.resx">
+      <DependentUpon>FrmRecusaLista.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmRelatorioClienteCidade.resx">
+      <DependentUpon>FrmRelatorioClienteCidade.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmRelatorioItensPedidos.resx">
+      <DependentUpon>FrmRelatorioItensPedidos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmRelatorioLista.resx">
+      <DependentUpon>FrmRelatorioLista.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmRelatorioPedido.resx">
+      <DependentUpon>FrmRelatorioPedido.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmRotaProcessa.resx">
+      <DependentUpon>FrmRotaProcessa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSincronizacao.resx">
+      <DependentUpon>FrmSincronizacao.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Core\Recusa.cs" />
+    <Compile Include="Core\Sincronizacao.cs" />
+    <Compile Include="Utils\Enums.cs" />
+    <Compile Include="Utils\Globals.cs" />
+    <Compile Include="Utils\LogBuilder.cs" />
+    <Compile Include="Utils\Zip.cs" />
+    <Compile Include="Utils\Util.cs" />
+    <Compile Include="Utils\Validator.cs" />
+    <Compile Include="Web References\NeoFileSystemService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BdScripts\apagar_dados_banco.txt" />
+    <Content Include="BdScripts\geracaoBd.txt" />
+    <Content Include="BdScripts\queries.txt" />
+    <Content Include="BdScripts\Rota.txt" />
+    <Content Include="BdScripts\TempBdScript.txt" />
+    <Content Include="Doc\BdScripts\geracaoBd.txt" />
+    <Content Include="Doc\BdScripts\queries.txt" />
+    <Content Include="Doc\BdScripts\TempBdScript.txt" />
+    <Content Include="Doc\DiagramaGrade.png" />
+    <Content Include="Doc\RelacionandoVendedorComClienteUsandoNeoStore.txt" />
+    <Content Include="Image\backgroundr1_c1.jpg" />
+    <Content Include="Image\background_1.png" />
+    <Content Include="Image\bt_anterior.png" />
+    <Content Include="Image\bt_clientes.png" />
+    <Content Include="Image\bt_desligar.png" />
+    <Content Include="Image\bt_desligar_r1_c1.jpg" />
+    <Content Include="Image\bt_fim.png" />
+    <Content Include="Image\bt_iniciar.png" />
+    <Content Include="Image\bt_ok_r1_c1.jpg" />
+    <Content Include="Image\bt_pedidos.png" />
+    <Content Include="Image\bt_pedidos_r1_c1.jpg" />
+    <Content Include="Image\bt_Produtos2_r1_c1.jpg" />
+    <Content Include="Image\bt_proximo.png" />
+    <Content Include="Image\bt_sincronizar.png" />
+    <Content Include="Image\icone_cadeado_r1_c1.jpg" />
+    <Content Include="Image\icone_homem.png" />
+    <Content Include="Image\marca_neo_pocket2.png" />
+    <Content Include="Image\package_system_r1_c1.gif" />
+    <Content Include="Image\search-web.png" />
+    <Content Include="Image\telaInicial_r1_c1.jpg" />
+    <Content Include="Image\telaSincronizacao_r1_c1.jpg" />
+    <Content Include="NeoPocket.ico" />
+    <Content Include="pocketdb.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Doc\BdScripts\Script.txt" />
+    <Content Include="System.SR.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="Rascunho\rascunho.txt" />
+    <None Include="Web References\NeoFileSystemService\neofilesystemservice.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Doc\desconto_maximo_pedido.xlsx" />
+    <None Include="Doc\Instalacao do pocket SANOG.docx" />
+    <None Include="Doc\Regras_de_negocio\Venda_a_prazo.docx" />
+    <None Include="Doc\REGRAS_DE_NEGÓCIO_NEO_POCKET.doc" />
+    <None Include="Doc\Rotina de Atualização.docx" />
+    <None Include="ftpcaminho.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ftpsenha.seg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ftpusuario.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="senha.seg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\atributo.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\cidade.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\cliente.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\especie_financeira.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\forma_pagamento.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\grade.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\item_atributo.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\item_forma_pagamento.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\item_grade.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\item_tabela_preco.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\motivo.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\parametro.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\produto.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NETCFv35.Messages.EN.gac">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SincDado\saldo_grade.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="usuario.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="vendedorcodigo.seg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="vendedornome.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Web References\NeoFileSystemService\neofilesystemservice.wsdl" />
+    <None Include="Web References\NeoFileSystemService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\_svn\entries" />
+    <None Include="Web References\_svn\format" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://neo.eti.br/neofilesystemwebservice/neofilesystemservice.asmx">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\NeoFileSystemService\</RelPath>
+      <UpdateFromURL>http://neo.eti.br/neofilesystemwebservice/neofilesystemservice.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>
+      </CachedAppSettingsObjectName>
+      <CachedSettingsPropName>
+      </CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Neo.Pocket.Controls\Neo.Pocket.Controls\Neo.Pocket.Controls.csproj">
+      <Project>{A20F0522-32BC-4CB3-9CAD-1DDD97A0BD82}</Project>
+      <Name>Neo.Pocket.Controls</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web References\_svn\prop-base\" />
+    <Folder Include="Web References\_svn\props\" />
+    <Folder Include="Web References\_svn\text-base\" />
+    <Folder Include="Web References\_svn\tmp\prop-base\" />
+    <Folder Include="Web References\_svn\tmp\props\" />
+    <Folder Include="Web References\_svn\tmp\text-base\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

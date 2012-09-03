@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://neo.eti.br/neofilesystemwebservice/neofilesystemservice.asmx?wsdl" docRef="http://neo.eti.br/neofilesystemwebservice/neofilesystemservice.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://neo.eti.br/neofilesystemwebservice/neofilesystemservice.asmx" xmlns:q1="http://www.net.eti.br/services/NeoFileSystemService" binding="q1:NeoFileSystemServiceSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://neo.eti.br/neofilesystemwebservice/neofilesystemservice.asmx" xmlns:q2="http://www.net.eti.br/services/NeoFileSystemService" binding="q2:NeoFileSystemServiceSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>

@@ -1,0 +1,473 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/neopocket/!svn/ver/70/Neopocket/Forms
+END
+FrmConfiguracaoDeAcesso.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/neopocket/!svn/ver/10/Neopocket/Forms/FrmConfiguracaoDeAcesso.Designer.cs
+END
+FrmConfiguracaoDeAcesso.cs
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/neopocket/!svn/ver/11/Neopocket/Forms/FrmConfiguracaoDeAcesso.cs
+END
+FrmInformacoesDoCliente .resx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmInformacoesDoCliente%20.resx
+END
+FrmRelatorioLista.resx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmRelatorioLista.resx
+END
+FrmRelatorioClienteSemPedido.resx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/neopocket/!svn/ver/26/Neopocket/Forms/FrmRelatorioClienteSemPedido.resx
+END
+FrmRelatorioItensPedidos.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/neopocket/!svn/ver/28/Neopocket/Forms/FrmRelatorioItensPedidos.Designer.cs
+END
+FrmRelatorioItensPedidos.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/neopocket/!svn/ver/28/Neopocket/Forms/FrmRelatorioItensPedidos.cs
+END
+FrmOpcao.resx
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmOpcao.resx
+END
+FrmClienteLista.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/neopocket/!svn/ver/70/Neopocket/Forms/FrmClienteLista.cs
+END
+FE.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FE.Designer.cs
+END
+FrmLogin.resx
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/neopocket/!svn/ver/4/Neopocket/Forms/FrmLogin.resx
+END
+FrmRelatorioPedido.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/neopocket/!svn/ver/67/Neopocket/Forms/FrmRelatorioPedido.cs
+END
+FrmClienteCadastro1.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/neopocket/!svn/ver/10/Neopocket/Forms/FrmClienteCadastro1.cs
+END
+FrmProdutoLista.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/neopocket/!svn/ver/59/Neopocket/Forms/FrmProdutoLista.cs
+END
+FrmRecusaLista.resx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmRecusaLista.resx
+END
+FrmInformacoesDoCliente .cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmInformacoesDoCliente%20.cs
+END
+FrmRelatorioLista.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmRelatorioLista.Designer.cs
+END
+FrmPrincipal.resx
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/neopocket/!svn/ver/4/Neopocket/Forms/FrmPrincipal.resx
+END
+FrmRelatorioClienteSemPedido.cs
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/neopocket/!svn/ver/26/Neopocket/Forms/FrmRelatorioClienteSemPedido.cs
+END
+FrmOpcao.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmOpcao.Designer.cs
+END
+FrmPedidoLista.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/neopocket/!svn/ver/70/Neopocket/Forms/FrmPedidoLista.cs
+END
+FrmClienteCadastro4.resx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteCadastro4.resx
+END
+FrmRotaProcessa.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/neopocket/!svn/ver/70/Neopocket/Forms/FrmRotaProcessa.cs
+END
+FrmLogin.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/neopocket/!svn/ver/59/Neopocket/Forms/FrmLogin.cs
+END
+FrmClienteLista.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/neopocket/!svn/ver/58/Neopocket/Forms/FrmClienteLista.Designer.cs
+END
+FrmPrincipal.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/neopocket/!svn/ver/59/Neopocket/Forms/FrmPrincipal.Designer.cs
+END
+FrmGrade.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmGrade.Designer.cs
+END
+FrmConfiguracaoDeAcesso.resx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmConfiguracaoDeAcesso.resx
+END
+FrmRelatorioItensPedidos.resx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/neopocket/!svn/ver/28/Neopocket/Forms/FrmRelatorioItensPedidos.resx
+END
+FrmClienteCadastro4.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/neopocket/!svn/ver/16/Neopocket/Forms/FrmClienteCadastro4.cs
+END
+FormBase.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/neopocket/!svn/ver/53/Neopocket/Forms/FormBase.cs
+END
+FrmInformacoesDoCliente .Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmInformacoesDoCliente%20.Designer.cs
+END
+FrmItem.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmItem.Designer.cs
+END
+FrmRelatorioClienteCidade.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmRelatorioClienteCidade.Designer.cs
+END
+FrmGrade.resx
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmGrade.resx
+END
+FrmRelatorioPedido.resx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmRelatorioPedido.resx
+END
+FrmClienteCadastro1.resx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteCadastro1.resx
+END
+FrmProdutoLista.resx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmProdutoLista.resx
+END
+FrmLogin.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/neopocket/!svn/ver/4/Neopocket/Forms/FrmLogin.Designer.cs
+END
+FrmItem.resx
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmItem.resx
+END
+FrmRelatorioClienteCidade.resx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmRelatorioClienteCidade.resx
+END
+FrmPedidoLista.resx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmPedidoLista.resx
+END
+FrmPedido.resx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmPedido.resx
+END
+FrmRecusa.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmRecusa.Designer.cs
+END
+FrmRotaProcessa.resx
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/neopocket/!svn/ver/59/Neopocket/Forms/FrmRotaProcessa.resx
+END
+FrmGrade.cs
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmGrade.cs
+END
+FrmRelatorioPedido.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neopocket/!svn/ver/26/Neopocket/Forms/FrmRelatorioPedido.Designer.cs
+END
+FrmClienteCadastro1.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteCadastro1.Designer.cs
+END
+FE.cs
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FE.cs
+END
+FrmClienteCadastro2.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteCadastro2.Designer.cs
+END
+FrmClienteCadastro3.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteCadastro3.Designer.cs
+END
+FrmClienteCadastro3.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/neopocket/!svn/ver/10/Neopocket/Forms/FrmClienteCadastro3.cs
+END
+FrmClienteCadastro4.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteCadastro4.Designer.cs
+END
+FrmProdutoLista.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/neopocket/!svn/ver/53/Neopocket/Forms/FrmProdutoLista.Designer.cs
+END
+FrmRelatorioLista.cs
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmRelatorioLista.cs
+END
+FrmItem.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/neopocket/!svn/ver/26/Neopocket/Forms/FrmItem.cs
+END
+FrmRecusa.resx
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmRecusa.resx
+END
+FrmRelatorioClienteCidade.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/neopocket/!svn/ver/11/Neopocket/Forms/FrmRelatorioClienteCidade.cs
+END
+FrmPedidoLista.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/neopocket/!svn/ver/69/Neopocket/Forms/FrmPedidoLista.Designer.cs
+END
+FrmSincronizacao.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmSincronizacao.Designer.cs
+END
+FrmOpcao.cs
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmOpcao.cs
+END
+FrmClienteCadastro2.resx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteCadastro2.resx
+END
+FrmPedido.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/neopocket/!svn/ver/67/Neopocket/Forms/FrmPedido.cs
+END
+FrmRotaProcessa.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/neopocket/!svn/ver/70/Neopocket/Forms/FrmRotaProcessa.Designer.cs
+END
+FormBase.resx
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/neopocket/!svn/ver/4/Neopocket/Forms/FormBase.resx
+END
+FrmRecusaLista.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmRecusaLista.Designer.cs
+END
+FrmSincronizacao.resx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FrmSincronizacao.resx
+END
+FrmRecusaLista.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/neopocket/!svn/ver/10/Neopocket/Forms/FrmRecusaLista.cs
+END
+FrmPrincipal.cs
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/neopocket/!svn/ver/57/Neopocket/Forms/FrmPrincipal.cs
+END
+FrmRecusa.cs
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/neopocket/!svn/ver/10/Neopocket/Forms/FrmRecusa.cs
+END
+FrmClienteCadastro2.cs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/neopocket/!svn/ver/10/Neopocket/Forms/FrmClienteCadastro2.cs
+END
+FormBase.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/neopocket/!svn/ver/4/Neopocket/Forms/FormBase.Designer.cs
+END
+FrmClienteLista.resx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteLista.resx
+END
+FrmRelatorioClienteSemPedido.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/neopocket/!svn/ver/26/Neopocket/Forms/FrmRelatorioClienteSemPedido.Designer.cs
+END
+FE.resx
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/neopocket/!svn/ver/13/Neopocket/Forms/FE.resx
+END
+FrmSincronizacao.cs
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/neopocket/!svn/ver/44/Neopocket/Forms/FrmSincronizacao.cs
+END
+FrmPedido.Designer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/neopocket/!svn/ver/69/Neopocket/Forms/FrmPedido.Designer.cs
+END
+FrmClienteCadastro3.resx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/neopocket/!svn/ver/9/Neopocket/Forms/FrmClienteCadastro3.resx
+END

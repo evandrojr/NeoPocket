@@ -1,0 +1,103 @@
+﻿namespace Neopocket.Forms
+{
+    partial class FrmSincronizacao
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.MainMenu mainMenu;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSincronizacao));
+            this.mainMenu = new System.Windows.Forms.MainMenu();
+            this.mnuVoltar = new System.Windows.Forms.MenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.lblSincronizando = new System.Windows.Forms.Label();
+            this.txtStatus = new System.Windows.Forms.TextBox();
+            this.SuspendLayout();
+            // 
+            // mainMenu
+            // 
+            this.mainMenu.MenuItems.Add(this.mnuVoltar);
+            // 
+            // mnuVoltar
+            // 
+            this.mnuVoltar.Enabled = false;
+            this.mnuVoltar.Text = "Voltar";
+            this.mnuVoltar.Click += new System.EventHandler(this.mnuVoltar_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(240, 268);
+            // 
+            // lblSincronizando
+            // 
+            this.lblSincronizando.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.lblSincronizando.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.lblSincronizando.Location = new System.Drawing.Point(65, 145);
+            this.lblSincronizando.Name = "lblSincronizando";
+            this.lblSincronizando.Size = new System.Drawing.Size(119, 18);
+            this.lblSincronizando.Text = "  Sincronizando...";
+            // 
+            // txtStatus
+            // 
+            this.txtStatus.Location = new System.Drawing.Point(0, 0);
+            this.txtStatus.Multiline = true;
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtStatus.Size = new System.Drawing.Size(240, 268);
+            this.txtStatus.TabIndex = 2;
+            // 
+            // FrmSincronizacao
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(240, 268);
+            this.ControlBox = false;
+            this.Controls.Add(this.txtStatus);
+            this.Controls.Add(this.lblSincronizando);
+            this.Controls.Add(this.pictureBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.KeyPreview = true;
+            this.Menu = this.mainMenu;
+            this.MinimizeBox = false;
+            this.Name = "FrmSincronizacao";
+            this.Text = "Sincronização de dados";
+            this.Activated += new System.EventHandler(this.FrmSincronizacao_Activated);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.MenuItem mnuVoltar;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label lblSincronizando;
+        private System.Windows.Forms.TextBox txtStatus;
+    }
+}

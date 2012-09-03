@@ -1,0 +1,55 @@
+﻿ using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using NeoSync;
+
+namespace Config
+{
+    public class D
+    {
+        public static bool ModoTeste = true;
+        public static Bd Bd;
+        public static Bd BdRel;
+        public static string ApplicationName = "NeoSync";
+        public static string AplicacaoDiretorio = (System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase) + @"\").ToString().Substring(6);
+        public static string BancoAlvo = ""; // caminho e arquivo
+        public static System.Globalization.CultureInfo CultureInfoBRA = new System.Globalization.CultureInfo("pt-br");
+        public static System.Globalization.CultureInfo CultureInfoEUA = new System.Globalization.CultureInfo("en-us");
+        public static string TabelasSincronizacaoDiretorio = @"SincDado\";
+        public static string BackupDiretorio = @"Backup\";
+        public static string Loja;
+        public static string arquivoEnvioNome = "STORE_RM.zip";
+        public static Roteiro Roteiro;
+        public static bool ConcentrarTodosClientesParaVendedorPocket = false;
+        public static string CodVendedorPocket = "000064";
+
+        #region Configuracao da Lib
+
+        //Debug config
+        public static string NeoDebug_LogFile = "NeoSyncLog.txt";
+        public static bool NeoDebug_ReportSend = true;
+        public static bool NeoDebug_ReportSave = true;
+        public static string NeoDebug_From = "erro@neo.eti.br";
+        public static string NeoDebug_To = "erro@neo.eti.br";
+        public static string NeoDebug_Subject = "NeoSync erro";
+        public static string NeoDebug_Body = "";
+        public static string NeoDebug_Host = "smtp.neo.eti.br";
+        public static string NeoDebug_Port = "25";
+        public static string NeoDebug_User = "erro@neo.eti.br";
+        public static string NeoDebug_Password = "luavelha";
+
+        #endregion 
+
+
+        public static string ConexaoParamentros()
+        {
+            return "User=ABDMBA2001MXQ;Password=aqbxdmm1b0a02;Dialect=3;" + D.BancoAlvo;
+        }
+
+        //static D()
+        //{
+        //}
+    }
+}

@@ -1,0 +1,97 @@
+﻿namespace NeoPocketUpdater
+{
+    partial class FE {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.MainMenu mainMenu1;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing) {
+            if (disposing && (components != null)) {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent() {
+            this.mainMenu1 = new System.Windows.Forms.MainMenu();
+            this.txtMensagem = new System.Windows.Forms.TextBox();
+            this.txtDetalhes = new System.Windows.Forms.TextBox();
+            this.BtFechar = new System.Windows.Forms.Button();
+            this.btDetalhes = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // txtMensagem
+            // 
+            this.txtMensagem.Location = new System.Drawing.Point(0, 40);
+            this.txtMensagem.Multiline = true;
+            this.txtMensagem.Name = "txtMensagem";
+            this.txtMensagem.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtMensagem.Size = new System.Drawing.Size(240, 97);
+            this.txtMensagem.TabIndex = 0;
+            // 
+            // txtDetalhes
+            // 
+            this.txtDetalhes.Location = new System.Drawing.Point(0, 171);
+            this.txtDetalhes.Multiline = true;
+            this.txtDetalhes.Name = "txtDetalhes";
+            this.txtDetalhes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtDetalhes.Size = new System.Drawing.Size(240, 97);
+            this.txtDetalhes.TabIndex = 1;
+            this.txtDetalhes.Visible = false;
+            // 
+            // BtFechar
+            // 
+            this.BtFechar.Location = new System.Drawing.Point(87, 145);
+            this.BtFechar.Name = "BtFechar";
+            this.BtFechar.Size = new System.Drawing.Size(72, 20);
+            this.BtFechar.TabIndex = 2;
+            this.BtFechar.Text = "Fechar";
+            this.BtFechar.Click += new System.EventHandler(this.btClose_Click);
+            // 
+            // btDetalhes
+            // 
+            this.btDetalhes.Location = new System.Drawing.Point(165, 145);
+            this.btDetalhes.Name = "btDetalhes";
+            this.btDetalhes.Size = new System.Drawing.Size(72, 20);
+            this.btDetalhes.TabIndex = 3;
+            this.btDetalhes.Text = "Detalhes";
+            this.btDetalhes.Click += new System.EventHandler(this.txtDetalhes_Click);
+            // 
+            // FE
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(240, 268);
+            this.Controls.Add(this.btDetalhes);
+            this.Controls.Add(this.BtFechar);
+            this.Controls.Add(this.txtDetalhes);
+            this.Controls.Add(this.txtMensagem);
+            this.Menu = this.mainMenu1;
+            this.Name = "FE";
+            this.Text = "Mensagem";
+            this.Load += new System.EventHandler(this.FE_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.TextBox txtMensagem;
+        private System.Windows.Forms.TextBox txtDetalhes;
+        private System.Windows.Forms.Button BtFechar;
+        private System.Windows.Forms.Button btDetalhes;
+    }
+}
